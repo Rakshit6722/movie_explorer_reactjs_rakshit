@@ -5,9 +5,15 @@ import { Button, Card, TextField, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import { loginApi, registerApi } from '../../services/api';
+import Cookies from 'js-cookie'
+import { toast } from 'react-toastify';
+import WithRouter from '../hoc/WithRouter';
+import SaveIcon from '@mui/icons-material/Save'; 
 
 type AuthTemplateProps = {
     type: 'login' | 'register',
+    navigate?: any
 }
 
 type AuthTemplateState = {
@@ -28,7 +34,8 @@ type AuthTemplateState = {
         confirmpasswordError: string
     },
     showPassword: boolean,
-    showConfirmPassword: boolean
+    showConfirmPassword: boolean,
+    setLoading: boolean
 }
 
 class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
@@ -53,7 +60,8 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                 confirmpasswordError: ''
             },
             showPassword: false,
-            showConfirmPassword: false
+            showConfirmPassword: false,
+            setLoading: false
         }
     }
 
@@ -83,57 +91,134 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
             confirmpasswordError: ''
         }
 
-        if (formData.firstname === '') {
-            errorObj.firstnammeError = 'First name is required'
-            isValid = false
+        if (this.props.type === 'register') {
+            if (formData.firstname === '') {
+                errorObj.firstnammeError = 'First name is required'
+                isValid = false
+            }
+            if (formData.lastname === '') {
+                errorObj.lastnameError = 'Last name is required'
+                isValid = false
+            }
+            if (formData.number === '') {
+                errorObj.numberError = 'Phone number is required'
+                isValid = false
+            }
+            if (formData.confirmpassword === '') {
+                errorObj.confirmpasswordError = 'Confirm password is required'
+                isValid = false
+            }
+            if (formData.password !== formData.confirmpassword) {
+                errorObj.confirmpasswordError = 'Password and confirm password do not match'
+                isValid = false
+            }
+            if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                errorObj.emailError = 'Email is invalid'
+                isValid = false
+            }
+            if (formData.password.length < 6) {
+                errorObj.passwordError = 'Password must be at least 6 characters long'
+                isValid = false
+            } else if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/.test(formData.password) === false) {
+                errorObj.passwordError = 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+                isValid = false
+            }
         }
-        if (formData.lastname === '') {
-            errorObj.lastnameError = 'Last name is required'
-            isValid = false
-        }
+
         if (formData.email === '') {
             errorObj.emailError = 'Email is required'
             isValid = false
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            errorObj.emailError = 'Email is invalid'
-            isValid = false
         }
-        if (formData.number === '') {
-            errorObj.numberError = 'Phone number is required'
-            isValid = false
-        }
+
+
         if (formData.password === '') {
             errorObj.passwordError = 'Password is required'
             isValid = false
-        } else if (formData.password.length < 6) {
-            errorObj.passwordError = 'Password must be at least 6 characters long'
-            isValid = false
-        } else if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/.test(formData.password) === false) {
-            errorObj.passwordError = 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-            isValid = false
         }
-        if (formData.confirmpassword === '') {
-            errorObj.confirmpasswordError = 'Confirm password is required'
-            isValid = false
-        }
-        if (formData.password !== formData.confirmpassword) {
-            errorObj.confirmpasswordError = 'Password and confirm password do not match'
-            isValid = false
-        }
+
+
         this.setState({
-            errors: errorObj
+            errors: errorObj,
+
         })
         return isValid
     }
 
-    handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        console.log("inside handle submit")
         const { formData } = this.state
         const isValid = this.isValid(formData)
 
         if (!isValid) {
             return
         }
+
+        this.setState((prevState) => ({
+            setLoading: !prevState.setLoading
+        }))
+
+        const { firstname,
+            lastname,
+            email,
+            password,
+            number
+        } = this.state.formData
+
+        if (this.props.type === 'login') {
+            try {
+                const response = await loginApi({ email, password })
+                console.log("response", response)
+
+                if (response?.status === 200) {
+                    localStorage.setItem("user", JSON.stringify(response?.data?.user))
+                    Cookies.set('token', response?.data?.token, {
+                        expires: 2,
+                        path: '/',
+                        sameSite: 'Lax'
+                    })
+                    this.props.navigate('/')
+                    toast.success('Login Successfull')
+                }
+            } catch (err: any) {
+                toast.error(err?.message ?? 'Something went wrong, please try again!')
+            }
+        } else if (this.props.type === 'register') {
+            try {
+                const response = await registerApi({
+                    email,
+                    first_name: firstname,
+                    last_name: lastname,
+                    password,
+                    mobile_number: number
+                })
+
+                if (response?.status === 201) {
+                    this.props.navigate('/login')
+                    toast.success("User Created Successfully")
+                }
+            } catch (err: any) {
+                console.log(err.message)
+                toast.error(err?.message || "Something went wrong, please try again")
+            }
+
+        }
+
+        this.setState({
+            formData: {
+                firstname: '',
+                lastname: '',
+                email: '',
+                number: '',
+                password: '',
+                confirmpassword: ''
+            }
+        })
+
+
+        this.setState((prevState) => ({
+            setLoading: !prevState.setLoading
+        }))
     }
 
     render() {
@@ -336,6 +421,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                 id="firstname"
                                                 label="First Name"
                                                 variant="outlined"
+                                                value={formData.firstname}
                                                 onChange={this.handleChange}
                                                 fullWidth
                                                 InputProps={{
@@ -390,6 +476,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                 id="lastname"
                                                 label="Last Name"
                                                 onChange={this.handleChange}
+                                                value={formData.lastname}
                                                 variant="outlined"
                                                 fullWidth
                                                 InputProps={{
@@ -446,6 +533,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                             label="Email"
                                             variant="outlined"
                                             onChange={this.handleChange}
+                                            value={formData.email}
                                             fullWidth
                                             InputProps={{
                                                 style: {
@@ -500,6 +588,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                             label="Phone Number"
                                             variant="outlined"
                                             onChange={this.handleChange}
+                                            value={formData.number}
                                             fullWidth
                                             InputProps={{
                                                 style: {
@@ -556,6 +645,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                     label="Password"
                                                     variant="outlined"
                                                     onChange={this.handleChange}
+                                                    value={formData.password}
                                                     type={showPassword ? "text" : "password"}
                                                     fullWidth
                                                     InputProps={{
@@ -639,6 +729,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                     label="Confirm Password"
                                                     variant="outlined"
                                                     onChange={this.handleChange}
+                                                    value={formData.confirmpassword}
                                                     type={showConfirmPassword ? "text" : "password"}
                                                     fullWidth
                                                     InputProps={{
@@ -719,21 +810,37 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                             )
                         }
 
-                        <Button type='submit' variant="contained" sx={{
-                            backgroundColor: '#f02c48',
-                            color: 'white',
-                            width: '100%',
-                            padding: '0.75rem 1.5rem',
-                            borderRadius: '0.5rem',
-                            '&:hover': {
-                                backgroundColor: '#d01c38',
-                                boxShadow: '0 0 0.5rem rgb(240, 44, 72 / 0.5)'
-                            },
-                        }}>
-                            {
-                                type === 'login' ? 'Login' : type === 'register' ? 'Create Account' : ''
-                            }
-                        </Button>
+                        {
+                            !this.state.setLoading ? (
+                                <Button disabled={this.state.setLoading} type='submit' variant="contained" sx={{
+                                    backgroundColor: '#f02c48',
+                                    color: 'white',
+                                    width: '100%',
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '0.5rem',
+                                    '&:hover': {
+                                        backgroundColor: '#d01c38',
+                                        boxShadow: '0 0 0.5rem rgb(240, 44, 72 / 0.5)'
+                                    },
+                                }}>
+                                    {
+                                        type === 'login' ? 'Login' : type === 'register' ? 'Create Account' : ''
+                                    }
+                                </Button>
+                            ) : (
+                                <Button
+                                fullWidth
+                                loading
+                                loadingPosition="start"
+                                startIcon={<SaveIcon />}
+                                variant="outlined"
+                              >
+                                Full width
+                              </Button>
+                            )
+                        }
+
+
 
                         <div className="relative mt-6 text-center">
                             <div className="absolute inset-0 flex items-center">
@@ -778,4 +885,4 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
     }
 }
 
-export default AuthTemplate
+export default WithRouter(AuthTemplate)
