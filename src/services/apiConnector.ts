@@ -1,4 +1,4 @@
-import axios, { Method } from 'axios'
+import axios, { AxiosResponse, Method } from 'axios'
 
 const axiosInstance = axios.create({})
 
