@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Box from '@mui/material/Box';
 import coverImage from '../../assets/images/coverImage5.jpg'
-import { Button, Card, TextField, Typography } from '@mui/material';
+import { Button, Card, CircularProgress, TextField, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -834,8 +834,13 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                 loadingPosition="start"
                                 startIcon={<SaveIcon />}
                                 variant="outlined"
+                                sx={{
+                                    backgroundColor: '#f02c48',
+                                    width: '100%',
+                                    padding: '0.75rem 1.5rem'
+                                }}
                               >
-                                Full width
+                                
                               </Button>
                             )
                         }
