@@ -9,7 +9,7 @@ import { loginApi, registerApi } from '../../services/api';
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify';
 import WithRouter from '../hoc/WithRouter';
-import SaveIcon from '@mui/icons-material/Save'; 
+import SaveIcon from '@mui/icons-material/Save';
 import { resetToken, resetUser, setToken, setUser } from '../../redux/slices/userSlice';
 
 type AuthTemplateProps = {
@@ -66,15 +66,15 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
             setLoading: false
         }
     }
-  
+
     componentDidMount(): void {
-    
+
         this.props.dispatch(resetUser())
         this.props.dispatch(resetToken())
     }
 
     handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        const { id, value } = e.target  
+        const { id, value } = e.target
 
         this.setState((prevState) => ({
             formData: {
@@ -839,19 +839,19 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                 </Button>
                             ) : (
                                 <Button
-                                fullWidth
-                                loading
-                                loadingPosition="start"
-                                startIcon={<SaveIcon />}
-                                variant="outlined"
-                                sx={{
-                                    backgroundColor: '#f02c48',   
-                                    width: '100%',
-                                    padding: '0.75rem 1.5rem'
-                                }}
-                              >
-                                
-                              </Button>
+                                    fullWidth
+                                    loading
+                                    loadingPosition="start"
+                                    startIcon={<SaveIcon />}
+                                    variant="outlined"
+                                    sx={{
+                                        backgroundColor: '#f02c48',
+                                        width: '100%',
+                                        padding: '0.75rem 1.5rem'
+                                    }}
+                                >
+
+                                </Button>
                             )
                         }
 
@@ -874,24 +874,25 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                         </div>
 
                         <div>
-                            <Button variant="outlined" sx={{
-                                backgroundColor: 'transparent',
-                                color: 'white',
-                                width: '100%',
-                                padding: '0.75rem 1.5rem',
-                                borderRadius: '0.5rem',
-                                marginTop: type === 'register' ? '1rem' : "",
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
-                                '&:hover': {
-                                    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                            <NavLink to={type === 'login' ? '/register' : '/login'} className="text-sm text-[rgba(255, 255, 255, 0.3)]">
+                                <Button variant="outlined" sx={{
+                                    backgroundColor: 'transparent',
                                     color: 'white',
-                                    boxShadow: '0 0 0.5rem rgb(240, 44, 72 / 0.5)'
-                                },
-                            }}>
-                                <NavLink to={type === 'login' ? '/register' : '/login'} className="text-sm text-[rgba(255, 255, 255, 0.3)]">
+                                    width: '100%',
+                                    padding: '0.75rem 1.5rem',
+                                    borderRadius: '0.5rem',
+                                    marginTop: type === 'register' ? '1rem' : "",
+                                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                                        color: 'white',
+                                        boxShadow: '0 0 0.5rem rgb(240, 44, 72 / 0.5)'
+                                    },
+                                }}>
+
                                     {type === 'login' ? 'Create an account' : 'Already have an account?'}
-                                </NavLink>
-                            </Button>
+                                </Button>
+                            </NavLink>
                         </div>
                     </form>
                 </Card>
