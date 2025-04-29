@@ -10,10 +10,12 @@ import Cookies from 'js-cookie'
 import { toast } from 'react-toastify';
 import WithRouter from '../hoc/WithRouter';
 import SaveIcon from '@mui/icons-material/Save'; 
+import { resetToken, resetUser, setToken, setUser } from '../../redux/slices/userSlice';
 
 type AuthTemplateProps = {
     type: 'login' | 'register',
-    navigate?: any
+    navigate?: any,
+    dispatch?: any
 }
 
 type AuthTemplateState = {
@@ -64,9 +66,15 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
             setLoading: false
         }
     }
+  
+    componentDidMount(): void {
+    
+        this.props.dispatch(resetUser())
+        this.props.dispatch(resetToken())
+    }
 
     handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        const { id, value } = e.target
+        const { id, value } = e.target  
 
         this.setState((prevState) => ({
             formData: {
@@ -171,12 +179,14 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                 console.log("response", response)
 
                 if (response?.status === 200) {
-                    localStorage.setItem("user", JSON.stringify(response?.data?.user))
-                    Cookies.set('token', response?.data?.token, {
-                        expires: 2,
-                        path: '/',
-                        sameSite: 'Lax'
-                    })
+                    // localStorage.setItem("user", JSON.stringify(response?.data?.user))
+                    // Cookies.set('token', response?.data?.token, {
+                    //     expires: 2,
+                    //     path: '/',
+                    //     sameSite: 'Lax'
+                    // })
+                    this.props.dispatch(setUser(response?.data?.user))
+                    this.props.dispatch(setToken(response?.data?.token))
                     this.props.navigate('/')
                     toast.success('Login Successfull')
                 }
@@ -240,7 +250,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                     zIndex: '0'
                 }}>
                     <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#f02c48]/20 via-black/75 to-black/60" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#f02c48]/55 via-black/85 to-black/90" />
                 </Box>
 
                 <Card sx={{
@@ -260,7 +270,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                     WebkitBackdropFilter: 'blur(0.5rem)',
                 }}>
                     <div className='mb-6'>
-                        <Typography variant="h4" gutterBottom sx={{ color: 'white', fontSize: '1.5rem', lineHeight: '1.5rem', marginBottom: '0.5rem' }}>
+                        <Typography variant="h4" gutterBottom sx={{ color: 'white', fontSize: '1.5rem', lineHeight: '1.5rem', marginBottom: '0.5rem', fontFamily: 'Anton' }}>
                             {type === 'login' ? 'Sign In' : type === 'register' ? 'Create Account' : ''}
                         </Typography>
                         <div className="h-1 w-12 bg-[#f02c48] rounded-full"></div>
@@ -835,7 +845,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                 startIcon={<SaveIcon />}
                                 variant="outlined"
                                 sx={{
-                                    backgroundColor: '#f02c48',
+                                    backgroundColor: '#f02c48',   
                                     width: '100%',
                                     padding: '0.75rem 1.5rem'
                                 }}
