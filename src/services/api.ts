@@ -2,12 +2,17 @@ import axios, { AxiosResponse } from 'axios'
 import { apiConnector } from './apiConnector'
 import { toast } from 'react-toastify'
 
-const BASE_URL = 'https://movie-explorer-ror-akshay-katoch.onrender.com/api/v1'
+const BASE_URL = 'https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1'
 
 
 export const loginApi = async (data: {email: string, password: string}) => {
     try{
-        const response = await apiConnector('POST', `${BASE_URL}/login`, data, {})
+
+        const payload = {
+            email: data.email,
+            password: data.password
+        }
+        const response = await apiConnector('POST',`${BASE_URL}/login`, payload)
         return response
     }catch(err: any){
         console.log(err)
