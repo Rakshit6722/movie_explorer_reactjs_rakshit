@@ -47,7 +47,7 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
     return (
         <div
             className="relative group transition-all duration-300 hover:scale-105 hover:z-10"
-            style={{ width: '240px', height: '360px' }}
+            style={{ width: '180px', height: '290px' }}
         >
             <div className="absolute inset-0 rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl">
                 <img
