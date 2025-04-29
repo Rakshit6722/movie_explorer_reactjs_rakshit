@@ -37,7 +37,7 @@ export class   Index extends Component<any, any> {
     return (
       <div className='flex relative flex-col gap-4'>
 
-        <div className={`w-full h-[500px] transition-all duration-700 ease-in-out ${hasScrolled ? 'bg-black' : ''}`}>
+        <div className={`w-full h-[500px] 2xl:h-[515px] transition-all duration-700 ease-in-out ${hasScrolled ? 'bg-black' : ''}`}>
 
           {!hasScrolled && (
             <div className={`transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`}>
