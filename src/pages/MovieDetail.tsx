@@ -114,8 +114,7 @@ class MovieDetail extends Component<any, any> {
                                     {movie.genre.map((genre: string, idx: number) => (
                                         <span
                                             key={idx}
-                                            className={`px-4 py-1.5 text-xs font-medium uppercase tracking-wider rounded-full border transform transition-all duration-300 hover:scale-105 hover:shadow-md cursor-pointer 
-    bg-red-900/70 text-red-100 border-red-700 hover:bg-red-800`}
+                                            className={`px-4 py-1.5 text-xs font-medium uppercase tracking-wider rounded-full border transform transition-all duration-300 hover:scale-105 hover:shadow-md cursor-pointer bg-red-900/70 text-red-100 border-red-700 hover:bg-red-800`}
                                         >
                                             <span className="inline-flex items-center">
 
