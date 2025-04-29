@@ -92,7 +92,7 @@ function Carousel({ movieList,type }: CarouselSectionProps) {
 
             <div
                 ref={carouselRef}
-                className="flex space-x-4 overflow-x-auto py-4 px-0 scrollbar-hide snap-x snap-mandatory"
+                className="flex space-x-2 overflow-x-auto py-4 px-0 scrollbar-hide snap-x snap-mandatory"
             >
 
                 {movieList.map((movie, index) => (
