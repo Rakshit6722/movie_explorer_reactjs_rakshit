@@ -44,7 +44,7 @@ export class MainCarouselMovieCard extends Component<Props> {
 
 
                     <div className="text-white space-y-4 group">
-                        <h2 className="text-2xl tracking-wide md:text-4xl font-bold mb-2">
+                        <h2 className="text-2xl tracking-wide md:text-4xl text-gray-300 font-bold mb-2">
                             {this.props.movie.title}
                         </h2>
                         <p className="text-gray-300 text-sm">
