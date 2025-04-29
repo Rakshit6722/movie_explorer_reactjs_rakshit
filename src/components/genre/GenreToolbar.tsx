@@ -58,7 +58,7 @@ export class GenreToolbar extends Component<GenreToolbarProps, GenreToolbarState
                             onClick={() => this.props.setSelectedGenre(genre.name)}
                             key={genre.id}
                             style={selectedGenre === genre.name ? { backgroundColor: genreColors[genre.name] } : {}}
-                            className={`px-4 tracking-wider py-2 rounded-full md:text-lg font-medium transition-all duration-300
+                            className={`px-4 tracking-wider py-2 rounded-full md:text-sm 2xl:text-lg font-medium transition-all duration-300
                 ${selectedGenre === genre.name
                                     ? 'text-white'
                                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'}
