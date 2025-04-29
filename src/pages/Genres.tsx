@@ -37,13 +37,13 @@ function Genres() {
         <>
 
             <div ref={mainRef} className="flex flex-col space-y-8 py-6">
-                <div className="lg:px-4">
+                <div>
                     <GenreToolbar selectedGenre={selectedGenre} setSelectedGenre={setSelectedGenreMovies} />
                 </div>
 
                 <div className="mt-2">
                     {filteredMovies.length > 0 ? (
-                        <div className="px-4">
+                        <div>
                             <p className="text-gray-300 text-sm mb-4 md:ml-4">
                                 Showing {filteredMovies.length} movies in {selectedGenre || "all genres"}
                             </p>

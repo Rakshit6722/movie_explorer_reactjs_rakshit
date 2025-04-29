@@ -29,7 +29,7 @@ function MoviesGrid({ movieList }: MoviesGridProps) {
 
     return (
         <>
-            <div className='flex flex-wrap justify-start gap-9 md: pl-4 mb-16'>
+            <div className='flex flex-wrap justify-start gap-2.5 mb-16'>
                 {currentMovies.map((movie, index) => (
                     <MoviesCard key={index} movie={movie} />
                 ))}
