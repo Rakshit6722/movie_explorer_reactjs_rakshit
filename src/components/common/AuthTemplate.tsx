@@ -67,12 +67,6 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
         }
     }
 
-    componentDidMount(): void {
-
-        this.props.dispatch(resetUser())
-        this.props.dispatch(resetToken())
-    }
-
     handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const { id, value } = e.target
 
@@ -187,6 +181,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                     // })
                     this.props.dispatch(setUser(response?.data?.user))
                     this.props.dispatch(setToken(response?.data?.token))
+                    localStorage.setItem("token", response?.data?.token)
                     this.props.navigate('/')
                     toast.success('Login Successfull')
                 }
