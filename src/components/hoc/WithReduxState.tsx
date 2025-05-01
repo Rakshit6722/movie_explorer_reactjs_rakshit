@@ -8,8 +8,10 @@ const WithReduxState = (Component: ComponentType<any>) => {
     const NewComponent = (props: any) => {
         const userInfo = useSelector((state: RootState) => state.user.userInfo);
         const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+        const movieList = useSelector((state: RootState) => state.movie.movies);
+        
         const location = useLocation()
-        return <Component {...props} userInfo={userInfo} location={location} isLoggedIn={isLoggedIn}/>;
+        return <Component {...props} userInfo={userInfo} movieList={movieList} location={location} isLoggedIn={isLoggedIn}/>;
     }
 
     return NewComponent
