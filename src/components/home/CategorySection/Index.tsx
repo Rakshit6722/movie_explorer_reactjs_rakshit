@@ -3,9 +3,10 @@ import CarouselSection from './CarouselSection';
 import MainCarousel from '../MainCarousel';
 import { getMovieByPageApi, getMoviesForHomePage } from '../../../services/movieApi';
 import WithRouter from '../../hoc/WithRouter';
-import { setMovies } from '../../../redux/slices/movieSlice';
+import { setLoading, setMovies } from '../../../redux/slices/movieSlice';
+import { LinearProgress } from '@mui/material';
 
-export class   Index extends Component<any, any> {
+export class Index extends Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -24,13 +25,16 @@ export class   Index extends Component<any, any> {
   }
 
   fetchHomeMovies = async () => {
-    try{
+    this.props.dispatch(setLoading(true));
+    try {
       const data = await getMoviesForHomePage(10);
-      if(data){
+      if (data) {
         this.props.dispatch(setMovies(data));
       }
-    }catch(err: any){
+    } catch (err: any) {
       console.log(err.message);
+    } finally {
+      this.props.dispatch(setLoading(false));
     }
   }
 
@@ -50,22 +54,24 @@ export class   Index extends Component<any, any> {
     const { hasScrolled, isFading } = this.state;
 
     return (
-      <div className='flex relative flex-col gap-4'>
+      <>
+        <div className='flex relative flex-col gap-4'>
 
-        <div className={`w-full h-[500px] 2xl:h-[515px] transition-all duration-700 ease-in-out ${hasScrolled ? 'bg-black' : ''}`}>
+          <div className={`w-full h-[500px] 2xl:h-[515px] transition-all duration-700 ease-in-out ${hasScrolled ? 'bg-black' : ''}`}>
 
-          {!hasScrolled && (
-            <div className={`transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`}>
-              <MainCarousel />
-            </div>
-          )}
+            {!hasScrolled && (
+              <div className={`transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`}>
+                <MainCarousel />
+              </div>
+            )}
+          </div>
+
+          <CarouselSection type={'Trending'} heading={'Top Trending'} />
+          <CarouselSection type={'NewRelease'} heading={'New Release'} />
+          <CarouselSection type={'FanFavourite'} heading={'Fan Favourite'} />
+          <CarouselSection type={'Mood'} heading='Find By Mood' />
         </div>
-
-        <CarouselSection type={'Trending'} heading={'Top Trending'} />
-        <CarouselSection type={'NewRelease'} heading={'New Release'} />
-        <CarouselSection type={'FanFavourite'} heading={'Fan Favourite'} />
-        <CarouselSection type={'Mood'} heading='Find By Mood' />
-      </div>
+      </>
     );
   }
 }
