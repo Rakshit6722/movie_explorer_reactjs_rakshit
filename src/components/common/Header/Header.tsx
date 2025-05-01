@@ -107,7 +107,7 @@ class Header extends Component<any, HeaderState> {
           outline: <FaRegUser size={22} />,
           filled: <FaUser size={22} />,
         },
-        label: this.props.isLoggedIn ? `Hi, ${this.props.userInfo.firstname}` : "Login",
+        label: this.props.isLoggedIn ? `Hi, ${this.props.userInfo.name}` : "Login",
         href: this.props.isLoggedIn ? '/profile' : "/login",
       },
     ];
