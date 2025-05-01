@@ -12,6 +12,30 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
 
     const navigate = useNavigate()
 
+    const imageUrl = `https://movie-explorer-rorakshaykat2003-movie.onrender.com//${movie.poster_url}`
+
+    const formatRating = (rating: number) => {
+        if (rating || rating === 0) {
+            return rating.toFixed(1);
+        }
+        return 'N/A';
+    }
+
+    const formatDuration = (minutes: number) => {
+        if (!minutes && minutes !== 0) return 'N/A';
+        
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        
+        if (hours === 0) {
+            return `${mins}m`;
+        } else if (mins === 0) {
+            return `${hours}h`;
+        } else {
+            return `${hours}h ${mins}m`;
+        }
+    }
+
     // if (type === 'trending') {
     //     return (
     //         <div
@@ -46,55 +70,49 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
 
     return (
         <div
-            className="relative group transition-all duration-300 hover:scale-105 hover:z-10"
-            style={{ width: '180px', height: '290px' }}
+            className="relative w-[140px] h-[230px] md:w-[180px] md:h-[290px] group transition-all duration-300 hover:scale-105 hover:z-10"
         >
-            
+
             <div className="absolute inset-0 rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl">
                 <img
-                    src={movie.poster}
+                    src={imageUrl}
                     alt={movie.title}
                     className="w-full h-full object-cover"
                     loading='lazy'
                 />
 
                 <div className="absolute top-2 right-2 bg-black/70 text-yellow-400 px-2 py-1 rounded-md text-sm font-bold">
-                    ★ {movie.rating}
+                    ★ {formatRating(movie.rating)}
                 </div>
 
                 <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black to-transparent opacity-90"></div>
 
                 <div className="absolute bottom-3 left-3 right-3">
-                    <h3 className="text-white text-lg font-semibold truncate">{movie.title}</h3>
+                    {/* <h3 className="text-white text-sm font-semibold truncate">{movie.title}</h3> */}
                 </div>
             </div>
 
-            <div className="absolute inset-0 bg-black/80 rounded-xl p-4 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute inset-0 bg-black/70 rounded-xl p-4 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div>
-                    <h3 className="text-white text-lg font-semibold truncate">{movie.title}</h3>
+                    <h3 className="text-white text-sm font-semibold truncate">{movie.title}</h3>
                     <div className="flex items-center text-gray-300 text-sm mt-1">
                         <span>{movie.release_year}</span>
                         <span className="mx-2">•</span>
-                        <span>{movie.duration}</span>
+                        <span>{formatDuration(movie.duration)}</span>
                     </div>
 
                     <div className="mt-3 flex flex-wrap gap-1">
-                        {movie.genre.slice(0, 2).map((genre, idx) => (
-                            <span
-                                key={idx}
-                                className="bg-gray-700 text-xs px-2 py-1 rounded-full text-gray-300"
-                            >
-                                {genre}
-                            </span>
-                        ))}
+                        <span
+                            className="bg-gray-700 text-xs px-2 py-1 rounded-full text-gray-300"
+                        >
+                            {movie.genre}
+                        </span>
                         {movie.genre.length > 2 && (
                             <span className="bg-gray-700 text-xs px-2 py-1 rounded-full text-gray-300">
                                 +{movie.genre.length - 2}
                             </span>
                         )}
                     </div>
-
-                    <p className="mt-3 text-sm text-gray-300 line-clamp-3">{movie.description}</p>
                 </div>
 
                 <button onClick={() => navigate(`/movie?id=${movie.id}`)} className="mt-auto w-full bg-[#f02c49] hover:bg-[#f02c49c5] hover:text-black text-white py-2 rounded-md transition-colors">

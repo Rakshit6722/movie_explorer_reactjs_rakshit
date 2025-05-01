@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import CarouselSection from './CarouselSection';
 import MainCarousel from '../MainCarousel';
+import { getMovieByPageApi, getMoviesForHomePage } from '../../../services/movieApi';
+import WithRouter from '../../hoc/WithRouter';
+import { setMovies } from '../../../redux/slices/movieSlice';
 
 export class   Index extends Component<any, any> {
   constructor(props: any) {
@@ -12,11 +15,23 @@ export class   Index extends Component<any, any> {
   }
 
   componentDidMount() {
+    this.fetchHomeMovies();
     window.addEventListener('scroll', this.handleScroll);
   }
 
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  fetchHomeMovies = async () => {
+    try{
+      const data = await getMoviesForHomePage(10);
+      if(data){
+        this.props.dispatch(setMovies(data));
+      }
+    }catch(err: any){
+      console.log(err.message);
+    }
   }
 
   handleScroll = () => {
@@ -55,4 +70,4 @@ export class   Index extends Component<any, any> {
   }
 }
 
-export default Index;
+export default WithRouter(Index);
