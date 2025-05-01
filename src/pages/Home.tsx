@@ -5,6 +5,8 @@ import Footer from '../components/common/Footer'
 
 
 class Home extends Component {
+
+
   render() {
     return (
       <div>

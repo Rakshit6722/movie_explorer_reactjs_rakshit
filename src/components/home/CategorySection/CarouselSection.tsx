@@ -27,9 +27,7 @@ function CarouselSection({ type, heading }: CarouselSectionProps) {
                 return movies;
         }
     }, [type, movies]);
-
-    console.log(movieList)
-
+    
     return (
         <div className='flex flex-col '>
             <div className='group cursor-pointer flex items-center space-x-2 lg:space-x-4 font-sans tracking-wide mb-4'>

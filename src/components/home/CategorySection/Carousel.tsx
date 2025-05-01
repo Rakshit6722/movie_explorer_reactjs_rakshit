@@ -1,124 +1,133 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { Component, createRef } from 'react';
 import MoviesCard from './MoviesCard';
 import { HiArrowSmLeft, HiOutlineArrowSmRight } from "react-icons/hi";
 import { NavLink } from 'react-router-dom';
+import { Movie } from '../../../types/type';
 
-type CarouselSectionProps = {
-    movieList: Array<{
-        id: number;
-        title: string;
-        genre: Array<string>;
-        release_year: string;
-        rating: string;
-        description: string;
-        director: string;
-        duration: string;
-        poster: string;
-        coverimage: string;
-    }>,
-    type: string,
+
+type CarouselProps = {
+  movieList: Array<Movie>;
+  type: string;
 };
 
-function Carousel({ movieList,type }: CarouselSectionProps) {
-    const carouselRef = useRef<HTMLDivElement>(null);
-    const [isLeftVisible, setIsLeftVisible] = useState(false);
-    const [isRightVisible, setIsRightVisible] = useState(true);
-    const [innerWidth, setInnerWidth] = useState(window.innerWidth);
+type CarouselState = {
+  isLeftVisible: boolean;
+  isRightVisible: boolean;
+  innerWidth: number;
+};
 
-    useEffect(() => {
-        const handleResize = () => {
-            setInnerWidth(window.innerWidth);
-        };
+class Carousel extends Component<CarouselProps, CarouselState> {
+carouselRef: any;
 
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    },[innerWidth])
-
-    const checkScrollPosition = () => {
-        if (carouselRef.current) {
-            const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-            setIsLeftVisible(scrollLeft > 0);
-            setIsRightVisible(scrollLeft < scrollWidth - clientWidth);
-        }
+  constructor(props: CarouselProps) {
+    super(props);
+    this.state = {
+      isLeftVisible: false,
+      isRightVisible: true,
+      innerWidth: window.innerWidth
     };
+    this.carouselRef = createRef<HTMLDivElement>();
+  }
 
-    const scrollLeft = () => {
-        if (carouselRef.current) {
-            carouselRef.current.scrollBy({
-                left: -300,
-                behavior: 'smooth'
-            });
-        }
-    };
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+    
+    if (this.carouselRef.current) {
+      this.carouselRef.current.addEventListener('scroll', this.checkScrollPosition);
+    }
+    
+    this.checkScrollPosition();
+  }
 
-    const scrollRight = () => {
-        if (carouselRef.current) {
-            carouselRef.current.scrollBy({
-                left: 300,
-                behavior: 'smooth'
-            });
-        }
-    };
+  componentDidUpdate(prevProps: CarouselProps) {
+    if (prevProps.movieList !== this.props.movieList) {
+      this.checkScrollPosition();
+    }
+  }
 
-    useEffect(() => {
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+    
+    if (this.carouselRef.current) {
+      this.carouselRef.current.removeEventListener('scroll', this.checkScrollPosition);
+    }
+  }
 
-        checkScrollPosition();
+  handleResize = () => {
+    this.setState({ innerWidth: window.innerWidth });
+  };
 
-        if (carouselRef.current) {
-            carouselRef.current.addEventListener('scroll', checkScrollPosition);
-        }
+  checkScrollPosition = () => {
+    if (this.carouselRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = this.carouselRef.current;
+      this.setState({
+        isLeftVisible: scrollLeft > 0,
+        isRightVisible: scrollLeft < scrollWidth - clientWidth
+      });
+    }
+  };
 
-        return () => {
-            if (carouselRef.current) {
-                carouselRef.current.removeEventListener('scroll', checkScrollPosition);
-            }
-        };
-    }, [movieList]);
+  scrollLeft = () => {
+    if (this.carouselRef.current) {
+      this.carouselRef.current.scrollBy({
+        left: -525,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  scrollRight = () => {
+    if (this.carouselRef.current) {
+      this.carouselRef.current.scrollBy({
+        left: 525,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  render() {
+    const { movieList, type } = this.props;
+    const { isLeftVisible, isRightVisible, innerWidth } = this.state;
 
     return (
-        <div className="relative">
+      <div className="relative">
+        {((innerWidth >= 768) && isLeftVisible) && (
+          <button
+            onClick={this.scrollLeft}
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-4 rounded-full border border-gray-700 hover:border-[#f02c49] hover:bg-black/60 transition-all duration-300 z-20"
+          >
+            <HiArrowSmLeft size={26} />
+          </button>
+        )}
 
-            {((innerWidth >= 768) &&isLeftVisible) && (
-                <button
-                    onClick={scrollLeft}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-4 rounded-full border border-gray-700 hover:border-[#f02c49] hover:bg-black/60 transition-all duration-300 z-20"
-                >
-                    <HiArrowSmLeft size={26} />
-                </button>
-            )}
-
-            <div
-                ref={carouselRef}
-                className="flex space-x-2 overflow-x-auto py-4 px-0 scrollbar-hide snap-x snap-mandatory"
-            >
-
-                {movieList.map((movie, index) => (
-                    <div key={movie.id} className="flex-shrink-0">
-                        {
-                            type === 'Trending' ? (
-                                <MoviesCard type='trending' movie={movie} index={index} />
-                            ) : (
-                                <MoviesCard type='standard' movie={movie} index={index} />
-                            )
-                        }
-                    </div>
-                ))}
+        <div
+          ref={this.carouselRef}
+          className="flex space-x-2 overflow-x-auto py-4 px-0 scrollbar-hide snap-x snap-mandatory"
+        >
+          {movieList.map((movie, index) => (
+            <div key={movie.id} className="flex-shrink-0">
+              {
+                type === 'Trending' ? (
+                  <MoviesCard type='trending' movie={movie} index={index} />
+                ) : (
+                  <MoviesCard type='standard' movie={movie} index={index} />
+                )
+              }
             </div>
-
-
-            {((innerWidth >= 768) && isRightVisible) && (
-                <button
-                    onClick={scrollRight}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-4 rounded-full border border-gray-700 hover:border-[#f02c49] hover:bg-black/60 transition-all duration-300 z-10"
-                >
-                    <HiOutlineArrowSmRight size={26} />
-                </button>
-            )}
+          ))}
         </div>
+
+        {((innerWidth >= 768) && isRightVisible) && (
+          <button
+            onClick={this.scrollRight}
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-4 rounded-full border border-gray-700 hover:border-[#f02c49] hover:bg-black/60 transition-all duration-300 z-10"
+          >
+            <HiOutlineArrowSmRight size={26} />
+          </button>
+        )}
+      </div>
     );
+  }
 }
 
 export default Carousel;
