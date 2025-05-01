@@ -19,6 +19,7 @@ export class MainCarouselMovieCard extends Component<Props> {
                     <img
                         src={bannerUrl}
                         alt={this.props.movie.title}
+                        loading='lazy'
                         className="w-[100%] h-[100%] object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out"
                     />
 

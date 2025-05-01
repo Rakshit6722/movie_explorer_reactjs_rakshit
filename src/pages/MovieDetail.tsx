@@ -150,6 +150,7 @@ class MovieDetail extends Component<any, any> {
                             src={bannerUrl}
                             alt={movie.title}
                             className="w-full h-full object-cover"
+                            loading="lazy"
                             onError={this.handleImageError}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-[#0f0f0f]/70 to-transparent" />
@@ -167,6 +168,7 @@ class MovieDetail extends Component<any, any> {
                                         src={posterUrl}
                                         alt={movie.title}
                                         className="w-full h-full object-cover"
+                                        loading="lazy"
                                         onError={this.handleImageError}
                                     />
                                 </div>
@@ -274,6 +276,7 @@ class MovieDetail extends Component<any, any> {
                                                 <img
                                                     src={movie.poster_url ? `${API_BASE}${movie.poster_url}` : `${API_BASE}/placeholder-poster.jpg`}
                                                     alt={movie.title}
+                                                    loading="lazy"
                                                     className="w-full h-full object-cover"
                                                     onError={this.handleImageError}
                                                 />
