@@ -1,15 +1,15 @@
 export interface Movie {
     id: number;
     title: string;
-    genre: string[];
-    rating: string;
+    genre: string;
+    rating: number;
     description: string;
-    release_year: string;
+    release_year: number;
     director: string;
-    duration: string;
-    poster: string;
-    coverimage: string;
-    premium?: boolean;
+    duration: number;
+    poster_url: string;
+    banner_url: string;
+    plan?: 'basic' | 'gold' | 'platinum';
 }
 
 export interface User {
