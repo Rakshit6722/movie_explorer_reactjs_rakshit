@@ -18,14 +18,14 @@ class NavItem extends Component<NavItemProps, NavItemState> {
   constructor(props: NavItemProps) {
     super(props);
     this.state = {
-      activePage: props.location.pathname === props.href,
+      activePage: props.location.pathname === props.href.split("?")[0], // Compare only the base path
     };
   }
 
   componentDidUpdate(prevProps: NavItemProps) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
       this.setState({
-        activePage: this.props.location.pathname === this.props.href,
+        activePage: this.props.location.pathname === this.props.href.split("?")[0], // Compare only the base path
       });
     }
   }
@@ -35,7 +35,7 @@ class NavItem extends Component<NavItemProps, NavItemState> {
   };
 
   handleMouseLeave = () => {
-    this.setState({ activePage: this.props.location.pathname === this.props.href });
+    this.setState({ activePage: this.props.location.pathname === this.props.href.split("?")[0] });
   };
 
   render() {
@@ -52,8 +52,8 @@ class NavItem extends Component<NavItemProps, NavItemState> {
         <div
           onMouseEnter={this.handleMouseEnter}
           onMouseLeave={this.handleMouseLeave}
-          className={`flex items-center justify-center w-9 h-9 rounded-lg transition-colors duration-200 hover:bg-[#f02c49e6]
-            ${activePage ? 'bg-[#f02c49e6]' : ''}
+          className={`flex items-center justify-center w-9 h-9 rounded-lg transition-colors duration-200
+          }
           `}
         >
           {activePage ? (

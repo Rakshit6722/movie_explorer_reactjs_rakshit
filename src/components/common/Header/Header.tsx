@@ -24,8 +24,10 @@ interface HeaderState {
 }
 
 class Header extends Component<any, HeaderState> {
+  clickOutisideRef: React.RefObject<HTMLDivElement | null>;
   constructor(props: any) {
     super(props);
+    this.clickOutisideRef = React.createRef<HTMLDivElement>();
     this.state = {
       expanded: false,
       windowWidth: window.innerWidth,
@@ -35,6 +37,7 @@ class Header extends Component<any, HeaderState> {
 
   componentDidMount = () => {
     window.addEventListener('resize', this.handleResize);
+    window.addEventListener('click', this.handleClickOutside);
     // this.handleResize();    
   }
 
@@ -46,6 +49,7 @@ class Header extends Component<any, HeaderState> {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('click', this.handleClickOutside);
   }
 
   handleResize = () => {
@@ -60,6 +64,12 @@ class Header extends Component<any, HeaderState> {
       this.setState({ expanded: true });
     }
   };
+
+  handleClickOutside = (event: MouseEvent) => {
+    if(this.clickOutisideRef.current && !this.clickOutisideRef.current.contains(event.target as Node)) {
+      this.setState({ expanded: false });
+    }
+  }
 
   handleMouseLeave = () => {
     if (this.state.windowWidth >= 768) {
@@ -92,7 +102,7 @@ class Header extends Component<any, HeaderState> {
           filled: <RiMovie2Fill size={22} />,
         },
         label: 'Genres',
-        href: '/genres'
+        href: '/genres?pageCount=1'
       },
       {
         icon: {
@@ -119,6 +129,7 @@ class Header extends Component<any, HeaderState> {
         className="fixed top-0 left-0 h-screen flex z-50"
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
+        ref={this.clickOutisideRef}
       >
         <div className="h-full bg-black md:w-20 flex flex-col items-center py-8 shadow-lg">
 
@@ -151,9 +162,9 @@ class Header extends Component<any, HeaderState> {
                 to={item.href}
                 key={item.label}
                 className={({ isActive }: any) =>
-                  `font-medium text-lg whitespace-nowrap
+                  `font-medium  text-lg whitespace-nowrap
                    flex items-center font-sans space-x-2 transition-all duration-300
-                   ${isActive ? 'text-[#f02c49e6]' : 'text-gray-400 hover:text-[#f02c49e6]'}`
+                   ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'}`
                 }
               >
                 {item.label}
