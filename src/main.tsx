@@ -15,11 +15,11 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-      <BrowserRouter>
-        <App />
-        <ToastContainer />
-      </BrowserRouter>
+        <BrowserRouter>
+          <App />
+          <ToastContainer />
+        </BrowserRouter>
       </PersistGate>
     </Provider>
-  </StrictMode>,
+  </StrictMode>
 )
