@@ -2,7 +2,8 @@ import { apiConnector } from "./apiConnector";
 
 const BASE_URL = `https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1/movies`
 
-export const getMovieByPageApi = async (page?: number) => {
+export const getMovieByPageApi = async (page?: number, genre?: string | null, search?: string | null) => {
+    if(genre === 'All') genre = null
     let apiUrl = ''
     if (!page) {
         apiUrl = `${BASE_URL}`
@@ -10,10 +11,14 @@ export const getMovieByPageApi = async (page?: number) => {
         apiUrl = `${BASE_URL}?page=${page}`
     }
     try {
-        const response = await apiConnector("GET", apiUrl)
+        const response = await apiConnector("GET", apiUrl, null, null, null,{
+            genre: genre ? genre : null,
+            page: page ? page : null,
+            search: search ? search : null
+        })
         if (response?.status === 200) {
             console.log("response", response.data)
-            return response.data?.movies
+            return {data:response.data?.movies, totalPages: response.data?.total_pages}
         } else {
             throw new Error("Failed to fetch movies")
         }
@@ -31,7 +36,7 @@ export const getMoviesForHomePage = async (pageCount: number) => {
             pagesToFetch.map((page) => getMovieByPageApi(page))
         )
 
-        const allMovies = responses.flatMap((response) => response);
+        const allMovies = responses.flatMap((response) => response.data);
         return allMovies
     }catch(err: any){
         console.error("API Error:", err.response ? err.response.data : err.message);
