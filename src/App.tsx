@@ -4,6 +4,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import MovieDashboard from './pages/MovieDashboard'
 import Search from './pages/Search'
+import LoadingFallback from './components/common/LoadingFallback'
 const Home = lazy(() => import('./pages/Home'))
 const MoodMain = lazy(() => import('./pages/MoodMain'))
 const Genres = lazy(() => import('./pages/Genres'))
@@ -19,32 +20,32 @@ const App = () => {
         <Route path='/' element={<MovieDashboard />}>
           <Route index element={<Navigate to="/home" />} />
           <Route path='home' element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingFallback />}>
               <Home />
             </Suspense>
           } />
           <Route path='genres' element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingFallback />}>
               <Genres />
             </Suspense>
           } />
           <Route path='profile' element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingFallback />}>
               <Profile />
             </Suspense>
           } />
           <Route path='moods' element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingFallback />}>
               <MoodMain />
             </Suspense>
           } />
           <Route path='movie' element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingFallback />}>
               <MovieDetail />
             </Suspense>
           } />
           <Route path='search' element={
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<LoadingFallback />}>
               <Search />
             </Suspense>
           } />
