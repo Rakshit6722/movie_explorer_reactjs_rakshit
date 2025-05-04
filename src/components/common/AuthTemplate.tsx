@@ -173,12 +173,6 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                 console.log("response", response)
 
                 if (response?.status === 200) {
-                    // localStorage.setItem("user", JSON.stringify(response?.data?.user))
-                    // Cookies.set('token', response?.data?.token, {
-                    //     expires: 2,
-                    //     path: '/',
-                    //     sameSite: 'Lax'
-                    // })
                     this.props.dispatch(setUser(response?.data?.user))
                     this.props.dispatch(setToken(response?.data?.token))
                     localStorage.setItem("token", response?.data?.token)
@@ -419,9 +413,10 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
 
                         {
                             type === 'register' && (
-                                <div className='flex flex-col gap-4'>
-                                    <div className='flex gap-4'>
-                                        <div className='w-1/2'>
+                                <div className='flex flex-col gap-3'>
+                                  
+                                    <div className='flex flex-col sm:flex-row gap-3'>
+                                        <div className='flex-1'>
                                             <TextField
                                                 id="firstname"
                                                 label="First Name"
@@ -429,14 +424,14 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                 value={formData.firstname}
                                                 onChange={this.handleChange}
                                                 fullWidth
+                                                size="small"
                                                 InputProps={{
-                                                    style: {
-                                                        color: 'white',
-                                                    }
+                                                    style: { color: 'white' }
                                                 }}
                                                 InputLabelProps={{
                                                     style: {
                                                         color: 'rgba(255, 255, 255, 0.6)',
+                                                        fontSize: '0.85rem' 
                                                     }
                                                 }}
                                                 placeholder="Enter your first name"
@@ -446,37 +441,25 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                     backdropFilter: 'blur(8px)',
                                                     WebkitBackdropFilter: 'blur(8px)',
                                                     '& .MuiOutlinedInput-root': {
-                                                        '& fieldset': {
-                                                            borderColor: 'rgba(255, 255, 255, 0.3)',
-                                                        },
-                                                        '&:hover fieldset': {
-                                                            borderColor: '#f02c48',
-                                                        },
-                                                        '&.Mui-focused fieldset': {
-                                                            borderColor: '#f02c48',
-                                                        },
+                                                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                        '&:hover fieldset': { borderColor: '#f02c48' },
+                                                        '&.Mui-focused fieldset': { borderColor: '#f02c48' },
                                                         input: {
                                                             color: 'white',
-                                                            '::placeholder': {
-                                                                color: 'rgba(255, 255, 255, 0.6)',
-                                                            }
+                                                            '::placeholder': { color: 'rgba(255, 255, 255, 0.6)' }
                                                         }
                                                     },
                                                     '& .MuiInputLabel-root': {
                                                         color: 'rgba(255, 255, 255, 0.6)',
-                                                        '&.Mui-focused': {
-                                                            color: '#f02c48',
-                                                        }
+                                                        '&.Mui-focused': { color: '#f02c48' }
                                                     }
                                                 }}
                                             />
-                                            {
-                                                errors.firstnammeError && (
-                                                    <span className='text-red-500 text-sm'>{errors.firstnammeError}</span>
-                                                )
-                                            }
+                                            {errors.firstnammeError && (
+                                                <div className='text-red-500 text-xs mt-1 h-4'>{errors.firstnammeError}</div>
+                                            )}
                                         </div>
-                                        <div className='w-1/2'>
+                                        <div className='flex-1'>
                                             <TextField
                                                 id="lastname"
                                                 label="Last Name"
@@ -484,14 +467,14 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                 value={formData.lastname}
                                                 variant="outlined"
                                                 fullWidth
+                                                size="small"
                                                 InputProps={{
-                                                    style: {
-                                                        color: 'white',
-                                                    }
+                                                    style: { color: 'white' }
                                                 }}
                                                 InputLabelProps={{
                                                     style: {
                                                         color: 'rgba(255, 255, 255, 0.6)',
+                                                        fontSize: '0.85rem' 
                                                     }
                                                 }}
                                                 placeholder="Enter your last name"
@@ -501,37 +484,27 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                     backdropFilter: 'blur(8px)',
                                                     WebkitBackdropFilter: 'blur(8px)',
                                                     '& .MuiOutlinedInput-root': {
-                                                        '& fieldset': {
-                                                            borderColor: 'rgba(255, 255, 255, 0.3)',
-                                                        },
-                                                        '&:hover fieldset': {
-                                                            borderColor: '#f02c48',
-                                                        },
-                                                        '&.Mui-focused fieldset': {
-                                                            borderColor: '#f02c48',
-                                                        },
+                                                        '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                        '&:hover fieldset': { borderColor: '#f02c48' },
+                                                        '&.Mui-focused fieldset': { borderColor: '#f02c48' },
                                                         input: {
                                                             color: 'white',
-                                                            '::placeholder': {
-                                                                color: 'rgba(255, 255, 255, 0.6)',
-                                                            }
+                                                            '::placeholder': { color: 'rgba(255, 255, 255, 0.6)' }
                                                         }
                                                     },
                                                     '& .MuiInputLabel-root': {
                                                         color: 'rgba(255, 255, 255, 0.6)',
-                                                        '&.Mui-focused': {
-                                                            color: '#f02c48',
-                                                        }
+                                                        '&.Mui-focused': { color: '#f02c48' }
                                                     }
                                                 }}
                                             />
-                                            {
-                                                errors.lastnameError && (
-                                                    <span className='text-red-500 text-sm'>{errors.lastnameError}</span>
-                                                )
-                                            }
+                                            {errors.lastnameError && (
+                                                <div className='text-red-500 text-xs mt-1 h-4'>{errors.lastnameError}</div>
+                                            )}
                                         </div>
                                     </div>
+
+                                 
                                     <div>
                                         <TextField
                                             id="email"
@@ -540,14 +513,14 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                             onChange={this.handleChange}
                                             value={formData.email}
                                             fullWidth
+                                            size="small" 
                                             InputProps={{
-                                                style: {
-                                                    color: 'white',
-                                                }
+                                                style: { color: 'white' }
                                             }}
                                             InputLabelProps={{
                                                 style: {
                                                     color: 'rgba(255, 255, 255, 0.6)',
+                                                    fontSize: '0.85rem' 
                                                 }
                                             }}
                                             placeholder="Enter your email"
@@ -557,36 +530,26 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                 backdropFilter: 'blur(8px)',
                                                 WebkitBackdropFilter: 'blur(8px)',
                                                 '& .MuiOutlinedInput-root': {
-                                                    '& fieldset': {
-                                                        borderColor: 'rgba(255, 255, 255, 0.3)',
-                                                    },
-                                                    '&:hover fieldset': {
-                                                        borderColor: '#f02c48',
-                                                    },
-                                                    '&.Mui-focused fieldset': {
-                                                        borderColor: '#f02c48',
-                                                    },
+                                                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                    '&:hover fieldset': { borderColor: '#f02c48' },
+                                                    '&.Mui-focused fieldset': { borderColor: '#f02c48' },
                                                     input: {
                                                         color: 'white',
-                                                        '::placeholder': {
-                                                            color: 'rgba(255, 255, 255, 0.6)',
-                                                        }
+                                                        '::placeholder': { color: 'rgba(255, 255, 255, 0.6)' }
                                                     }
                                                 },
                                                 '& .MuiInputLabel-root': {
                                                     color: 'rgba(255, 255, 255, 0.6)',
-                                                    '&.Mui-focused': {
-                                                        color: '#f02c48',
-                                                    }
+                                                    '&.Mui-focused': { color: '#f02c48' }
                                                 }
                                             }}
                                         />
-                                        {
-                                            errors.emailError && (
-                                                <span className='text-red-500 text-sm'>{errors.emailError}</span>
-                                            )
-                                        }
+                                        {errors.emailError && (
+                                            <div className='text-red-500 text-xs mt-1 h-4'>{errors.emailError}</div>
+                                        )}
                                     </div>
+
+                                   
                                     <div>
                                         <TextField
                                             id="number"
@@ -595,14 +558,14 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                             onChange={this.handleChange}
                                             value={formData.number}
                                             fullWidth
+                                            size="small"
                                             InputProps={{
-                                                style: {
-                                                    color: 'white',
-                                                }
+                                                style: { color: 'white' }
                                             }}
                                             InputLabelProps={{
                                                 style: {
                                                     color: 'rgba(255, 255, 255, 0.6)',
+                                                    fontSize: '0.85rem' 
                                                 }
                                             }}
                                             placeholder="Enter your phone number"
@@ -612,38 +575,28 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                 backdropFilter: 'blur(8px)',
                                                 WebkitBackdropFilter: 'blur(8px)',
                                                 '& .MuiOutlinedInput-root': {
-                                                    '& fieldset': {
-                                                        borderColor: 'rgba(255, 255, 255, 0.3)',
-                                                    },
-                                                    '&:hover fieldset': {
-                                                        borderColor: '#f02c48',
-                                                    },
-                                                    '&.Mui-focused fieldset': {
-                                                        borderColor: '#f02c48',
-                                                    },
+                                                    '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                    '&:hover fieldset': { borderColor: '#f02c48' },
+                                                    '&.Mui-focused fieldset': { borderColor: '#f02c48' },
                                                     input: {
                                                         color: 'white',
-                                                        '::placeholder': {
-                                                            color: 'rgba(255, 255, 255, 0.6)',
-                                                        }
+                                                        '::placeholder': { color: 'rgba(255, 255, 255, 0.6)' }
                                                     }
                                                 },
                                                 '& .MuiInputLabel-root': {
                                                     color: 'rgba(255, 255, 255, 0.6)',
-                                                    '&.Mui-focused': {
-                                                        color: '#f02c48',
-                                                    }
+                                                    '&.Mui-focused': { color: '#f02c48' }
                                                 }
                                             }}
                                         />
-                                        {
-                                            errors.numberError && (
-                                                <span className='text-red-500 text-sm'>{errors.numberError}</span>
-                                            )
-                                        }
+                                        {errors.numberError && (
+                                            <div className='text-red-500 text-xs mt-1 h-4'>{errors.numberError}</div>
+                                        )}
                                     </div>
-                                    <div className='flex gap-4'>
-                                        <div className='w-1/2'>
+
+                                   
+                                    <div className='flex flex-col sm:flex-row gap-3'>
+                                        <div className='flex-1'>
                                             <div className='relative'>
                                                 <TextField
                                                     id="password"
@@ -653,14 +606,14 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                     value={formData.password}
                                                     type={showPassword ? "text" : "password"}
                                                     fullWidth
+                                                    size="small" 
                                                     InputProps={{
-                                                        style: {
-                                                            color: 'white',
-                                                        }
+                                                        style: { color: 'white' }
                                                     }}
                                                     InputLabelProps={{
                                                         style: {
                                                             color: 'rgba(255, 255, 255, 0.6)',
+                                                            fontSize: '0.85rem'
                                                         }
                                                     }}
                                                     placeholder="Enter your password"
@@ -670,64 +623,47 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                         backdropFilter: 'blur(8px)',
                                                         WebkitBackdropFilter: 'blur(8px)',
                                                         '& .MuiOutlinedInput-root': {
-                                                            '& fieldset': {
-                                                                borderColor: 'rgba(255, 255, 255, 0.3)',
-                                                            },
-                                                            '&:hover fieldset': {
-                                                                borderColor: '#f02c48',
-                                                            },
-                                                            '&.Mui-focused fieldset': {
-                                                                borderColor: '#f02c48',
-                                                            },
+                                                            '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                            '&:hover fieldset': { borderColor: '#f02c48' },
+                                                            '&.Mui-focused fieldset': { borderColor: '#f02c48' },
                                                             input: {
                                                                 color: 'white',
-                                                                '::placeholder': {
-                                                                    color: 'rgba(255, 255, 255, 0.6)',
-                                                                }
+                                                                '::placeholder': { color: 'rgba(255, 255, 255, 0.6)' }
                                                             }
                                                         },
                                                         '& .MuiInputLabel-root': {
                                                             color: 'rgba(255, 255, 255, 0.6)',
-                                                            '&.Mui-focused': {
-                                                                color: '#f02c48',
-                                                            }
+                                                            '&.Mui-focused': { color: '#f02c48' }
                                                         }
                                                     }}
                                                 />
-                                                {
-                                                    showPassword ? (
-                                                        <VisibilityOffIcon
-                                                            className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer'
-                                                            sx={{
-                                                                color: 'rgba(255, 255, 255, 0.6)',
-                                                                '&:hover': {
-                                                                    color: '#f02c48',
-                                                                }
-                                                            }}
-                                                            onClick={() => this.setState({ showPassword: !showPassword })}
-                                                        />
-                                                    ) : (
-                                                        <VisibilityIcon
-                                                            className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer'
-                                                            sx={{
-                                                                color: 'rgba(255, 255, 255, 0.6)',
-                                                                '&:hover': {
-                                                                    color: '#f02c48',
-                                                                }
-                                                            }}
-                                                            onClick={() => this.setState({ showPassword: !showPassword })}
-                                                        />
-                                                    )
-                                                }
-
+                                                {showPassword ? (
+                                                    <VisibilityOffIcon
+                                                        className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm' // Adjusted position and size
+                                                        sx={{
+                                                            color: 'rgba(255, 255, 255, 0.6)',
+                                                            fontSize: '1.2rem',
+                                                            '&:hover': { color: '#f02c48' }
+                                                        }}
+                                                        onClick={() => this.setState({ showPassword: !showPassword })}
+                                                    />
+                                                ) : (
+                                                    <VisibilityIcon
+                                                        className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm' // Adjusted position and size
+                                                        sx={{
+                                                            color: 'rgba(255, 255, 255, 0.6)',
+                                                            fontSize: '1.2rem', 
+                                                            '&:hover': { color: '#f02c48' }
+                                                        }}
+                                                        onClick={() => this.setState({ showPassword: !showPassword })}
+                                                    />
+                                                )}
                                             </div>
-                                            {
-                                                errors.passwordError && (
-                                                    <span className='text-red-500 text-sm'>{errors.passwordError}</span>
-                                                )
-                                            }
+                                            {errors.passwordError && (
+                                                <div className='text-red-500 text-xs mt-1 min-h-[1rem]'>{errors.passwordError}</div>
+                                            )}
                                         </div>
-                                        <div className='w-1/2'>
+                                        <div className='flex-1'>
                                             <div className='relative'>
                                                 <TextField
                                                     id="confirmpassword"
@@ -737,78 +673,62 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                     value={formData.confirmpassword}
                                                     type={showConfirmPassword ? "text" : "password"}
                                                     fullWidth
+                                                    size="small" 
                                                     InputProps={{
-                                                        style: {
-                                                            color: 'white',
-                                                        }
+                                                        style: { color: 'white' }
                                                     }}
                                                     InputLabelProps={{
                                                         style: {
                                                             color: 'rgba(255, 255, 255, 0.6)',
+                                                            fontSize: '0.85rem' 
                                                         }
                                                     }}
-                                                    placeholder="Confirm your password"
+                                                    placeholder="Confirm password"
                                                     sx={{
                                                         backgroundColor: 'rgba(255, 255, 255, 0.1)',
                                                         borderRadius: '0.5rem',
                                                         backdropFilter: 'blur(8px)',
                                                         WebkitBackdropFilter: 'blur(8px)',
                                                         '& .MuiOutlinedInput-root': {
-                                                            '& fieldset': {
-                                                                borderColor: 'rgba(255, 255, 255, 0.3)',
-                                                            },
-                                                            '&:hover fieldset': {
-                                                                borderColor: '#f02c48',
-                                                            },
-                                                            '&.Mui-focused fieldset': {
-                                                                borderColor: '#f02c48',
-                                                            },
+                                                            '& fieldset': { borderColor: 'rgba(255, 255, 255, 0.3)' },
+                                                            '&:hover fieldset': { borderColor: '#f02c48' },
+                                                            '&.Mui-focused fieldset': { borderColor: '#f02c48' },
                                                             input: {
                                                                 color: 'white',
-                                                                '::placeholder': {
-                                                                    color: 'rgba(255, 255, 255, 0.6)',
-                                                                }
+                                                                '::placeholder': { color: 'rgba(255, 255, 255, 0.6)' }
                                                             }
                                                         },
                                                         '& .MuiInputLabel-root': {
                                                             color: 'rgba(255, 255, 255, 0.6)',
-                                                            '&.Mui-focused': {
-                                                                color: '#f02c48',
-                                                            }
+                                                            '&.Mui-focused': { color: '#f02c48' }
                                                         }
                                                     }}
                                                 />
-                                                {
-                                                    showConfirmPassword ? (
-                                                        <VisibilityOffIcon
-                                                            className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer'
-                                                            sx={{
-                                                                color: 'rgba(255, 255, 255, 0.6)',
-                                                                '&:hover': {
-                                                                    color: '#f02c48',
-                                                                }
-                                                            }}
-                                                            onClick={() => this.setState({ showConfirmPassword: !showConfirmPassword })}
-                                                        />
-                                                    ) : (
-                                                        <VisibilityIcon
-                                                            className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer'
-                                                            sx={{
-                                                                color: 'rgba(255, 255, 255, 0.6)',
-                                                                '&:hover': {
-                                                                    color: '#f02c48',
-                                                                }
-                                                            }}
-                                                            onClick={() => this.setState({ showConfirmPassword: !showConfirmPassword })}
-                                                        />
-                                                    )
-                                                }
+                                                {showConfirmPassword ? (
+                                                    <VisibilityOffIcon
+                                                        className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm' // Adjusted position and size
+                                                        sx={{
+                                                            color: 'rgba(255, 255, 255, 0.6)',
+                                                            fontSize: '1.2rem',
+                                                            '&:hover': { color: '#f02c48' }
+                                                        }}
+                                                        onClick={() => this.setState({ showConfirmPassword: !showConfirmPassword })}
+                                                    />
+                                                ) : (
+                                                    <VisibilityIcon
+                                                        className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm' // Adjusted position and size
+                                                        sx={{
+                                                            color: 'rgba(255, 255, 255, 0.6)',
+                                                            fontSize: '1.2rem', 
+                                                            '&:hover': { color: '#f02c48' }
+                                                        }}
+                                                        onClick={() => this.setState({ showConfirmPassword: !showConfirmPassword })}
+                                                    />
+                                                )}
                                             </div>
-                                            {
-                                                errors.confirmpasswordError && (
-                                                    <span className='text-red-500 text-sm'>{errors.confirmpasswordError}</span>
-                                                )
-                                            }
+                                            {errors.confirmpasswordError && (
+                                                <div className='text-red-500 text-xs mt-1 min-h-[1rem]'>{errors.confirmpasswordError}</div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
