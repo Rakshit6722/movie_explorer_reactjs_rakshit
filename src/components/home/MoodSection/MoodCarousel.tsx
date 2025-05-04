@@ -22,7 +22,7 @@ function MoodCarousel() {
         const genres = moodGenreMapping[selectedMood] || [];
 
         return movies.filter((movie: any) => {
-            return genres.some((genre: string) => movie.genre.includes(genre));
+            return genres.some((genre: string) => movie.genre === genre);
         }).sort((a: any, b: any) => b.rating - a.rating).slice(0, 10);
 
     }, [selectedMood, movies]);

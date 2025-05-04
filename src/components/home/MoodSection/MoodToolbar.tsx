@@ -15,25 +15,40 @@ function MoodToolbar() {
   const moodList = useSelector((state: any) => state.mood.moodList);
   const selectedMood = useSelector((state: any) => state.mood.selectedMood);
 
+  function hexToRgb(hex: string): string {
+    hex = hex.replace('#', '');
+    
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    
+    return `${r}, ${g}, ${b}`;
+  }  
 
   return (
-    <div className="flex font-anton tracking-wide space-x-4 overflow-x-auto scrollbar-hide py-2 ">
+    <div className="flex items-center font-anton tracking-wide space-x-3 overflow-x-auto scrollbar-hide py-3 px-1 mb-2">
       {moodList.map((mood: string) => (
         <button
           key={mood}
           onClick={() => dispatch(setMood(mood))}
-          style={selectedMood === mood ? { backgroundColor: moodColors[mood] } : {}}
-          className={`px-4 tracking-wider py-2 rounded-full text-lg font-medium transition-all duration-300
-          ${selectedMood === mood
-              ? 'text-white'
-              : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white'}
-        `}
+          style={selectedMood === mood ? { 
+            backgroundColor: moodColors[mood],
+            boxShadow: `0 4px 12px rgba(${hexToRgb(moodColors[mood])}, 0.5)`
+          } : {}}
+          className={`
+            px-5 tracking-wider py-1.5 rounded-full text-base font-medium 
+            transition-all duration-300 shadow-sm hover:shadow-md
+            ${selectedMood === mood
+              ? 'text-white transform scale-105'
+              : 'bg-gray-800/80 text-gray-300 hover:bg-gray-700 hover:text-white'}
+          `}
         >
-          {mood}
+          {mood.charAt(0).toUpperCase() + mood.slice(1)}
         </button>
       ))}
     </div>
   );
 }
+
 
 export default MoodToolbar;
