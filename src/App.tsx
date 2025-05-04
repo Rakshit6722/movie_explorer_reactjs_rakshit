@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import Home from './pages/Home'
 import MovieDashboard from './pages/MovieDashboard'
-import MoodMain from './pages/MoodMain'
-import Genres from './pages/Genres'
-import Profile from './pages/Profile'
-import MovieDetail from './pages/MovieDetail'
+import Search from './pages/Search'
+const Home = lazy(() => import('./pages/Home'))
+const MoodMain = lazy(() => import('./pages/MoodMain'))
+const Genres = lazy(() => import('./pages/Genres'))
+const Profile = lazy(() => import('./pages/Profile'))
+const MovieDetail = lazy(() => import('./pages/MovieDetail'))
 
 const App = () => {
   return (
@@ -17,11 +18,36 @@ const App = () => {
         <Route path='register' element={<Register />} />
         <Route path='/' element={<MovieDashboard />}>
           <Route index element={<Navigate to="/home" />} />
-          <Route path='home' element={<Home />} />
-          <Route path='genres' element={<Genres/>} />
-          <Route path='profile' element={<Profile/>} />
-          <Route path='moods' element={<MoodMain />} />
-          <Route path='movie' element={<MovieDetail/>}/>
+          <Route path='home' element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Home />
+            </Suspense>
+          } />
+          <Route path='genres' element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Genres />
+            </Suspense>
+          } />
+          <Route path='profile' element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Profile />
+            </Suspense>
+          } />
+          <Route path='moods' element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <MoodMain />
+            </Suspense>
+          } />
+          <Route path='movie' element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <MovieDetail />
+            </Suspense>
+          } />
+          <Route path='search' element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Search />
+            </Suspense>
+          } />
           <Route path='*' element={<div>404 Not Found</div>} />
         </Route>
       </Routes>
