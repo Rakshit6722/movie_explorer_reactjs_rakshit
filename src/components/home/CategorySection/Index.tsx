@@ -8,6 +8,7 @@ import MoodFeaturePromo from '../MoodSection/MoodFeaturePromo';
 import MidCarousel from './MidCarouselSection';
 import { getMoviesForHomePage } from '../../../services/movieApi';
 import { setLoading, setMovies } from '../../../redux/slices/movieSlice';
+import SubscribeButton from './SubscribeButton';
 
 const Index = () => {
   const loading = useSelector((state: any) => state.movie.loading);
@@ -17,7 +18,9 @@ const Index = () => {
 
   useEffect(() => {
     fetchHomeMovies();
-
+    if(containerRef.current) {
+      containerRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
     const style = document.createElement('style');
     style.innerHTML = `
       @keyframes flicker {
@@ -112,14 +115,7 @@ const Index = () => {
 
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-black text-white">
-      <div className="fixed top-4 right-4 z-50">
-        <button
-          onClick={() => navigate('/subscription')}
-          className="px-6 py-2 bg-gradient-to-r from-[#e23145] to-[#c41f33] text-white rounded-lg font-anton tracking-wider transition hover:opacity-80"
-        >
-          Subscribe
-        </button>
-      </div>
+     <SubscribeButton/>
 
       <section className="w-full">
         {loading ? (

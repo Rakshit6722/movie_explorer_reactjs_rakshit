@@ -107,7 +107,7 @@ function MoodMain() {
 
                 </div>
                 
-                <MoviesGrid movieList={moodBasedMovies} type={'mood'}/>
+                <MoviesGrid  movieList={moodBasedMovies} type={'mood'}/>
             </div>
         </motion.div>
         <Footer />

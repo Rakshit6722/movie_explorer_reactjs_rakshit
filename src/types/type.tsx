@@ -19,5 +19,5 @@ export interface User {
     lastname: string;
     role: string;
     phonenumber: string;
-    subscribed?: boolean;
+    active_plan: string;
 }

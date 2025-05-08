@@ -3,6 +3,7 @@ import { Movie } from '../types/type';
 import Footer from '../components/common/Footer';
 import WithReduxState from '../components/hoc/WithReduxState';
 import { NavLink } from 'react-router-dom';
+import { getMovieDetails } from '../services/movieApi';
 
 class MovieDetail extends Component<any, any> {
     constructor(props: any) {
@@ -23,10 +24,10 @@ class MovieDetail extends Component<any, any> {
         console.log('Movie ID:', this.movieId);
 
         if(this.movieId) {
-            await this.getMovie(this.movieId);
+            this.getMovie(this.movieId);
             this.findSimilarMovies(this.state.movie)
         }
-  
+
         if(this.mainRef.current) {
             this.mainRef.current.scrollIntoView({ behavior: 'smooth' });
         }
@@ -52,18 +53,12 @@ class MovieDetail extends Component<any, any> {
         }
     }
 
-    getMovie = (id: string) => {
-        console.log("movieList", this.props.movieList);
-        if (this.props.movieList && Array.isArray(this.props.movieList)) {
-            const movieDetail = this.props.movieList.filter((movie: Movie) => movie.id === Number(id));
-            if (movieDetail.length > 0) {
-                this.setState({ movie: movieDetail[0], isLoading: false });
-            } else {
-                this.setState({ movie: '', isLoading: false });
-            }
-        } else {
-            this.setState({ isLoading: false });
-        }
+    getMovie = async (id: string) => {
+        if (!id) return;
+        const data = await getMovieDetails(Number(id))
+        console.log(data?.data)
+        this.setState({ movie: data?.data, isLoading: false });
+  
     }
 
     findSimilarMovies = (movie: Movie) => {

@@ -12,7 +12,7 @@ const MoodFeaturePromo = () => {
             if (!intervalRef.current) {
                 intervalRef.current = window.setInterval(() => {
                     setMinimized(prev => !prev);
-                }, 5 * 60 * 1000);
+                }, 2 * 60 * 1000);
             }
         } else {
             if (intervalRef.current) {

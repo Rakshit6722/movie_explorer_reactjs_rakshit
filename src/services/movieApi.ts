@@ -42,3 +42,21 @@ export const getMoviesForHomePage = async (pageCount: number) => {
         throw err
     }
 }
+
+export const getMovieDetails = async (id: number): Promise<any> => {
+    try{
+        const response = await apiConnector(
+            "GET",
+            `${BASE_URL}/${id}`,
+            null,
+            null,
+            null,
+            null
+        )
+
+        return response
+    }catch(err: any){
+        console.error("API Error:", err.response ? err.response.data : err.message);
+        throw err
+    }
+}

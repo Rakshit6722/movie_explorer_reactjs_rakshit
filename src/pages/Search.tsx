@@ -1,127 +1,177 @@
-import React, { Component } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import SearchHeader from '../components/search/SearchHeader';
 import { getMovieByPageApi } from '../services/movieApi';
-import WithRouter from '../components/hoc/WithRouter';
+import { useNavigate, useLocation } from 'react-router-dom';
 import MoviesGrid from '../components/common/MoviesGrid/MoviesGrid';
 import Placeholder from '../components/common/Placeholder';
+import { Movie } from '../types/type';
 
-export class Search extends Component<any, any> {
-  state = {
-    searchTerm: '',
-    selectedGenre: 'All',
-    movies: [],
-    totalPages: 0,
-  };
+function Search() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const mainRef = useRef<HTMLDivElement>(null);
+  
+  const searchParams = new URLSearchParams(location.search);
+  const urlPage = parseInt(searchParams.get('pageCount') || '1');
+  const urlSearch = searchParams.get('query') || '';
+  const urlGenre = searchParams.get('genre') || 'All';
 
-  mainRef = React.createRef<HTMLDivElement>();
+  const [searchTerm, setSearchTerm] = useState<string>(urlSearch);
+  const [selectedGenre, setSelectedGenre] = useState<string>(urlGenre);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(urlPage);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  searchParams = new URLSearchParams(window.location.search);
-  initialPage = parseInt(this.searchParams.get('pageCount') || '1');
-
-  componentDidMount(): void {
-    if (this.state.searchTerm) {
-      this.fetchSearchResults(this.initialPage, null, this.state.searchTerm);
-    }
-
-    if(this.mainRef.current) {
-      this.mainRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
-  onSearchChange = (event: React.ChangeEvent<HTMLInputElement> | React.SyntheticEvent, value: string | null = null) => {
-    const searchTerm = value ?? (event.target && 'value' in event.target ? event.target.value : '');
-    this.setState({ searchTerm }, () => {
-      if (searchTerm.trim() !== '') {
-        this.debouncedFetchSearchResults(1, this.state.selectedGenre === 'All' ? null : this.state.selectedGenre, searchTerm);
-        const newSearchParams = new URLSearchParams(window.location.search);
-        newSearchParams.set('pageCount', '1');
-        this.props.navigate(`${window.location.pathname}?${newSearchParams.toString()}`);
-      } else {
-        this.props.navigate(`${window.location.pathname}`);
-      }
-    });
-  };
-
-  setSelectedGenre = (genre: string) => {
-    this.setState({ selectedGenre: genre }, () => {
-      if (this.state.searchTerm.trim() !== '') {
-        this.debouncedFetchSearchResults(1, genre === 'All' ? null : genre, this.state.searchTerm);
-        const newSearchParams = new URLSearchParams(window.location.search);
-        newSearchParams.set('pageCount', '1');
-        this.props.navigate(`${window.location.pathname}?${newSearchParams.toString()}`);
-      }
-    });
-  };
-
-  fetchSearchResults = async (page: number, genre: string | null = null, searchTerm: string) => {
-    const response = await getMovieByPageApi(page, genre, searchTerm);
-    if (response) {
-      this.setState({ movies: response?.data });
-      this.setState({ totalPages: response?.totalPages });
-    }
-    console.log('Search results:', response);
-  };
-
-  handlePageChange = (page: number) => {
-    if (this.state.searchTerm === '') return;
-    if (this.state.selectedGenre === 'All') {
-      this.debouncedFetchSearchResults(page, null, this.state.searchTerm);
-    } else {
-      this.debouncedFetchSearchResults(page, this.state.selectedGenre, this.state.searchTerm);
-    }
-  };
-
-  debounce = (callback: Function, delay: number) => {
-    let timeoutId: NodeJS.Timeout | null = null;
+  const debounce = useCallback((func: Function, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
     return (...args: any[]) => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      timeoutId = setTimeout(() => {
-        callback(...args);
-      }, delay);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
     };
-  };
+  }, []);
+  
+  
+  const fetchSearchResults = useCallback(async (
+    page: number, 
+    genre: string | null = null, 
+    searchTerm: string
+  ) => {
+    if (!searchTerm.trim()) return;
+    
+    setIsLoading(true);
+    try {
+      const response = await getMovieByPageApi(
+        page, 
+        genre === 'All' ? null : genre, 
+        searchTerm
+      );
+      
+      if (response) {
+        setMovies(response?.data || []);
+        setTotalPages(response?.totalPages || 0);
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      setMovies([]);
+      setTotalPages(0);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+  
 
-  debouncedFetchSearchResults = this.debounce((page: number, genre: string | null, searchTerm: string) => {
-    this.fetchSearchResults(page, genre, searchTerm);
-  }, 1000);
+  const debouncedSearch = useCallback(
+    debounce((page: number, genre: string, term: string) => {
+      fetchSearchResults(page, genre, term);
+    }, 500),
+    [fetchSearchResults, debounce]
+  );
+  
+  const updateUrlParams = useCallback((
+    term: string, 
+    genre: string, 
+    page: number
+  ) => {
+    const params = new URLSearchParams();
+    if (term) params.set('query', term);
+    if (genre !== 'All') params.set('genre', genre);
+    params.set('pageCount', page.toString());
+    
+    navigate(`${window.location.pathname}?${params.toString()}`, { replace: true });
+  }, [navigate]);
+  
+  const handleSearchChange = useCallback((
+    event: React.ChangeEvent<HTMLInputElement> | React.SyntheticEvent, 
+    value: string | null = null
+  ) => {
+    const term = value ?? (event.target && 'value' in event.target ? event.target.value : '');
+    setSearchTerm(term);
+    
+    if (term.trim()) {
+      setCurrentPage(1);
+      updateUrlParams(term, selectedGenre, 1);
+      debouncedSearch(1, selectedGenre, term);
+    } else {
+      navigate(window.location.pathname);
+      setMovies([]);
+    }
+  }, [navigate, selectedGenre, debouncedSearch, updateUrlParams]);
+  
+  const handleGenreChange = useCallback((genre: string) => {
+    if (genre === selectedGenre) return;
+    
+    setSelectedGenre(genre);
+    setCurrentPage(1);
+    
+    if (searchTerm.trim()) {
+      updateUrlParams(searchTerm, genre, 1);
+      debouncedSearch(1, genre, searchTerm);
+    }
+  }, [searchTerm, selectedGenre, debouncedSearch, updateUrlParams]);
+  
 
-  render() {
-    const { searchTerm, selectedGenre, movies } = this.state;
+  const handlePageChange = useCallback((page: number) => {
+    if (page === currentPage || !searchTerm.trim()) return;
+    
+    setCurrentPage(page);
+    updateUrlParams(searchTerm, selectedGenre, page);
+    fetchSearchResults(page, selectedGenre === 'All' ? null : selectedGenre, searchTerm);
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage, searchTerm, selectedGenre, fetchSearchResults, updateUrlParams]);
+  
 
-    return (
-      <div ref={this.mainRef} className="min-h-screen flex flex-col">
-        <div className="pt-4 px-6">
-          <SearchHeader
-            setSelectedGenre={this.setSelectedGenre}
-            selectedGenre={selectedGenre}
-            searchTerm={searchTerm}
-            onSearchChange={this.onSearchChange}
-          />
-        </div>
-        <div className="flex-grow px-6 pb-5">
-          {searchTerm.trim() === '' ? (
-            <div className="flex items-center justify-center h-[60vh]">
-              <Placeholder />
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold">
-                Search Results for: <span className="font-bold">{searchTerm}</span>
-              </h2>
-              <MoviesGrid
-                type={"genre"}
-                onChange={this.handlePageChange}
-                movieList={movies}
-                totalPages={this.state.totalPages}
-              />
-            </div>
-          )}
-        </div>
+  useEffect(() => {
+    if (urlSearch) {
+      fetchSearchResults(urlPage, urlGenre === 'All' ? null : urlGenre, urlSearch);
+    }
+    
+    if (mainRef.current) {
+      mainRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, []);
+
+  return (
+    <div ref={mainRef} className="min-h-screen flex flex-col">
+      <div className="pt-4 px-6">
+        <SearchHeader
+          setSelectedGenre={handleGenreChange}
+          selectedGenre={selectedGenre}
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+        />
       </div>
-    );
-  }
+      
+      <div className="flex-grow px-6 pb-5">
+        {searchTerm.trim() === '' ? (
+          <div className="flex items-center justify-center h-[60vh]">
+            <Placeholder />
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <h2 className="text-2xl font-semibold">
+              Search Results for: <span className="font-bold">{searchTerm}</span>
+              {selectedGenre !== 'All' && (
+                <span className="ml-2 text-gray-400">
+                  in <span className="text-white font-medium">{selectedGenre}</span>
+                </span>
+              )}
+            </h2>
+            
+            <MoviesGrid
+              movieList={movies}
+              onChange={handlePageChange}
+              totalPages={totalPages}
+              currentPage={currentPage}
+              type={'searcha'}
+              isLoading={isLoading}
+            />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
-export default WithRouter(Search);
+export default Search;

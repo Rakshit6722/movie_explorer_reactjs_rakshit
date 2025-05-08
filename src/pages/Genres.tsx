@@ -1,78 +1,79 @@
 import React, { useEffect, useRef, useState } from 'react';
 import GenreToolbar from '../components/genre/GenreToolbar';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
+import { useDispatch } from 'react-redux';
 import MoviesGrid from '../components/common/MoviesGrid/MoviesGrid';
 import Footer from '../components/common/Footer';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Movie } from '../types/type';
-import { setLoading } from '../redux/slices/movieSlice';
 import { getMovieByPageApi } from '../services/movieApi';
 import { motion } from 'framer-motion';
 
 function Genres() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const searchParams = new URLSearchParams(window.location.search);
-    
+    const location = useLocation();
     const mainRef = useRef<HTMLDivElement>(null);
-
+    
+    const searchParams = new URLSearchParams(location.search);
+    const urlGenre = searchParams.get('genre') || 'All';
+    const urlPage = parseInt(searchParams.get('pageCount') || '1');
+    
     const [pageMovies, setPageMovies] = useState<Movie[]>([]);
-    const [selectedGenre, setSelectedGenre] = useState<string>('All');
+    const [selectedGenre, setSelectedGenre] = useState<string>(urlGenre);
+    const [currentPage, setCurrentPage] = useState<number>(urlPage);
     const [totalPages, setTotalPages] = useState<number>(0);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const initialPage = parseInt(searchParams.get('pageCount') || '1');
-
-    // useEffect(() => {
-    //     if (mainRef.current) {
-    //         mainRef.current.scrollIntoView({ behavior: 'smooth' });
-    //     }
-    //     fetchPageData(initialPage, selectedGenre); 
-    // }, []); 
+    
 
     useEffect(() => {
-        // if (selectedGenre === 'All' && initialPage === 1) return;
-        fetchPageData(1, selectedGenre);
-        const newSearchParams = new URLSearchParams(window.location.search);
-        newSearchParams.set('pageCount', '1');
-        navigate(`${window.location.pathname}?${newSearchParams.toString()}`);
+        window.scrollTo(0, 0);
+        fetchPageData(urlPage, urlGenre);
+    }, []);
+    
 
+    const setSelectedGenreMovies = (genre: string) => {
+        if (genre === selectedGenre) return;
+    
+        setSelectedGenre(genre);
+        setCurrentPage(1);
+        updateUrlParams(genre, 1);
+        fetchPageData(1, genre);
+  
         if (mainRef.current) {
             mainRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [selectedGenre, navigate]); 
-
-    const setSelectedGenreMovies = (genre: string) => {
-        setSelectedGenre(genre);
+    };
+    
+  
+    const updateUrlParams = (genre: string, page: number) => {
+        const newParams = new URLSearchParams();
+        newParams.set('genre', genre);
+        newParams.set('pageCount', page.toString());
+        navigate(`${window.location.pathname}?${newParams.toString()}`, { replace: true });
     };
 
-    const fetchPageData = async (page: number, genre: string = 'All') => {
-        console.log(`Fetching page ${page} data for genre: ${selectedGenre}`)
-
-        if (selectedGenre !== 'All') {
-            genre = selectedGenre;
-        }
-
+    const fetchPageData = async (page: number, genre: string = 'All') => {        
         try {
-
             setIsLoading(true);
-            const response = await getMovieByPageApi(page, genre);
-
-            setPageMovies(response?.data);
-            setTotalPages(response?.totalPages);
-            console.log('Tot')
+            const response = await getMovieByPageApi(page, genre === 'All' ? '' : genre);
+            
+            setPageMovies(response?.data || []);
+            setTotalPages(response?.totalPages || 0);
         } catch (err) {
             console.error("Error fetching page data:", err);
             setPageMovies([]);
         } finally {
-
             setIsLoading(false);
         }
     };
 
     const handlePageChange = (page: number) => {
-        fetchPageData(page);
+        if (page === currentPage) return;
+        setCurrentPage(page)
+        updateUrlParams(selectedGenre, page);
+        fetchPageData(page, selectedGenre);
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     return (
@@ -102,7 +103,9 @@ function Genres() {
                         movieList={pageMovies}
                         onChange={handlePageChange}
                         totalPages={totalPages}
+                        currentPage={currentPage}
                         type={'genre'}
+                        isLoading={isLoading}
                     />
                 </div>
             </div>

@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import React, { lazy, Suspense, useEffect } from 'react'
+import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import MovieDashboard from './pages/MovieDashboard'
@@ -11,8 +11,19 @@ const Genres = lazy(() => import('./pages/Genres'))
 const Profile = lazy(() => import('./pages/Profile'))
 const MovieDetail = lazy(() => import('./pages/MovieDetail'))
 const Subscription = lazy(() => import('./pages/Subscription'))
+const SubscriptionSuccess = lazy(() => import('./pages/SubscriptionSuccess'))
+
 
 const App = () => {
+
+  const location = useLocation()
+  const navigate = useNavigate()
+  
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    console.log('Query Params:', queryParams.toString());
+  },[location])
+
   return (
     <div>
       <Routes>
@@ -53,6 +64,11 @@ const App = () => {
           <Route path='subscription' element={
             <Suspense fallback={<LoadingFallback />}>
               <Subscription />
+            </Suspense>
+          } />
+          <Route path='subscription-success' element={
+            <Suspense fallback={<LoadingFallback />}>
+              <SubscriptionSuccess />
             </Suspense>
           } />
           <Route path='*' element={<div>404 Not Found</div>} />
