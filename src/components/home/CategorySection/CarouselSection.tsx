@@ -18,20 +18,24 @@ function CarouselSection({ type, heading }: CarouselSectionProps) {
     const movieList: Movie[] = React.useMemo(() => {
         switch (type) {
             case 'Trending':
-                return movies.filter((movie: any) => parseInt(movie.rating) > 7.5).sort((a: any, b: any) => b.rating - a.rating).slice(0, 10);
+                return movies.filter((movie: any) => parseInt(movie.rating) > 7.5).sort((a: any, b: any) => b.rating - a.rating).slice(0, 30);
             case 'NewRelease':
-                return movies.filter((movie: any) => parseInt(movie.release_year) > 2015).sort((a: any, b: any) => b.release_year - a.release_year).slice(0, 10);
+                return movies.filter((movie: any) => parseInt(movie.release_year) > 2015).sort((a: any, b: any) => b.release_year - a.release_year).slice(0, 30);
             case 'FanFavourite':
-                return movies.filter((movie: any) => movie.rating > 8.0).sort((a: any, b: any) => b.rating - a.rating).slice(0, 10);
+                return movies.filter((movie: any) => parseInt(movie.rating) > 7.5).sort((a: any, b: any) => b.rating - a.rating);
+            case 'Action':
+                return movies.filter((movie: any) => movie.genre === 'Action').sort((a: any, b: any) => b.rating - a.rating).slice(0, 30);
+            case 'Horror':
+                return movies.filter((movie: any) => movie.genre === 'Horror').sort((a: any, b: any) => b.rating - a.rating).slice(0, 30)
             default:
                 return movies;
         }
     }, [type, movies]);
     
     return (
-        <div className='flex flex-col '>
-            <div className='group cursor-pointer flex items-center space-x-2 lg:space-x-4 font-sans tracking-wide mb-4'>
-                <p className='font-anton text-gray-300 tracking-wide text-3xl lg:text-4xl'>{heading}</p>
+        <div className='flex flex-col z-20'>
+            <div className='group cursor-pointer flex items-center space-x-2 lg:space-x-4 font-sans tracking-wide'>
+                <p className='font-anton text-gray-300 tracking-wide text-3xl lg:text-3xl'>{heading}</p>
                 <NavLink to={type === 'Mood' ? '/moods' : '/genres'}>
                     <div className="relative flex items-center italic space-x-1 lg:space-x-1 cursor-pointer overflow-hidden group">
                         <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-[#f02c49] lg:ml-2 transition-all duration-300 group-hover:w-[85%]"></span>

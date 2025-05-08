@@ -1,29 +1,25 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Skeleton, Box } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import CarouselSection from './CarouselSection';
 import MainCarousel from '../MainCarousel';
-import { getMovieByPageApi, getMoviesForHomePage } from '../../../services/movieApi';
-import WithRouter from '../../hoc/WithRouter';
+import MoodFeaturePromo from '../MoodSection/MoodFeaturePromo';
+import MidCarousel from './MidCarouselSection';
+import { getMoviesForHomePage } from '../../../services/movieApi';
 import { setLoading, setMovies } from '../../../redux/slices/movieSlice';
-import { Skeleton, Box } from '@mui/material';
-import { connect } from 'react-redux';
 
-export class Index extends Component<any, any> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      hasScrolled: false,
-      isFading: false,
-      loading: true, // Track loading state
-    };
-  }
+const Index = () => {
+  const loading = useSelector((state: any) => state.movie.loading);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  componentDidMount() {
-    this.fetchHomeMovies();
-    window.addEventListener('scroll', this.handleScroll);
-    
-    // Add the keyframe animation to the document
+  useEffect(() => {
+    fetchHomeMovies();
+
     const style = document.createElement('style');
-    style.textContent = `
+    style.innerHTML = `
       @keyframes flicker {
         0% { opacity: 1 }
         50% { opacity: 0.55 }
@@ -32,93 +28,65 @@ export class Index extends Component<any, any> {
         80% { opacity: 0.85 }
         100% { opacity: 1 }
       }
-      
       .flicker-effect {
         animation: flicker 2s infinite ease-in-out;
       }
     `;
     document.head.appendChild(style);
-  }
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.handleScroll);
-  }
-
-  fetchHomeMovies = async () => {
-    this.props.dispatch(setLoading(true));
-    this.setState({ loading: true });
+  const fetchHomeMovies = async () => {
+    dispatch(setLoading(true));
     try {
       const data = await getMoviesForHomePage(10);
-      if (data) {
-        this.props.dispatch(setMovies(data));
-      }
+      if (data) dispatch(setMovies(data));
     } catch (err: any) {
       console.log(err.message);
     } finally {
-      this.props.dispatch(setLoading(false));
-      this.setState({ loading: false });
-    }
-  }
-
-  handleScroll = () => {
-    const scrollTop = window.scrollY;
-    if (scrollTop > 320 && !this.state.hasScrolled) {
-      this.setState({ isFading: true });
-      setTimeout(() => {
-        this.setState({ hasScrolled: true, isFading: false });
-      }, 500);
-    } else if (scrollTop <= 300 && this.state.hasScrolled) {
-      this.setState({ hasScrolled: false });
+      dispatch(setLoading(false));
     }
   };
 
-  // Carousel skeleton loading component with flickering effect
-  renderCarouselSkeleton = () => (
+  const renderCarouselSkeleton = () => (
     <Box className="w-full flicker-effect">
-      <Skeleton 
-        variant="rectangular" 
-        animation="wave" 
-        width="100%" 
-        height={500} 
-        sx={{ 
-          bgcolor: 'rgba(255, 255, 255, 0.06)', // Very subtle brightness increase
-          borderRadius: '8px',
-        }} 
+      <Skeleton
+        variant="rectangular"
+        animation="wave"
+        width="100%"
+        height={500}
+        sx={{ bgcolor: 'rgba(255, 255, 255, 0.06)', borderRadius: '8px' }}
       />
     </Box>
   );
 
-  // Movie card skeleton loading component with flickering effect
-  renderMovieCardsSkeleton = () => (
-    <Box className="w-full px-4 py-6">
+  const renderMovieCardsSkeleton = () => (
+    <Box className="w-full my-12">
       <Skeleton
         variant="text"
         width={200}
         height={32}
         animation="wave"
-        sx={{ 
-          bgcolor: 'rgba(255, 255, 255, 0.06)', // Very subtle brightness increase
-          mb: 3,
-        }}
+        sx={{ bgcolor: 'rgba(255, 255, 255, 0.06)', mb: 3 }}
         className="flicker-effect"
       />
-
-      <Box className="flex gap-3 overflow-x-hidden">
-        {[...Array(6)].map((_, index) => (
-          <Box 
-            key={index} 
-            sx={{ minWidth: '180px' }}
+      <Box className="flex gap-4 overflow-x-hidden">
+        {[...Array(10)].map((_, index) => (
+          <Box
+            key={index}
             className="flicker-effect"
-            style={{ animationDelay: `${index * 0.1}s` }} // Staggered effect
+            style={{ animationDelay: `${index * 0.1}s`, minWidth: '180px' }}
           >
             <Skeleton
               variant="rectangular"
-              animation="wave"
               width={180}
               height={270}
-              sx={{ 
-                bgcolor: 'rgba(255, 255, 255, 0.08)', // Very subtle brightness increase
-                borderRadius: '8px', 
+              animation="wave"
+              sx={{
+                bgcolor: 'rgba(255, 255, 255, 0.08)',
+                borderRadius: '8px',
                 mb: 1,
               }}
             />
@@ -142,46 +110,50 @@ export class Index extends Component<any, any> {
     </Box>
   );
 
-  render() {
-    const { hasScrolled, isFading, loading } = this.state;
+  return (
+    <div ref={containerRef} className="relative w-full min-h-screen bg-black text-white">
+      <div className="fixed top-4 right-4 z-50">
+        <button
+          onClick={() => navigate('/subscription')}
+          className="px-6 py-2 bg-gradient-to-r from-[#e23145] to-[#c41f33] text-white rounded-lg font-anton tracking-wider transition hover:opacity-80"
+        >
+          Subscribe
+        </button>
+      </div>
 
-    return (
-      <>
-        <div className='flex relative flex-col gap-4'>
-          <div className={`w-full lg:h-[500px] 2xl:h-[515px] transition-all duration-700 ease-in-out ${hasScrolled ? 'bg-black' : ''}`}>
-            {loading ? (
-              // Show flickering shimmer effect for the main carousel
-              this.renderCarouselSkeleton()
-            ) : (
-              !hasScrolled && (
-                <div className={`transition-opacity duration-500 ${isFading ? 'opacity-0' : 'opacity-100'}`}>
-                  <MainCarousel />
-                </div>
-              )
-            )}
+      <section className="w-full">
+        {loading ? (
+          renderCarouselSkeleton()
+        ) : (
+          <div className="">
+            <MoodFeaturePromo />
+            <MainCarousel />
           </div>
+        )}
+      </section>
 
-          {loading ? (
-            // Show flickering shimmer effect for all carousel sections
-            <>
-              {this.renderMovieCardsSkeleton()}
-              {this.renderMovieCardsSkeleton()}
-              {this.renderMovieCardsSkeleton()}
-              {this.renderMovieCardsSkeleton()}
-            </>
-          ) : (
-            // Show actual content when loaded
-            <>
-              <CarouselSection type={'Trending'} heading={'Top Trending'} />
-              <CarouselSection type={'NewRelease'} heading={'New Release'} />
-              <CarouselSection type={'FanFavourite'} heading={'Fan Favourite'} />
-              <CarouselSection type={'Mood'} heading='Find By Mood' />
-            </>
-          )}
-        </div>
-      </>
-    );
-  }
-}
 
-export default WithRouter(Index);
+      <section className="w-full flex flex-col">
+        {loading ? (
+          <>
+            {renderMovieCardsSkeleton()}
+            {renderMovieCardsSkeleton()}
+            {renderMovieCardsSkeleton()}
+          </>
+        ) : (
+          <>
+            <CarouselSection type="Trending" heading="Top Trending" />
+            <CarouselSection type="NewRelease" heading="New Release" />
+            <CarouselSection type="FanFavourite" heading="Fan Favourite" />
+            <MidCarousel type="MidCarousel" />
+            <CarouselSection type="Mood" heading="Find By Mood" />
+            <CarouselSection type="Action" heading="Action Packed" />
+            <CarouselSection type="Horror" heading="Horror Nights" />
+          </>
+        )}
+      </section>
+    </div>
+  );
+};
+
+export default Index;

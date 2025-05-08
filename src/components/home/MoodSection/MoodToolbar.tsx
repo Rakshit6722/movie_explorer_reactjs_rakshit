@@ -26,7 +26,7 @@ function MoodToolbar() {
   }  
 
   return (
-    <div className="flex items-center font-anton tracking-wide space-x-3 overflow-x-auto scrollbar-hide py-3 px-1 mb-2">
+    <div className="flex items-center font-anton tracking-wide space-x-3 overflow-x-auto scrollbar-hide py-1 ">
       {moodList.map((mood: string) => (
         <button
           key={mood}

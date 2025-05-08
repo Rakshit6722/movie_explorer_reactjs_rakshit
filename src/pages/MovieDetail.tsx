@@ -130,15 +130,6 @@ class MovieDetail extends Component<any, any> {
             );
         }
 
-        const API_BASE = 'https://movie-explorer-rorakshaykat2003-movie.onrender.com';
-    
-        const posterUrl = movie.poster_url ? 
-            `${API_BASE}${movie.poster_url.startsWith('/') ? '' : '/'}${movie.poster_url}` : 
-            `${API_BASE}/placeholder-poster.jpg`;
-            
-        const bannerUrl = movie.banner_url ? 
-            `${API_BASE}${movie.banner_url.startsWith('/') ? '' : '/'}${movie.banner_url}` : 
-            (movie.poster_url ? posterUrl : `${API_BASE}/placeholder-banner.jpg`);
 
         return (
             <div ref={this.mainRef} className="flex flex-col bg-[#0f0f0f]">
@@ -147,7 +138,7 @@ class MovieDetail extends Component<any, any> {
                   
                     <div className="absolute inset-0 z-0">
                         <img
-                            src={bannerUrl}
+                            src={movie?.banner_url}
                             alt={movie.title}
                             className="w-full h-full object-cover"
                             loading="lazy"
@@ -165,7 +156,7 @@ class MovieDetail extends Component<any, any> {
                                             rounded-lg shadow-2xl overflow-hidden border border-gray-800 
                                             transform translate-y-8 md:translate-y-16 transition-transform hover:scale-105">
                                     <img
-                                        src={posterUrl}
+                                        src={movie?.poster_url}
                                         alt={movie.title}
                                         className="w-full h-full object-cover"
                                         loading="lazy"
@@ -274,7 +265,7 @@ class MovieDetail extends Component<any, any> {
                                         <div key={index} className="flex items-center gap-3 group cursor-pointer">
                                             <div className="w-16 h-24 md:w-24 md:h-36 bg-gray-800 rounded-md flex-shrink-0 overflow-hidden">
                                                 <img
-                                                    src={movie.poster_url ? `${API_BASE}${movie.poster_url}` : `${API_BASE}/placeholder-poster.jpg`}
+                                                    src={movie.poster_url}
                                                     alt={movie.title}
                                                     loading="lazy"
                                                     className="w-full h-full object-cover"

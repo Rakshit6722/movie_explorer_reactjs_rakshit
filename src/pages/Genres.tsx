@@ -24,15 +24,15 @@ function Genres() {
 
     const initialPage = parseInt(searchParams.get('pageCount') || '1');
 
-    useEffect(() => {
-        if (mainRef.current) {
-            mainRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-        fetchPageData(initialPage, selectedGenre); 
-    }, []); 
+    // useEffect(() => {
+    //     if (mainRef.current) {
+    //         mainRef.current.scrollIntoView({ behavior: 'smooth' });
+    //     }
+    //     fetchPageData(initialPage, selectedGenre); 
+    // }, []); 
 
     useEffect(() => {
-        if (selectedGenre === 'All' && initialPage === 1) return;
+        // if (selectedGenre === 'All' && initialPage === 1) return;
         fetchPageData(1, selectedGenre);
         const newSearchParams = new URLSearchParams(window.location.search);
         newSearchParams.set('pageCount', '1');

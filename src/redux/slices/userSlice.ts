@@ -27,8 +27,11 @@ const userSlice = createSlice({
         setError: (state, action) => {
             state.error = action.payload;
         },
+        setIsLoggedIn: (state, action) => {
+            state.isLoggedIn = action.payload;
+        }
     },
 })
 
-export const { setUser, setToken, resetUser, setError, resetToken } = userSlice.actions;
+export const { setUser, setToken, resetUser, setError, resetToken, setIsLoggedIn } = userSlice.actions;
 export default userSlice.reducer;

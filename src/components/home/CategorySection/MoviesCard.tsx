@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Movie } from '../../../types/type';
 import { useNavigate } from 'react-router-dom';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 
 type MoviesCardProps = {
     movie: Movie;
     index?: number;
-    type?: 'standard' | 'trending';
+    type?: 'standard' | 'trending'
 };
 
 function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
@@ -35,7 +36,7 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
     };
 
     useEffect(() => {
-        setImageUrl(`https://movie-explorer-rorakshaykat2003-movie.onrender.com//${movie.poster_url}`);
+        setImageUrl(movie.poster_url || '');
     }, [movie.poster_url]);
 
     useEffect(() => {
@@ -67,27 +68,53 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
         };
     }, []);
 
+    
+    const renderPlanIcon = () => {
+        if (!movie?.plan || movie.plan === 'basic') return null;
+        
+        const iconColor = movie.plan === 'gold' 
+            ? 'text-amber-400' 
+            : 'text-slate-300';
+        
+        const bgColor = movie.plan === 'gold' 
+            ? 'bg-black/70 border border-amber-500/40' 
+            : 'bg-black/70 border border-slate-400/40';
+        
+        return (
+            <div className={`absolute top-2 right-2 ${bgColor} px-2 py-1 rounded-md z-20 group-hover:opacity-0 transition-opacity flex items-center gap-1`}>
+                <WorkspacePremiumIcon className={`${iconColor}`} sx={{ fontSize: 16 }} />
+                {movie.plan === 'gold' && (
+                    <span className="text-xs font-medium text-amber-400">PRO</span>
+                )}
+            </div>
+        );
+    };
+
     return (
         <div
-            className={`relative w-[140px] h-[230px] md:w-[180px] md:h-[290px] group transition-all duration-300 ${
+            className={`relative w-[140px] h-[230px] md:w-[180px] md:h-[260px] group transition-all duration-300 ${
                 isMobile ? '' : 'hover:scale-105 hover:z-10'
             }`}
             onClick={() => isMobile && setShowDetails(!showDetails)} 
         >
-            <div className="absolute inset-0 rounded-xl overflow-hidden shadow-lg group-hover:shadow-2xl">
+            {renderPlanIcon()}
+            
+            <div className="absolute inset-0 rounded-md overflow-hidden shadow-lg group-hover:shadow-2xl">
                 <img
                     src={imageUrl}
                     alt={movie.title}
                     className="w-full h-full object-cover"
                     loading="lazy"
                 />
-                <div className="absolute top-2 right-2 bg-black/70 text-yellow-400 px-2 py-1 rounded-md text-sm font-bold">
+
+                <div className="absolute top-2 left-2 bg-black/70 text-yellow-400 px-2 py-1 rounded-md text-sm font-bold">
                     ★ {formatRating(movie.rating)}
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black to-transparent opacity-90"></div>
             </div>
+            
             <div
-                className={`absolute inset-0 bg-black/70 rounded-xl p-4 flex flex-col justify-between ${
+                className={`absolute inset-0 bg-black/70 rounded-md p-4 flex flex-col justify-between ${
                     isMobile
                         ? showDetails
                             ? 'opacity-100'
@@ -117,7 +144,13 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
 
                 <button
                     onClick={() => navigate(`/movie?id=${movie.id}`)}
-                    className="mt-auto w-full bg-[#f02c49] hover:bg-[#f02c49c5] hover:text-black text-white py-2 text-sm rounded-md transition-colors"
+                    className={`mt-auto w-full py-2 text-sm rounded-md transition-colors ${
+                        movie?.plan === 'basic' 
+                            ? 'bg-[#f02c49] hover:bg-[#f02c49c5] hover:text-black text-white'
+                            : movie?.plan === 'gold'
+                                ? 'bg-amber-500 hover:bg-amber-400 text-black'
+                                : 'bg-slate-300 hover:bg-slate-200 text-black'
+                    }`}
                 >
                     More Info
                 </button>

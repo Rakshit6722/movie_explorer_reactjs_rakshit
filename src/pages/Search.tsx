@@ -13,12 +13,18 @@ export class Search extends Component<any, any> {
     totalPages: 0,
   };
 
+  mainRef = React.createRef<HTMLDivElement>();
+
   searchParams = new URLSearchParams(window.location.search);
   initialPage = parseInt(this.searchParams.get('pageCount') || '1');
 
   componentDidMount(): void {
     if (this.state.searchTerm) {
       this.fetchSearchResults(this.initialPage, null, this.state.searchTerm);
+    }
+
+    if(this.mainRef.current) {
+      this.mainRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }
 
@@ -85,7 +91,7 @@ export class Search extends Component<any, any> {
     const { searchTerm, selectedGenre, movies } = this.state;
 
     return (
-      <div className="min-h-screen flex flex-col">
+      <div ref={this.mainRef} className="min-h-screen flex flex-col">
         <div className="pt-4 px-6">
           <SearchHeader
             setSelectedGenre={this.setSelectedGenre}

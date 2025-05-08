@@ -10,6 +10,7 @@ const MoodMain = lazy(() => import('./pages/MoodMain'))
 const Genres = lazy(() => import('./pages/Genres'))
 const Profile = lazy(() => import('./pages/Profile'))
 const MovieDetail = lazy(() => import('./pages/MovieDetail'))
+const Subscription = lazy(() => import('./pages/Subscription'))
 
 const App = () => {
   return (
@@ -47,6 +48,11 @@ const App = () => {
           <Route path='search' element={
             <Suspense fallback={<LoadingFallback />}>
               <Search />
+            </Suspense>
+          } />
+          <Route path='subscription' element={
+            <Suspense fallback={<LoadingFallback />}>
+              <Subscription />
             </Suspense>
           } />
           <Route path='*' element={<div>404 Not Found</div>} />

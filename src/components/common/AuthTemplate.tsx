@@ -5,12 +5,13 @@ import { Button, Card, CircularProgress, TextField, Typography } from '@mui/mate
 import { NavLink } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { loginApi, registerApi } from '../../services/api';
+import { loginApi, registerApi, userNotificationApi } from '../../services/api';
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify';
 import WithRouter from '../hoc/WithRouter';
 import SaveIcon from '@mui/icons-material/Save';
 import { resetToken, resetUser, setToken, setUser } from '../../redux/slices/userSlice';
+import { requestForToken } from '../../utils/fcm';
 
 type AuthTemplateProps = {
     type: 'login' | 'register',
@@ -177,6 +178,14 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                     this.props.dispatch(setToken(response?.data?.token))
                     localStorage.setItem("token", response?.data?.token)
                     this.props.navigate('/')
+                    const fcmToken = await requestForToken()
+                    if(fcmToken){
+                        console.log("fcmToken", fcmToken)
+                        await userNotificationApi({
+                            device_token: fcmToken,
+                            notifications_enabled: true
+                        })
+                    }
                     toast.success('Login Successfull')
                 }
             } catch (err: any) {

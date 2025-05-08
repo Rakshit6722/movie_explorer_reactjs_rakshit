@@ -2,147 +2,129 @@ import React, { Component } from 'react';
 import { Movie } from '../../types/type';
 
 type Props = {
-    movie: Movie
+  movie: Movie;
 };
 
 type State = {
-    coverUrl: string;
-    bannerUrl: string;
-}
+  coverUrl: string;
+  bannerUrl: string;
+};
 
 export class MainCarouselMovieCard extends Component<Props> {
+  state = {
+    coverUrl: this.props.movie.poster_url,
+    bannerUrl: this.props.movie.banner_url,
+  };
 
-    state = {
-        coverUrl: `https://movie-explorer-rorakshaykat2003-movie.onrender.com${this.props.movie.poster_url}`,
-        bannerUrl: `https://movie-explorer-rorakshaykat2003-movie.onrender.com${this.props.movie.banner_url}`
-    }
+  componentDidMount(): void {
+    const preloadPoster = new Image();
+    preloadPoster.src = this.state.coverUrl;
 
-    componentDidMount(): void {
-        const preloadPoster = new Image()
-        preloadPoster.src = this.state.coverUrl
+    const preloadBanner = new Image();
+    preloadBanner.src = this.state.bannerUrl;
 
-        const preloadBanner = new Image()
-        preloadBanner.src = this.state.bannerUrl
-        
-        document.addEventListener('visibilitychange', this.handleVisibilityChange);
-    }
-    
-    handleVisibilityChange = () => {
-        if (document.visibilityState === 'visible') {
-            const images = document.querySelectorAll('img')
-            images.forEach((img) => {
-                const src = img.getAttribute('src')
-                if (src) {
-                    img.setAttribute('src', src)
-                }
-            })
+    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+  }
+
+  handleVisibilityChange = () => {
+    if (document.visibilityState === 'visible') {
+      const images = document.querySelectorAll('img');
+      images.forEach((img) => {
+        const src = img.getAttribute('src');
+        if (src) {
+          img.setAttribute('src', src);
         }
+      });
     }
+  };
+
+  componentWillUnmount(): void {
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+  }
+
+  render() {
+    const { coverUrl, bannerUrl } = this.state;
+    const { title, genre, release_year, rating, director, id, description } = this.props.movie;
+
+    return (
+      <div className="relative group w-full h-[400px] md:h-[500px] lg:h-[600px] xl:h-[650px] 2xl:h-[700px] overflow-hidden bg-black">
+        <img
+          src={bannerUrl}
+          alt={title}
+          className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-500 group-hover:scale-105"
+          loading="eager"
+          fetchPriority="high"
+        />
+
     
-    componentWillUnmount(): void {
-        document.removeEventListener('visibilitychange', this.handleVisibilityChange);
-    }
+        <div
+          className="absolute"
+          style={{
+            top: '-4%',
+            left: '-4%',
+            width: '108%',
+            height: '108%',
+            zIndex: 10,
+            pointerEvents: 'none',
+          }}
+        >
+          <div className="w-full h-full bg-gradient-to-t from-black via-black/60 to-transparent transition-opacity duration-500 group-hover:via-black/70" />
+        </div>
 
+        <div className="absolute bottom-20 left-6 md:left-16 z-20 flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
+          <div className="hidden md:block w-[160px] h-[230px] rounded-lg overflow-hidden shadow-md">
+            <img
+              src={coverUrl}
+              alt={title}
+              className="w-full h-full object-cover"
+            />
+          </div>
 
-    render() {
+          <div className="text-white hidden md:block max-w-2xl">
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight opacity-65 leading-tight transition-transform duration-300 group-hover:translate-x-1">
+              {title}
+            </h2>
 
-        const { coverUrl, bannerUrl } = this.state
-
-        return (
-            <div className="relative group w-full h-[400px] md:h-[580px] overflow-hidden shadow-lg bg-black">
-
-                <div className="w-full h-full relative">
-                    <img
-                        src={bannerUrl}
-                        alt={this.props.movie.title}
-                        loading='eager'
-                        fetchPriority='high'
-                        className="w-[100%] h-[100%] object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out"
-                    />
-
-
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-90"></div>
-                </div>
-
-
-                <div className="absolute bottom-6 left-16 flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6 z-10">
-
-                    <div className="w-[130px] h-[190px] hidden md:block md:w-[160px] md:h-[230px] rounded-lg overflow-hidden shadow-lg">
-                        <img
-                            src={coverUrl}
-                            alt={this.props.movie.title}
-                            className="w-full h-full object-cover"
-                        />
-                    </div>
-
-
-                    <div className="text-white space-y-5 max-w-xl">
-                        <h2 className="text-3xl md:text-5xl font-bold mb-3 
-                                       bg-gradient-to-r from-white via-gray-200 to-gray-400 font-anton tracking-wider opacity-70 text-transparent bg-clip-text 
-                                       drop-shadow-sm">
-                            {this.props.movie.title}
-                        </h2>
-
-
-                        <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-2">
-                            <div className="flex flex-wrap gap-2">
-                                <span className="px-3 py-1 bg-red-900/30 border border-red-800/40 
-                                                    text-red-100 rounded-full text-xs font-medium">
-                                    {this.props.movie.genre}
-                                </span>
-
-                                <span className="px-3 py-1 bg-gray-900/50 border border-gray-700/40 
-                                               text-gray-300 rounded-full text-xs font-medium">
-                                    {this.props.movie.release_year}
-                                </span>
-                            </div>
-
-
-                            <div className="flex items-center">
-                                <div className="flex items-center justify-center bg-yellow-500/20 border border-yellow-500/30 
-                                                rounded-lg px-3 py-1.5 text-yellow-400">
-                                    <svg className="w-4 h-4 mr-1 fill-current" viewBox="0 0 24 24">
-                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                                    </svg>
-                                    <span className="font-bold text-sm">
-                                        {this.props.movie.rating.toFixed(1)}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/*                       
-                        <p className="text-gray-300 text-sm leading-relaxed line-clamp-2 md:line-clamp-3 max-w-lg">
-                            {this.props.movie.description || "No description available for this title."}
-                        </p> */}
-
-
-                        <p className="text-gray-400 text-sm">
-                            Director: <span className="text-gray-300 font-medium">{this.props.movie.director}</span>
-                        </p>
-
-
-                        <div className="flex flex-wrap gap-4 mt-6 pt-2">
-                            <button
-                                onClick={() => window.location.href = `/movie?id=${this.props.movie.id}`}
-                                className="bg-[#f02c49] hover:bg-[#d0213b] transition-all px-7 py-3 
-                                           rounded-full text-sm font-semibold flex items-center
-                                           shadow-lg shadow-[#f02c49]/20 transform hover:scale-105">
-                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                More Info
-                            </button>
-
-
-                        </div>
-                    </div>
-                </div>
+            <p className="text-gray-300 text-sm italic mb-4">
+              {description.split(' ').slice(0, 20).join(' ')}...
+            </p>
+            <div className="flex flex-wrap items-center space-x-4 text-sm text-gray-300 mb-4">
+              {genre && (
+                <span className="bg-white/10 border border-white/20 px-3 py-1 rounded-full">
+                  {genre}
+                </span>
+              )}
+              {release_year && (
+                <span className="text-gray-400">{release_year}</span>
+              )}
+              {rating && (
+                <span className="flex items-center space-x-1">
+                  <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 15l-5.878 3.09L5.6 12.18.727 7.91l6.412-.59L10 2l2.86 5.32 6.413.59-4.874 4.27 1.478 5.91z" />
+                  </svg>
+                  <span>{rating.toFixed(1)}</span>
+                </span>
+              )}
             </div>
-        );
-    }
+
+            <p className="text-gray-300 text-sm mb-4">
+              Directed by: <span className="font-medium text-gray-100">{director}</span>
+            </p>
+
+            <button
+              onClick={() => window.location.href = `/movie?id=${id}`}
+              className="mt-2 px-6 py-2 rounded-full bg-gradient-to-r from-[#e23145] to-[#c41f33] text-white text-sm font-semibold hover:opacity-90 hover:scale-105 transition-all flex items-center space-x-2"
+            >
+              <span>Explore Movie</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default MainCarouselMovieCard;

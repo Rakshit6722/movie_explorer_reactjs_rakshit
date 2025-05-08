@@ -35,9 +35,9 @@ function MoodCarousel() {
         bored: 'lg:bg-gradient-to-b from-gray-400 to-black',
     };
     return (
-        <div className={`relative ${moodBackgroundColors[selectedMood]} py-6 lg:pl-8 rounded-l-xl lg:rounded-l-xl shadow-lg`}>
+        <div className={`relative ${moodBackgroundColors[selectedMood]} py-6 lg:pl-8 rounded-l-xl lg:rounded-l-md shadow-lg`}>
         
-            <div className="absolute inset-0 bg-black/30 rounded-l-xl z-0"></div>
+            <div className="absolute inset-0 bg-black/30 rounded-l-md z-0"></div>
 
             <div className="relative z-10">
                 <MoodToolbar />

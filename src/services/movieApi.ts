@@ -17,7 +17,6 @@ export const getMovieByPageApi = async (page?: number, genre?: string | null, se
             search: search ? search : null
         })
         if (response?.status === 200) {
-            console.log("response", response.data)
             return {data:response.data?.movies, totalPages: response.data?.total_pages}
         } else {
             throw new Error("Failed to fetch movies")

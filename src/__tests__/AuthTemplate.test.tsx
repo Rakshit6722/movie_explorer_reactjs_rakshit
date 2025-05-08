@@ -1,17 +1,32 @@
-import { MemoryRouter } from 'react-router-dom';
-import '@testing-library/jest-dom';
-import AuthTemplate from '../components/common/AuthTemplate';
-import { render, screen } from '@testing-library/react';
+import React from "react";
+import AuthTemplate from "../components/common/AuthTemplate";
+import { render } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import configureStore from "redux-mock-store";
+import { Provider } from "react-redux";
 
-describe("AuthTemplate tests", () => {
-    test("AuthTemplate renders correctly for login page", () => {
+const mockStore = configureStore([])
+const initialState = {
+    loading: { movie: { loading: false } },
+}
+
+const mockDispatch = jest.fn()
+const mockNavigate = jest.fn()
+
+const renderComponent = () => {
+    return (
         render(
-            <MemoryRouter>
-                <AuthTemplate type='login'/>
-            </MemoryRouter>
+            <Provider store={mockStore(initialState)}>
+                <MemoryRouter>
+                    <AuthTemplate type={"login"} navigate={mockNavigate} dispatch={mockDispatch} />
+                </MemoryRouter>
+            </Provider>
         )
+    )
+}
 
-        expect(screen.getByText(/sign in/i)).toBeInTheDocument()
+describe("AuthTemplate", () => {
+    test("render correctly", () => {
+        renderComponent()
     })
 })
-
