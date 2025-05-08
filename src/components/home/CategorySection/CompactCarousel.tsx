@@ -10,7 +10,7 @@ type MidCarouselProps = {
   type?: string;
 }
 
-const MidCarousel = ({ movieList, type }: MidCarouselProps) => {
+const CompactCarousel = ({ movieList, type }: MidCarouselProps) => {
   const navigate = useNavigate();
 
   const settings = {
@@ -100,4 +100,4 @@ const MidCarousel = ({ movieList, type }: MidCarouselProps) => {
   );
 };
 
-export default MidCarousel;
+export default CompactCarousel;

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import CarouselSection from './CarouselSection';
 import MainCarousel from '../MainCarousel';
 import MoodFeaturePromo from '../MoodSection/MoodFeaturePromo';
-import MidCarousel from './MidCarouselSection';
+import MidCarousel from './CompactCarouselSection';
 import { getMoviesForHomePage } from '../../../services/movieApi';
 import { setLoading, setMovies } from '../../../redux/slices/movieSlice';
 import SubscribeButton from './SubscribeButton';

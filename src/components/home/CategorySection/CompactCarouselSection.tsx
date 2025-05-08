@@ -1,13 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import MidCarousel from './MidCarousel'
+import MidCarousel from './CompactCarousel'
 
 
 type MidCarouselProps = {
     type: string
 }
 
-const MidCarouselSection = ({type}: MidCarouselProps) => {
+const CompactCarouselSection = ({type}: MidCarouselProps) => {
 
     const movieList = useSelector((state: any) => state.movie.movies)
 
@@ -18,4 +18,4 @@ const MidCarouselSection = ({type}: MidCarouselProps) => {
   )
 }
 
-export default MidCarouselSection
+export default CompactCarouselSection
