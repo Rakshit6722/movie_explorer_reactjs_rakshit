@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Skeleton, Box } from '@mui/material';
+import { Skeleton, Box, stepButtonClasses } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CarouselSection from './CarouselSection';
@@ -9,6 +9,10 @@ import MidCarousel from './CompactCarouselSection';
 import { getMoviesForHomePage } from '../../../services/movieApi';
 import { setLoading, setMovies } from '../../../redux/slices/movieSlice';
 import SubscribeButton from './SubscribeButton';
+import { motion } from 'framer-motion';
+import { getSubscriptionDetailsApi } from '../../../services/api';
+import { setCurrentPlan } from '../../../redux/slices/userSlice';
+import { current } from '@reduxjs/toolkit';
 
 const Index = () => {
   const loading = useSelector((state: any) => state.movie.loading);
@@ -18,9 +22,11 @@ const Index = () => {
 
   useEffect(() => {
     fetchHomeMovies();
-    if(containerRef.current) {
+    currentFetchPlan()
+    if (containerRef.current) {
       containerRef.current.scrollIntoView({ behavior: 'smooth' });
     }
+
     const style = document.createElement('style');
     style.innerHTML = `
       @keyframes flicker {
@@ -36,12 +42,14 @@ const Index = () => {
       }
     `;
     document.head.appendChild(style);
+
     return () => {
       document.head.removeChild(style);
     };
   }, []);
 
   const fetchHomeMovies = async () => {
+    
     dispatch(setLoading(true));
     try {
       const data = await getMoviesForHomePage(10);
@@ -52,6 +60,17 @@ const Index = () => {
       dispatch(setLoading(false));
     }
   };
+
+  const currentFetchPlan = async () => {
+    try{
+      const response = await getSubscriptionDetailsApi()
+      if(response){
+        dispatch(setCurrentPlan(response?.plan))
+      }
+    }catch(err: any){
+      console.log(err.message);
+    }
+  }
 
   const renderCarouselSkeleton = () => (
     <Box className="w-full flicker-effect">
@@ -113,23 +132,30 @@ const Index = () => {
     </Box>
   );
 
+  const scrollAnimProps = {
+    initial: { opacity: 0, y: 30 },
+    whileInView: { opacity: 1, y: 0 },
+    transition: { duration: 0.5 },
+    viewport: { once: true, amount: 0.1 },
+    style: { zIndex: 1, willChange: 'transform, opacity' },
+  };
+
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-black text-white">
-     <SubscribeButton/>
+      {!loading && <SubscribeButton />}
 
-      <section className="w-full">
+      <section className="w-full mb-12">
         {loading ? (
           renderCarouselSkeleton()
         ) : (
-          <div className="">
+          <motion.div {...scrollAnimProps}>
             <MoodFeaturePromo />
             <MainCarousel />
-          </div>
+          </motion.div>
         )}
       </section>
 
-
-      <section className="w-full flex flex-col">
+      <section className="w-full flex flex-col mb-12">
         {loading ? (
           <>
             {renderMovieCardsSkeleton()}
@@ -138,13 +164,27 @@ const Index = () => {
           </>
         ) : (
           <>
-            <CarouselSection type="Trending" heading="Top Trending" />
-            <CarouselSection type="NewRelease" heading="New Release" />
-            <CarouselSection type="FanFavourite" heading="Fan Favourite" />
-            <MidCarousel type="MidCarousel" />
-            <CarouselSection type="Mood" heading="Find By Mood" />
-            <CarouselSection type="Action" heading="Action Packed" />
-            <CarouselSection type="Horror" heading="Horror Nights" />
+            <motion.div {...scrollAnimProps} className="mb-8">
+              <CarouselSection type="Trending" heading="Top Trending" />
+            </motion.div>
+            <motion.div {...scrollAnimProps} className="mb-8">
+              <CarouselSection type="NewRelease" heading="New Release" />
+            </motion.div>
+            <motion.div {...scrollAnimProps} className="mb-8">
+              <CarouselSection type="FanFavourite" heading="Fan Favourite" />
+            </motion.div>
+            <motion.div {...scrollAnimProps} className="mb-8">
+              <MidCarousel type="MidCarousel" />
+            </motion.div>
+            <motion.div {...scrollAnimProps} className="mb-8">
+              <CarouselSection type="Mood" heading="Find By Mood" />
+            </motion.div>
+            <motion.div {...scrollAnimProps} className="mb-8">
+              <CarouselSection type="Action" heading="Action Packed" />
+            </motion.div>
+            <motion.div {...scrollAnimProps} className="mb-8">
+              <CarouselSection type="Horror" heading="Horror Nights" />
+            </motion.div>
           </>
         )}
       </section>
