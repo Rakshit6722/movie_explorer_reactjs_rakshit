@@ -10,7 +10,7 @@ import Cookies from 'js-cookie'
 import { toast } from 'react-toastify';
 import WithRouter from '../hoc/WithRouter';
 import SaveIcon from '@mui/icons-material/Save';
-import { resetToken, resetUser, setToken, setUser } from '../../redux/slices/userSlice';
+import { resetToken, resetUser, setCurrentPlan, setToken, setUser } from '../../redux/slices/userSlice';
 import { requestForToken } from '../../utils/fcm';
 
 type AuthTemplateProps = {
@@ -176,7 +176,9 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                 if (response?.status === 200) {
                     this.props.dispatch(setUser(response?.data?.user))
                     this.props.dispatch(setToken(response?.data?.token))
+                    this.props.dispatch(setCurrentPlan(response?.data?.user?.active_plan))
                     localStorage.setItem("token", response?.data?.token)
+                    localStorage.setItem("plan", response?.data?.user?.active_plan)
                     this.props.navigate('/')
                     const fcmToken = await requestForToken()
                     if(fcmToken){
