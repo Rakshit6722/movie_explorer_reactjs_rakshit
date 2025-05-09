@@ -8,11 +8,15 @@ const userSlice = createSlice({
         token: null,
         loading: false,
         error: null,
+        currentPlan: null,
     },
     reducers: {
         setUser: (state, action) => {
             state.userInfo = action.payload;
             state.isLoggedIn = true;
+        },
+        setCurrentPlan: (state, action) => {
+            state.currentPlan = action.payload;
         },
         setToken: (state, action) => {
             state.token = action.payload;
@@ -33,5 +37,5 @@ const userSlice = createSlice({
     },
 })
 
-export const { setUser, setToken, resetUser, setError, resetToken, setIsLoggedIn } = userSlice.actions;
+export const { setUser, setToken, resetUser, setError, resetToken, setIsLoggedIn, setCurrentPlan } = userSlice.actions;
 export default userSlice.reducer;
