@@ -144,7 +144,7 @@ function Profile() {
             <div className="container max-w-6xl mx-auto px-4 py-12 sm:py-16">
               <div className="flex flex-col md:flex-row md:items-center justify-between">
                 <div>
-                  <h1 className="font-anton text-4xl md:text-5xl tracking-wide mb-2">Hello, {userInfo.name}</h1>
+                  <h1 className="font-anton text-4xl md:text-5xl tracking-wide mb-2">Hello, {userInfo.first_name}</h1>
                   <p className="text-gray-300 text-lg">Welcome to your profile</p>
                 </div>
                 
