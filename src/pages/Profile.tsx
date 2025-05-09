@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import WithReduxState from '../components/hoc/WithReduxState';
-import { Button } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Button, Divider } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
@@ -9,6 +9,16 @@ import CreateMovieForm from '../components/adminControl/createMovie/CreateMovieF
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import CircularProgress from '@mui/material/CircularProgress';
+import { plans } from './Subscription';
+import { getSubscriptionDetailsApi } from '../services/api';
+import { setCurrentPlan, setcurrentUserPlan } from '../redux/slices/userSlice';
+import { current } from '@reduxjs/toolkit';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -20,34 +30,95 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 function Profile() {
+
+  const dispatch = useDispatch()
+
   const userInfo = useSelector((state: any) => state.user.userInfo);
   const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
+  const currentUserPlan = useSelector((state: any) => state.user.currentPlan);
   
-  // For subscription dialog and current plan
   const [open, setOpen] = React.useState(false);
   const [subscriptionOpen, setSubscriptionOpen] = React.useState(false);
-  const [currentPlan, setCurrentPlan] = React.useState('basic'); 
+  // const [currentUserPlan, setCurrentUserPlan] = React.useState(localStorage.getItem("plan") === 'null' ? 'basic' : localStorage.getItem("plan")); 
+  const [planInfo, setPlanInfo] = useState(plans.find((plan) => plan.key === currentUserPlan) || plans[0]);
+  const [subscriptionDetails, setSubscriptionDetails] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    fetchPlanDetails();
+    setPlanInfo(plans.find((plan) => plan.key === currentUserPlan) || plans[0]);
+  }, [currentUserPlan]);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
-  
+
+  const fetchPlanDetails = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await getSubscriptionDetailsApi();
+      console.log("Subscription details:", response);
+      
+      if (response?.plan) {
+        dispatch(setCurrentPlan(response.plan));
+        localStorage.setItem("plan", response.plan);
+        setSubscriptionDetails(response);
+      }
+    } catch (err: any) {
+      console.log(err);
+      setError("Couldn't fetch subscription details");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleSubscriptionOpen = () => {
-    setSubscriptionOpen(true);
-  };
-  
-  const handleSubscriptionClose = () => {
-    setSubscriptionOpen(false);
+  const formatDateForDisplay = (dateString: string) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
   };
 
-  const handleUpgradePlan = (plan: string) => {
-    setCurrentPlan(plan);
-    setSubscriptionOpen(false);
-    // In real implementation, this would connect to payment processing
+  const getStatusDisplay = () => {
+    if (!subscriptionDetails?.status) return "Not Active";
+    
+    const status = subscriptionDetails.status.toLowerCase();
+    if (status === "active") return "Active";
+    if (status === "inactive") return "Inactive";
+    if (status === "trial") return "Trial";
+    if (status === "cancelled") return "Cancelled";
+    return subscriptionDetails.status;
+  };
+
+  const getDaysRemaining = () => {
+    if (!subscriptionDetails?.expiry_date) return null;
+    
+    const expiry = new Date(subscriptionDetails.expiry_date);
+    const today = new Date();
+    
+    const diffTime = expiry.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return diffDays > 0 ? diffDays : 0;
+  };
+
+  const getStatusClass = () => {
+    if (!subscriptionDetails?.status) return "bg-gray-500/20 text-gray-400";
+    
+    const status = subscriptionDetails.status.toLowerCase();
+    if (status === "active") return "bg-green-500/20 text-green-400";
+    if (status === "inactive") return "bg-gray-500/20 text-gray-400";
+    if (status === "trial") return "bg-blue-500/20 text-blue-400";
+    if (status === "cancelled") return "bg-red-500/20 text-red-400";
+    return "bg-gray-500/20 text-gray-400";
   };
 
   if (!isLoggedIn) {
@@ -66,125 +137,266 @@ function Profile() {
 
   return (
     <>
-      <div className="bg-gradient-to-b from-[#e23145] via-black/60 to-transparent text-white p-8 min-h-screen">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="font-anton text-4xl tracking-wide mb-8 text-center">Profile</h2>
+      <div className="bg-gradient-to-b from-[#e23145] via-black/60 to-transparent text-white min-h-screen">
 
-          <div className="bg-white/10 rounded-lg shadow-lg p-6 mb-8">
-            <h3 className="font-anton text-2xl tracking-wide mb-2">
-              Hi, {userInfo.name}
-            </h3>
-            {userInfo.role === 'supervisor' && (
-              <p className="font-sans text-gray-400 mb-4">({userInfo.role})</p>
-            )}
+        <div className="relative overflow-hidden">
+          <div className="bg-gradient-to-r from-black/80 to-black/40 backdrop-blur-sm">
+            <div className="container max-w-6xl mx-auto px-4 py-12 sm:py-16">
+              <div className="flex flex-col md:flex-row md:items-center justify-between">
+                <div>
+                  <h1 className="font-anton text-4xl md:text-5xl tracking-wide mb-2">Hello, {userInfo.name}</h1>
+                  <p className="text-gray-300 text-lg">Welcome to your profile</p>
+                </div>
+                
+                {subscriptionDetails && currentUserPlan !== 'basic' && (
+                  <div className="mt-4 md:mt-0 flex items-center">
+                    <div className={`px-4 py-2 rounded-full ${getStatusClass()} flex items-center`}>
+                      <span className="w-2 h-2 rounded-full bg-current mr-2"></span>
+                      <span>{getStatusDisplay()}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
+        </div>
+        
+        <div className="container max-w-6xl mx-auto px-4 py-6 pb-20">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
 
-          {/* Subscription Plan Section - OK to add with dummy data as requested */}
-          <div className="space-y-6 font-sans bg-white/10 rounded-lg shadow-lg p-6 mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-anton text-2xl tracking-wide">Current Plan</h3>
+            <div className="md:col-span-4 space-y-6">
+        
+              <div className="bg-white/10 rounded-xl shadow-lg overflow-hidden backdrop-blur-sm border border-white/10">
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <PersonIcon className="text-[#e23145]" />
+                    <h3 className="font-anton text-2xl tracking-wide">Account Details</h3>
+                  </div>
+                  
+                  <div className="space-y-5 mt-6">
+                    <div className="space-y-1">
+                      <div className="flex items-center text-gray-400 text-sm">
+                        <EmailIcon fontSize="small" className="mr-2" />
+                        <span>EMAIL</span>
+                      </div>
+                      <p className="text-white text-lg pl-7">{userInfo.email}</p>
+                    </div>
+                    
+                    <div className="space-y-1">
+                      <div className="flex items-center text-gray-400 text-sm">
+                        <AdminPanelSettingsIcon fontSize="small" className="mr-2" />
+                        <span>ACCOUNT TYPE</span>
+                      </div>
+                      <p className="text-white text-lg capitalize pl-7">{userInfo.role}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+    
+              {userInfo.role === 'supervisor' && (
+                <div className="bg-white/10 rounded-xl shadow-lg overflow-hidden backdrop-blur-sm border border-white/10">
+                  <div className="p-6">
+                    <h3 className="font-anton text-2xl tracking-wide mb-5">Admin Controls</h3>
+                    <div className="grid grid-cols-1 gap-3">
+                      <Button 
+                        sx={{ 
+                          color: "#fff", 
+                          backgroundColor: "rgba(226, 49, 69, 0.7)",
+                          "&:hover": {
+                            backgroundColor: "rgba(226, 49, 69, 0.9)",
+                          }
+                        }} 
+                        fullWidth 
+                        variant="contained" 
+                        onClick={handleClickOpen}
+                      >
+                        Add Movie
+                      </Button>
+                      <Button 
+                        sx={{ 
+                          color: "#fff", 
+                          border: "1px solid rgba(255, 255, 255, 0.3)", 
+                          "&:hover": {
+                            backgroundColor: "rgba(255, 255, 255, 0.1)",
+                          }
+                        }} 
+                        fullWidth 
+                        variant="outlined"
+                      >
+                        Edit Movie
+                      </Button>
+                      <Button 
+                        sx={{ 
+                          color: "#fff", 
+                          border: "1px solid rgba(255, 255, 255, 0.3)",
+                          "&:hover": {
+                            backgroundColor: "rgba(255, 255, 255, 0.1)",
+                          }
+                        }} 
+                        fullWidth 
+                        variant="outlined"
+                      >
+                        Delete Movie
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             
-            <div className={`p-4 rounded-lg border ${
-              currentPlan === 'basic' ? 'border-gray-600 bg-gray-800/30' :
-              currentPlan === 'gold' ? 'border-amber-500/30 bg-gradient-to-br from-amber-900/30 to-amber-700/20' :
-              'border-slate-400/30 bg-gradient-to-br from-slate-700/30 to-slate-600/20'
-            }`}>
-              <div className="flex items-center gap-3 mb-3">
-                <WorkspacePremiumIcon className={
-                  currentPlan === 'basic' ? 'text-gray-400' :
-                  currentPlan === 'gold' ? 'text-amber-400' :
-                  'text-slate-300'
-                } />
-                <h4 className="font-bold text-xl">
-                  {currentPlan === 'basic' ? 'Basic' :
-                   currentPlan === 'gold' ? 'Gold' :
-                   'Platinum'} Plan
-                </h4>
-              </div>
-              
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-sm text-gray-300">
-                  {currentPlan === 'basic' ? 'Free access with limited content' :
-                   currentPlan === 'gold' ? 'Premium content with no ads' :
-                   'Ultimate access with all features'}
-                </span>
-                <span className="font-bold">
-                  {currentPlan === 'basic' ? 'FREE' :
-                   currentPlan === 'gold' ? '$9.99/mo' :
-                   '$14.99/mo'}
-                </span>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div className="flex items-center gap-1">
-                  {currentPlan !== 'basic' ? 
-                    <CheckCircleIcon fontSize="small" className="text-green-500" /> : 
-                    <CancelIcon fontSize="small" className="text-gray-500" />
-                  }
-                  <span className={currentPlan !== 'basic' ? '' : 'text-gray-500'}>
-                    Ad-free viewing
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {currentPlan !== 'basic' ? 
-                    <CheckCircleIcon fontSize="small" className="text-green-500" /> : 
-                    <CancelIcon fontSize="small" className="text-gray-500" />
-                  }
-                  <span className={currentPlan !== 'basic' ? '' : 'text-gray-500'}>
-                    Premium content
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {currentPlan === 'platinum' ? 
-                    <CheckCircleIcon fontSize="small" className="text-green-500" /> : 
-                    <CancelIcon fontSize="small" className="text-gray-500" />
-                  }
-                  <span className={currentPlan === 'platinum' ? '' : 'text-gray-500'}>
-                    Early releases
-                  </span>
-                </div>
-                <div className="flex items-center gap-1">
-                  {currentPlan === 'platinum' ? 
-                    <CheckCircleIcon fontSize="small" className="text-green-500" /> : 
-                    <CancelIcon fontSize="small" className="text-gray-500" />
-                  }
-                  <span className={currentPlan === 'platinum' ? '' : 'text-gray-500'}>
-                    Offline viewing
-                  </span>
+    
+            <div className="md:col-span-8">
+              <div className="bg-white/10 rounded-xl shadow-lg overflow-hidden backdrop-blur-sm border border-white/10">
+                <div className="p-6">
+                  <div className="flex items-center gap-3 mb-6">
+                    <WorkspacePremiumIcon className={
+                      currentUserPlan === 'basic' ? 'text-gray-400' :
+                      currentUserPlan === 'gold' ? 'text-amber-400' :
+                      'text-slate-300'
+                    } />
+                    <h3 className="font-anton text-2xl tracking-wide">Subscription Plan</h3>
+                  </div>
+                  
+                  {loading ? (
+                    <div className="flex items-center justify-center py-16">
+                      <CircularProgress size={40} sx={{ color: "#e23145" }} />
+                    </div>
+                  ) : error ? (
+                    <div className="bg-red-900/20 text-red-400 p-4 rounded-lg text-center my-6">
+                      {error}
+                    </div>
+                  ) : (
+                    <div className="space-y-8">
+                      <div className={`p-5 rounded-lg border ${
+                        currentUserPlan === 'basic' ? 'border-gray-600 bg-gray-800/30' :
+                        currentUserPlan === 'gold' ? 'border-amber-500/30 bg-gradient-to-br from-amber-900/20 to-amber-700/10' :
+                        'border-slate-400/30 bg-gradient-to-br from-slate-700/20 to-slate-600/10'
+                      }`}>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                          <div>
+                            <div className="flex items-center">
+                              <h4 className="font-bold text-xl mr-2">
+                                {planInfo.name} Plan
+                              </h4>
+                              <span className={`text-xs px-2 py-0.5 rounded ${
+                                currentUserPlan === 'basic' ? 'bg-gray-700 text-gray-300' :
+                                currentUserPlan === 'gold' ? 'bg-amber-700/50 text-amber-200' :
+                                'bg-slate-700/50 text-slate-200'
+                              }`}>
+                                {currentUserPlan?.toUpperCase()}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-300 mt-1">
+                              {currentUserPlan === 'basic' ? 'Free access with limited content' :
+                               currentUserPlan === 'gold' ? 'Premium content with no ads' :
+                               'Ultimate access with all features'}
+                            </p>
+                          </div>
+                          
+                          <div className="text-right">
+                            <div className="font-bold text-xl">
+                              {planInfo.price === 0 ? 'FREE' : `₹${planInfo.price}`}
+                            </div>
+                            <div className="text-xs text-gray-400">
+                              {planInfo.price > 0 ? 'per month' : ''}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+      
+                      {subscriptionDetails && currentUserPlan !== 'basic' && (
+                        <div>
+                          <h4 className="font-medium mb-3">Subscription Timeline</h4>
+                          <div className="p-4 bg-black/30 rounded-lg">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                              <div>
+                                <div className="flex items-center text-sm mb-1">
+                                  <CalendarTodayIcon fontSize="small" className="mr-2 text-gray-400" />
+                                  <span className="text-gray-400">Start Date</span>
+                                </div>
+                                <div className="text-white pl-7">
+                                  {formatDateForDisplay(subscriptionDetails.created_at)}
+                                </div>
+                              </div>
+                              
+                              <div>
+                                <div className="flex items-center text-sm mb-1">
+                                  <AccessTimeIcon fontSize="small" className="mr-2 text-gray-400" />
+                                  <span className="text-gray-400">Expiration Date</span>
+                                </div>
+                                <div className="text-white pl-7">
+                                  {formatDateForDisplay(subscriptionDetails.expiry_date)}
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {getDaysRemaining() !== null && (
+                              <div className="mt-4 pt-3 border-t border-gray-700">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-gray-400 text-sm">Time Remaining</span>
+                                  <span className={subscriptionDetails.status?.toLowerCase() === "active" 
+                                    ? "text-green-400 font-medium" 
+                                    : "text-gray-400"}>
+                                    {getDaysRemaining()} days
+                                  </span>
+                                </div>
+                                <div className="mt-2 bg-gray-700/50 h-2 rounded-full overflow-hidden">
+                                  <div 
+                                    className={`h-full ${subscriptionDetails.status?.toLowerCase() === "active" ? "bg-green-500" : "bg-gray-500"}`}
+                                    style={{ 
+                                      width: `${Math.min(getDaysRemaining() / 30 * 100, 100)}%` 
+                                    }}
+                                  ></div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                      
+
+                      <div>
+                        <h4 className="font-medium mb-3">Plan Features</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8">
+                          {planInfo.features.map((feature, index) => (
+                            <div key={index} className="flex items-center">
+                              {feature.available ? 
+                                <CheckCircleIcon fontSize="small" className="text-green-500 mr-2 flex-shrink-0" /> : 
+                                <CancelIcon fontSize="small" className="text-gray-500 mr-2 flex-shrink-0" />
+                              }
+                              <span className={`text-sm ${feature.available ? 'text-gray-100' : 'text-gray-500'}`}>
+                                {feature.text}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      
+          
+                      <div>
+                        <button
+                          onClick={() => window.location.href = '/subscription'}
+                          className={`
+                            w-full py-3 rounded-lg text-sm font-medium text-center transition-all
+                            ${currentUserPlan === 'basic' 
+                              ? 'bg-gradient-to-r from-[#e23145] to-[#c41f33] text-white hover:shadow-lg hover:shadow-red-900/30' 
+                              : 'border border-gray-600 text-gray-300 hover:bg-white/5'}
+                          `}
+                        >
+                          {currentUserPlan === 'basic' 
+                            ? 'Upgrade Plan' 
+                            : subscriptionDetails?.status?.toLowerCase() === 'active' 
+                              ? 'Manage Subscription' 
+                              : 'Renew Subscription'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="space-y-6 font-sans bg-white/10 rounded-lg shadow-lg p-6">
-            <div className="flex flex-col">
-              <p className="text-gray-400 text-sm uppercase tracking-wide">Email</p>
-              <p className="text-white text-lg">{userInfo.email}</p>
-            </div>
-
-            <div className="flex flex-col">
-              <p className="text-gray-400 text-sm uppercase tracking-wide">Account Type</p>
-              <p className="text-white text-lg capitalize">{userInfo.role}</p>
-            </div>
-          </div>
-
-          {userInfo.role === 'supervisor' && (
-            <div className="mt-8 bg-white/10 rounded-lg shadow-lg p-6">
-              <h3 className="font-anton text-2xl tracking-wide mb-4">Actions</h3>
-              <div className="flex flex-wrap gap-4">
-                <Button sx={{ color: "#e23145", borderColor: '#e23145' }} variant="outlined" onClick={handleClickOpen}>
-                  Add Movie
-                </Button>
-                <Button sx={{ color: "#e23145", borderColor: '#e23145' }} variant="outlined">
-                  Edit Movie
-                </Button>
-                <Button sx={{ color: "#e23145", borderColor: '#e23145' }} variant="outlined">
-                  Delete Movie
-                </Button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
