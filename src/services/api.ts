@@ -73,11 +73,47 @@ export const addSubscriptioApi = async (plan: string): Promise<any> => {
             `${BASE_URL}/subscriptions`,
             { plan },
             {
-              'accept': 'application/json',
-              'Authorization': `Bearer ${token}`,
+                'accept': 'application/json',
+                'Authorization': `Bearer ${token}`,
             }
-          );
+        );
         return response.data
+    } catch (err: any) {
+        console.log(err)
+        throw err
+    }
+}
+
+export const getSubscriptionDetailsApi = async (): Promise<any> => {
+    const token = localStorage.getItem('token')
+    if (!token) return
+    try {
+        const response = await apiConnector(
+            "GET",
+            `${BASE_URL}/subscriptions`,
+            null,
+            {
+                'Authorization': `Bearer ${token}`,
+                'accept': 'application/json'
+            },
+            null,
+            null
+        );
+        console.log("response", response)
+        return response?.data?.subscriptions
+    } catch (err: any) {
+        console
+    }
+}
+
+
+export const updatePaymentStatus = async (sessionId: string | null): Promise<any> => {
+    try {
+        const response = await apiConnector(
+            'GET',
+            `${BASE_URL}/subscriptions/success?session_id=${sessionId}`,
+        )
+        return response
     } catch (err: any) {
         console.log(err)
         throw err
