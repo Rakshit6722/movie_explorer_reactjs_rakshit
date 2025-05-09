@@ -18,11 +18,11 @@ const App = () => {
 
   const location = useLocation()
   const navigate = useNavigate()
-  
+
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     console.log('Query Params:', queryParams.toString());
-  },[location])
+  }, [location])
 
   return (
     <div>
@@ -66,13 +66,14 @@ const App = () => {
               <Subscription />
             </Suspense>
           } />
-          <Route path='subscription-success' element={
-            <Suspense fallback={<LoadingFallback />}>
-              <SubscriptionSuccess />
-            </Suspense>
-          } />
+
           <Route path='*' element={<div>404 Not Found</div>} />
         </Route>
+        <Route path='subscription-success' element={
+          <Suspense fallback={<LoadingFallback />}>
+            <SubscriptionSuccess />
+          </Suspense>
+        } />
       </Routes>
     </div>
   )
