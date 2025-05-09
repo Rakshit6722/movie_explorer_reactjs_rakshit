@@ -3,48 +3,53 @@ import React, { useState } from 'react';
 import { addSubscriptioApi } from '../services/api';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import { motion } from 'framer-motion';
+import SecurityIcon from '@mui/icons-material/Security';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
-const plans = [
+export const plans = [
   {
     key: 'basic',
     name: 'Basic',
     price: 0,
-    color: 'bg-gray-900',
+    color: 'bg-gradient-to-b from-gray-800 to-gray-900',
+    borderColor: 'border-gray-700',
     features: [
-      { text: 'Access to free movies', available: true },
-      { text: 'Standard Definition (480p)', available: true },
-      { text: 'Watch on 1 device at a time', available: true },
-      { text: 'Ad-free experience', available: false },
-      { text: 'Download for offline viewing', available: false },
-      { text: 'Premium content access', available: false },
+      { text: 'Access to curated free movie collection', available: true },
+      { text: 'Limited movie library access', available: true },
+      { text: 'New content updates monthly', available: true },
+      { text: 'Basic movie information and details', available: true },
+      { text: 'Ad-supported browsing experience', available: true },
     ]
   },
   {
     key: 'gold',
     name: 'Gold',
-    price: 9.99,
-    color: 'bg-gradient-to-br from-yellow-600/10 to-yellow-900/10',
+    price: 199,
+    color: 'bg-gradient-to-b from-amber-900/40 to-yellow-900/30',
+    borderColor: 'border-yellow-700',
     features: [
-      { text: 'Access to free movies', available: true },
-      { text: 'Full HD (1080p)', available: true },
-      { text: 'Watch on 2 devices at a time', available: true },
-      { text: 'Ad-free experience', available: true },
-      { text: 'Download for offline viewing', available: false },
-      { text: 'Premium content access', available: true },
+      { text: 'Full access to all Free & Gold movies', available: true },
+      { text: 'Exclusive Gold-tier movie collection', available: true },
+      { text: 'Ad-free browsing experience', available: true },
+      { text: 'Enhanced movie details and information', available: true },
+      { text: 'Priority access to newly added content', available: true },
     ]
   },
   {
     key: 'platinum',
     name: 'Platinum',
-    price: 14.99,
-    color: 'bg-gradient-to-br from-gray-600/10 to-gray-900/10',
+    price: 499,
+    color: 'bg-gradient-to-b from-gray-700/40 to-gray-900/50',
+    borderColor: 'border-gray-400',
     features: [
-      { text: 'Access to free movies', available: true },
-      { text: '4K Ultra HD + Dolby Atmos', available: true },
-      { text: 'Watch on 4 devices at a time', available: true },
-      { text: 'Ad-free experience', available: true },
-      { text: 'Download for offline viewing', available: true },
-      { text: 'Premium content access', available: true },
+      { text: 'Complete access to entire movie catalog', available: true },
+      { text: 'Premium exclusive releases and collections', available: true },
+      { text: 'Advanced movie information and metadata', available: true },
+      { text: 'Early access to all new releases', available: true },
+      { text: 'Exclusive platinum-only special collections', available: true },
     ]
   },
 ];
@@ -54,24 +59,21 @@ const Subscription = () => {
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [selectedPlan, setSelectedPlan] = useState('');
-  const [showPayment, setShowPayment] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(localStorage.getItem('plan') || 'gold');
 
-  const currentPlan = 'basic';
+  const currentPlan = useSelector((state: RootState) => state.user.currentPlan);
 
   const handlePlanSelection = (planKey: string) => {
     if (planKey === currentPlan) {
       setMessage("You're already subscribed to this plan");
-      setShowPayment(false);
       return;
     }
-    
+
     setSelectedPlan(planKey);
-    setShowPayment(true);
     setMessage('');
-    
+
     setTimeout(() => {
-      document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('payment-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 100);
   };
 
@@ -97,160 +99,239 @@ const Subscription = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white pb-20">
-      <div className="relative py-20 px-6 text-center">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-anton tracking-wide mb-6">
-            Choose Your Perfect Plan
-          </h1>
-          <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
-            Upgrade your viewing experience with premium features and exclusive content
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-black via-black/95 to-black text-white pb-12">
+      <div className="relative pt-16 pb-10 px-4 border-b border-gray-800/40">
+        <div className="max-w-5xl mx-auto text-center">
+          <motion.div
+            className="inline-block mb-4 px-4 py-1.5 rounded-full bg-red-900/20 border border-red-800/30"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="text-xs font-medium uppercase tracking-wider text-red-400">
+              Upgrade your experience
+            </span>
+          </motion.div>
+
+          <motion.h1
+            className="text-3xl md:text-4xl font-bold font-anton tracking-wide mb-3 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            Choose the Perfect Plan for You
+          </motion.h1>
+
+          <motion.p
+            className="text-sm md:text-base text-gray-400 max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            Get access to premium content with our flexible subscription options. Cancel anytime.
+          </motion.p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-6">
+
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
           {plans.map((plan) => (
-            <div 
-              key={plan.key} 
-              className={`rounded-2xl p-6 md:p-8 border ${
-                plan.key === currentPlan 
-                  ? 'border-[#f02c49]' 
-                  : plan.key === 'gold' 
-                  ? 'border-yellow-600/30'
-                  : plan.key === 'platinum'
-                  ? 'border-blue-500/30'
-                  : 'border-gray-700'
-              } ${plan.color} relative h-full`}
+            <div
+              key={plan.key}
+              className={`relative rounded-2xl overflow-hidden transition-all duration-300 ${selectedPlan === plan.key
+                  ? plan.key === 'gold'
+                    ? 'ring-2 ring-yellow-500 shadow-xl shadow-yellow-900/10'
+                    : plan.key === 'platinum'
+                      ? 'ring-2 ring-gray-300 shadow-xl shadow-gray-500/10'
+                      : 'ring-2 ring-red-500'
+                  : 'border border-gray-800 hover:border-gray-700'
+                }`}
             >
-              {plan.key === currentPlan && (
-                <div className="absolute -top-3 left-0 right-0 flex justify-center">
-                  <div className="bg-[#f02c49] text-white text-xs uppercase tracking-wider py-1 px-4 rounded-full font-bold">
-                    Current Plan
-                  </div>
+              {plan.key === 'gold' && (
+                <div className="absolute -top-3 -right-14 w-40 transform rotate-45 bg-yellow-600 text-center py-1 text-xs font-medium text-black">
+                  MOST POPULAR
                 </div>
               )}
-              
 
-              <div className="text-center mb-8 mt-4">
-                <h3 className={`text-2xl font-bold mb-2 ${
-                  plan.key === 'gold' ? 'text-yellow-400' : plan.key === 'platinum' ? 'text-blue-400' : 'text-white'
-                }`}>
-                  {plan.name}
-                </h3>
-                <div className="text-3xl font-bold mb-1">
-                  {plan.price === 0 ? (
-                    <span>Free</span>
-                  ) : (
-                    <>
-                      ${plan.price}
-                      <span className="text-base text-gray-400 font-normal">/month</span>
-                    </>
-                  )}
-                </div>
-                <p className="text-sm text-gray-400">
-                  {plan.key === 'basic' ? 'Limited access' : plan.key === 'gold' ? 'Most popular' : 'Best value'}
-                </p>
-              </div>
+              <div className={`${plan.color} px-7 py-6 relative backdrop-blur-sm`}>
+                {plan.key === currentPlan && (
+                  <span className="absolute top-0 left-0 bg-[#f02c49] text-white text-xs uppercase tracking-wider py-1 px-3 rounded-br-lg font-medium">
+                    Current
+                  </span>
+                )}
+                <div className="flex flex-col mb-2">
+                  <h2 className={`text-xl font-bold ${plan.key === 'gold' ? 'text-yellow-400' :
+                      plan.key === 'platinum' ? 'text-gray-200' : 'text-white'
+                    }`}>
+                    {plan.name}
+                  </h2>
 
-              <div className="space-y-3 mb-8">
-                {plan.features.map((feature, i) => (
-                  <div key={i} className="flex items-start">
-                    {feature.available ? (
-                      <CheckIcon className={`mr-2 mt-0.5 text-sm ${
-                        plan.key === 'gold' ? 'text-yellow-400' : 
-                        plan.key === 'platinum' ? 'text-blue-400' : 'text-green-500'
-                      }`} fontSize="small" />
-                    ) : (
-                      <CloseIcon className="mr-2 mt-0.5 text-sm text-gray-500" fontSize="small" />
-                    )}
-                    <span className={feature.available ? 'text-sm' : 'text-sm text-gray-500'}>
-                      {feature.text}
+                  <div className="flex items-baseline mt-2">
+                    <span className={`text-3xl font-bold ${plan.key === 'gold' ? 'text-yellow-400' :
+                        plan.key === 'platinum' ? 'text-gray-200' : 'text-white'
+                      }`}>
+                      {plan.price === 0 ? 'Free' : `Rs.${plan.price}`}
                     </span>
+                    {plan.price > 0 && (
+                      <span className="text-sm text-gray-400 ml-1">/month</span>
+                    )}
                   </div>
-                ))}
+
+                  <p className="text-xs text-gray-400 mt-2 font-medium">
+                    {plan.key === 'basic' ? 'Essential streaming experience' :
+                      plan.key === 'gold' ? 'Perfect for avid viewers' :
+                        'The ultimate cinematic experience'}
+                  </p>
+                </div>
               </div>
 
-              <button 
-                onClick={() => handlePlanSelection(plan.key)}
-                disabled={loading}
-                className={`w-full py-3 rounded-lg font-semibold text-center transition-all ${
-                  plan.key === currentPlan
-                    ? 'bg-gray-700 text-gray-300 cursor-not-allowed'
-                    : plan.key === 'gold'
-                    ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black hover:opacity-90'
-                    : plan.key === 'platinum'
-                    ? 'bg-gradient-to-r from-blue-400 to-blue-600 text-white hover:opacity-90'
-                    : 'bg-[#f02c49] text-white hover:bg-[#e01c39]'
-                }`}
-              >
-                {plan.key === currentPlan ? 'Current Plan' : `Get ${plan.name}`}
-              </button>
+              <div className="bg-gray-900/50 backdrop-blur-sm px-7 py-6">
+                <div className="space-y-4">
+                  {plan.features.map((feature, i) => (
+                    <div key={i} className="flex items-start">
+                      {feature.available ? (
+                        <CheckIcon className={`mr-3 ${plan.key === 'gold' ? 'text-yellow-400' :
+                            plan.key === 'platinum' ? 'text-gray-300' : 'text-green-500'
+                          }`} style={{ fontSize: '1.1rem' }} />
+                      ) : (
+                        <CloseIcon className="mr-3 text-gray-600" style={{ fontSize: '1.1rem' }} />
+                      )}
+                      <span className={`text-sm ${feature.available ? 'text-gray-200' : 'text-gray-500'}`}>
+                        {feature.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => handlePlanSelection(plan.key)}
+                  disabled={loading || plan.key === currentPlan || plan.key === 'basic'}
+                  className={`w-full mt-8 py-3 rounded-lg font-semibold text-sm transition-all ${loading
+                      ? 'bg-gray-700 cursor-wait'
+                      : plan.key === currentPlan
+                        ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed border border-gray-700'
+                        : plan.key === 'gold'
+                          ? selectedPlan === plan.key
+                            ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black'
+                            : 'bg-transparent border border-yellow-600/70 text-yellow-400 hover:bg-yellow-800/20'
+                          : plan.key === 'platinum'
+                            ? selectedPlan === plan.key
+                              ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white'
+                              : 'bg-transparent border border-gray-500 text-gray-300 hover:bg-gray-700/30'
+                            : selectedPlan === plan.key
+                              ? 'bg-[#f02c49] text-white'
+                              : 'bg-transparent border border-red-700/50 text-red-400 hover:bg-red-900/20'
+                    }`}
+                >
+                  {plan.key === currentPlan ? 'Current Plan' :
+                    selectedPlan === plan.key ? `Selected` : `Choose ${plan.name}`}
+                </button>
+              </div>
             </div>
           ))}
-        </div>
+        </motion.div>
 
-        {message && (
-          <div className="mt-8 text-center">
-            <p className="text-[#f02c49] font-semibold">{message}</p>
-          </div>
-        )}
+
       </div>
 
+      <div id="payment-section" className="max-w-lg mx-auto px-4 py-8">
+        <motion.div
+          className="bg-gradient-to-b from-black/70 to-black/70 backdrop-blur-md rounded-2xl overflow-hidden border border-gray-700/50 shadow-2xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          <div className="px-8 py-6 border-b border-gray-700/50 flex items-center justify-between">
+            <h3 className="text-xl font-semibold text-white">Checkout</h3>
+            <div className="flex items-center">
+              <span className="text-xs font-medium text-gray-400 mr-2">Secure payment</span>
+              <SecurityIcon className="text-gray-400" style={{ fontSize: '1rem' }} />
+            </div>
+          </div>
 
-      {showPayment && (
-        <div id="payment-section" className="max-w-lg mx-auto mt-16 px-4">
-          <div className="bg-gray-800/70 rounded-2xl p-8 shadow-xl border border-gray-700">
-            <h3 className="text-2xl font-bold mb-6 text-center">
-              Payment Details
-            </h3>
-            
-            <div className="bg-black/30 p-4 rounded-lg mb-6">
-              <p className="text-sm text-gray-400 mb-1">Selected Plan</p>
-              <div className="flex justify-between items-center">
-                <p className="font-bold">
-                  {plans.find(p => p.key === selectedPlan)?.name || ''} Plan
-                </p>
-                <p className="font-bold">
-                  ${plans.find(p => p.key === selectedPlan)?.price || 0}/month
-                </p>
+          <div className="px-8 py-6">
+            <div className="bg-gray-900/50 rounded-xl p-5 mb-8 border border-gray-800/80">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center">
+                  <LocalOfferIcon className={`mr-3 ${selectedPlan === 'gold' ? 'text-yellow-500' :
+                      selectedPlan === 'platinum' ? 'text-gray-300' : 'text-red-500'
+                    }`} style={{ fontSize: '1.2rem' }} />
+                  <div>
+                    <h4 className="font-medium">
+                      <span className="text-white">{plans.find(p => p.key === selectedPlan)?.name}</span>
+                      <span className="text-gray-400"> Plan</span>
+                    </h4>
+                    <p className="text-xs text-gray-500">Monthly subscription</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-bold text-white">Rs.{plans.find(p => p.key === selectedPlan)?.price}</div>
+                  <p className="text-xs text-gray-500">per month</p>
+                </div>
+              </div>
+
+              <div className="space-y-2.5 text-sm">
+                <div className="flex justify-between text-gray-400">
+                  <span>Billed monthly</span>
+                  <span className="text-white">${plans.find(p => p.key === selectedPlan)?.price}/mo</span>
+                </div>
+                <div className="flex justify-between text-gray-400">
+                  <span>Tax</span>
+                  <span className="text-white">Included</span>
+                </div>
+                <div className="pt-2 border-t border-gray-800 flex justify-between font-medium">
+                  <span className="text-gray-300">Today's total</span>
+                  <span className="text-white">${plans.find(p => p.key === selectedPlan)?.price}</span>
+                </div>
               </div>
             </div>
-            
-            <form onSubmit={handlePaymentSubmit}>
-              <p className="text-sm text-gray-400 mb-2">Card Information</p>
-              {/* <div className="bg-gray-900 rounded-lg p-4 mb-6">
-                <CardElement 
-                  options={{
-                    style: {
-                      base: {
-                        fontSize: '16px',
-                        color: '#ffffff',
-                        '::placeholder': {
-                          color: '#aab7c4',
-                        },
-                      },
-                    },
-                  }} 
-                />
-              </div> */}
-              
+
+            <form onSubmit={handlePaymentSubmit} className="space-y-6">
               <button
                 type="submit"
-                disabled={!stripe || loading}
-                className="w-full py-3 bg-gradient-to-r from-[#e23145] to-[#c41f33] text-white rounded-lg font-semibold hover:opacity-90 transition"
+                disabled={!stripe || loading || selectedPlan === currentPlan}
+                className={`w-full py-3.5 rounded-lg font-semibold text-center transition-all ${loading
+                    ? 'bg-gray-700 cursor-wait'
+                    : selectedPlan === currentPlan
+                      ? 'bg-gray-700 text-gray-300 cursor-not-allowed'
+                      : selectedPlan === 'gold'
+                        ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black hover:from-yellow-400 hover:to-amber-500'
+                        : selectedPlan === 'platinum'
+                          ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white hover:from-gray-300 hover:to-gray-500'
+                          : 'bg-[#f02c49] text-white hover:bg-[#e01c39]'
+                  }`}
               >
-                {loading ? 'Processing...' : 'Start Subscription'}
+                {loading ? 'Processing...' : `Subscribe Now`}
               </button>
-              
-              <p className="text-xs text-center text-gray-500 mt-4">
-                By subscribing, you agree to our Terms of Service and Privacy Policy.
-              </p>
+
+              {message && (
+                <div className="rounded-lg border border-[#f02c49]/20 bg-[#f02c49]/10 p-4 text-center">
+                  <p className="text-[#f02c49] text-sm font-medium">{message}</p>
+                </div>
+              )}
+
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center">
+                  <div className="h-px bg-gray-800 flex-grow"></div>
+                  <span className="px-4 text-xs font-medium text-gray-500 uppercase">Secure Checkout</span>
+                  <div className="h-px bg-gray-800 flex-grow"></div>
+                </div>
+
+                <div className="text-xs text-center text-gray-500">
+                  <p>By continuing, you agree to our Terms of Use and Privacy Policy.</p>
+                  <p className="mt-1">Your subscription will automatically renew each month until cancelled.</p>
+                </div>
+              </div>
             </form>
           </div>
-        </div>
-      )}
+        </motion.div>
+      </div>
     </div>
   );
 };
