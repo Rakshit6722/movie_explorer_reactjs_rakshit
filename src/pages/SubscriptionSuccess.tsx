@@ -34,7 +34,6 @@ const SubscriptionSuccess = () => {
   }, [])
 
   useEffect(() => {
-    // Parse URL parameters
     const params = new URLSearchParams(location.search);
     const plan = params.get('plan');
     const session_id = params.get('session_id');
@@ -47,6 +46,7 @@ const SubscriptionSuccess = () => {
   const updatePaymentSuccessStatus = async () => {
     try {
       const response = await updatePaymentStatus(paymentIntentId)
+      console.log("Payment status response:", response)
       if (response) {
         dispatch(setCurrentPlan(response?.data?.plan))
         setSubscriptionData({
@@ -128,8 +128,7 @@ const SubscriptionSuccess = () => {
               <h1 className="ml-3 text-white font-anton text-2xl tracking-wide">Payment Successful</h1>
             </div>
           </div>
-          
-          {/* Success content */}
+
           <div className="p-8 text-center">
             <motion.div
               className="mb-6 flex justify-center"

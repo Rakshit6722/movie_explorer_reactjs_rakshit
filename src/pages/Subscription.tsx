@@ -61,6 +61,8 @@ const Subscription = () => {
   const [message, setMessage] = useState('');
   const [selectedPlan, setSelectedPlan] = useState(localStorage.getItem('plan') || 'gold');
 
+
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const currentPlan = useSelector((state: RootState) => state.user.currentPlan);
 
   const handlePlanSelection = (planKey: string) => {
@@ -80,6 +82,12 @@ const Subscription = () => {
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    if (!isLoggedIn) {
+      setMessage('Please log in to subscribe.');
+      setLoading(false);
+      return;
+    }
 
     if (!stripe || !elements) {
       setMessage('Stripe is not loaded.');
@@ -279,7 +287,7 @@ const Subscription = () => {
               <div className="space-y-2.5 text-sm">
                 <div className="flex justify-between text-gray-400">
                   <span>Billed monthly</span>
-                  <span className="text-white">${plans.find(p => p.key === selectedPlan)?.price}/mo</span>
+                  <span className="text-white">Rs.{plans.find(p => p.key === selectedPlan)?.price}/mo</span>
                 </div>
                 <div className="flex justify-between text-gray-400">
                   <span>Tax</span>
@@ -287,7 +295,7 @@ const Subscription = () => {
                 </div>
                 <div className="pt-2 border-t border-gray-800 flex justify-between font-medium">
                   <span className="text-gray-300">Today's total</span>
-                  <span className="text-white">${plans.find(p => p.key === selectedPlan)?.price}</span>
+                  <span className="text-white">Rs.{plans.find(p => p.key === selectedPlan)?.price}</span>
                 </div>
               </div>
             </div>
