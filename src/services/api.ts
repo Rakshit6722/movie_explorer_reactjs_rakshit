@@ -34,6 +34,20 @@ export const registerApi = async (data: { first_name: string, last_name: string,
     }
 }
 
+export const logoutUser = async () => {
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    try {
+        const response = await apiConnector('POST', `${BASE_URL}/logout`, {}, {
+            Authorization: `Bearer ${token}`
+        });
+        return response
+    } catch (err: any) {
+        console.log(err);
+    }
+}
+
 
 export const userNotificationApi = async (data: { device_token: string, notifications_enabled: boolean }) => {
     const localStorageToken = localStorage.getItem('token')
