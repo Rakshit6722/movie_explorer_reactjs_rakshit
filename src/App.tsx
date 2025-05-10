@@ -5,6 +5,7 @@ import Register from './pages/Register'
 import MovieDashboard from './pages/MovieDashboard'
 import Search from './pages/Search'
 import LoadingFallback from './components/common/LoadingFallback'
+import AuthRoute from './components/protectedRoute/AuthRoute'
 const Home = lazy(() => import('./pages/Home'))
 const MoodMain = lazy(() => import('./pages/MoodMain'))
 const Genres = lazy(() => import('./pages/Genres'))
@@ -27,8 +28,16 @@ const App = () => {
   return (
     <div>
       <Routes>
-        <Route path='login' element={<Login />} />
-        <Route path='register' element={<Register />} />
+        <Route path='login' element={
+          <AuthRoute>
+            <Login />
+          </AuthRoute>
+        } />
+        <Route path='register' element={
+          <AuthRoute>
+            <Register />
+          </AuthRoute>
+        } />
         <Route path='/' element={<MovieDashboard />}>
           <Route index element={<Navigate to="/home" />} />
           <Route path='home' element={

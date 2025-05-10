@@ -59,10 +59,10 @@ const Subscription = () => {
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  
+
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const currentPlan = useSelector((state: RootState) => state.user.currentPlan || 'basic'); // Default to basic
-  
+
   const [selectedPlan, setSelectedPlan] = useState(currentPlan !== 'basic' ? currentPlan : 'gold');
 
   const handlePlanSelection = (planKey: string) => {
@@ -70,7 +70,7 @@ const Subscription = () => {
       setMessage("Basic is your default plan");
       return;
     }
-    
+
     if (planKey === currentPlan) {
       setMessage("You're already subscribed to this plan");
       return;
@@ -158,12 +158,12 @@ const Subscription = () => {
             <div
               key={plan.key}
               className={`relative rounded-2xl overflow-hidden transition-all duration-300 ${selectedPlan === plan.key
-                  ? plan.key === 'gold'
-                    ? 'ring-2 ring-yellow-500 shadow-xl shadow-yellow-900/10'
-                    : plan.key === 'platinum'
-                      ? 'ring-2 ring-gray-300 shadow-xl shadow-gray-500/10'
-                      : 'ring-2 ring-red-500'
-                  : 'border border-gray-800 hover:border-gray-700'
+                ? plan.key === 'gold'
+                  ? 'ring-2 ring-yellow-500 shadow-xl shadow-yellow-900/10'
+                  : plan.key === 'platinum'
+                    ? 'ring-2 ring-gray-300 shadow-xl shadow-gray-500/10'
+                    : 'ring-2 ring-red-500'
+                : 'border border-gray-800 hover:border-gray-700'
                 }`}
             >
               {plan.key === 'gold' && (
@@ -180,14 +180,14 @@ const Subscription = () => {
                 )}
                 <div className="flex flex-col mb-2">
                   <h2 className={`text-xl font-bold ${plan.key === 'gold' ? 'text-yellow-400' :
-                      plan.key === 'platinum' ? 'text-gray-200' : 'text-white'
+                    plan.key === 'platinum' ? 'text-gray-200' : 'text-white'
                     }`}>
                     {plan.name}
                   </h2>
 
                   <div className="flex items-baseline mt-2">
                     <span className={`text-3xl font-bold ${plan.key === 'gold' ? 'text-yellow-400' :
-                        plan.key === 'platinum' ? 'text-gray-200' : 'text-white'
+                      plan.key === 'platinum' ? 'text-gray-200' : 'text-white'
                       }`}>
                       {plan.price === 0 ? 'Free' : `Rs.${plan.price}`}
                     </span>
@@ -210,7 +210,7 @@ const Subscription = () => {
                     <div key={i} className="flex items-start">
                       {feature.available ? (
                         <CheckIcon className={`mr-3 ${plan.key === 'gold' ? 'text-yellow-400' :
-                            plan.key === 'platinum' ? 'text-gray-300' : 'text-green-500'
+                          plan.key === 'platinum' ? 'text-gray-300' : 'text-green-500'
                           }`} style={{ fontSize: '1.1rem' }} />
                       ) : (
                         <CloseIcon className="mr-3 text-gray-600" style={{ fontSize: '1.1rem' }} />
@@ -226,31 +226,26 @@ const Subscription = () => {
                   onClick={() => handlePlanSelection(plan.key)}
                   disabled={loading || plan.key === currentPlan || plan.key === 'basic'}
                   className={`w-full mt-8 py-3 rounded-lg font-semibold text-sm transition-all ${loading
-                      ? 'bg-gray-700 cursor-wait'
-                      : plan.key === currentPlan
+                    ? 'bg-gray-700 cursor-wait'
+                    : plan.key === currentPlan
+                      ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed border border-gray-700'
+                      : plan.key === 'basic'
                         ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed border border-gray-700'
-                        : plan.key === 'basic'
-                          ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed border border-gray-700'
-                          : plan.key === 'gold'
+                        : plan.key === 'gold'
+                          ? selectedPlan === plan.key
+                            ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black'
+                            : 'bg-transparent border border-yellow-600/70 text-yellow-400 hover:bg-yellow-800/20'
+                          : plan.key === 'platinum'
                             ? selectedPlan === plan.key
-                              ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black'
-                              : 'bg-transparent border border-yellow-600/70 text-yellow-400 hover:bg-yellow-800/20'
-                            : plan.key === 'platinum'
-                              ? selectedPlan === plan.key
-                                ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white'
-                                : 'bg-transparent border border-gray-500 text-gray-300 hover:bg-gray-700/30'
-                              : selectedPlan === plan.key
-                                ? 'bg-[#f02c49] text-white'
-                                : 'bg-transparent border border-red-700/50 text-red-400 hover:bg-red-900/20'
+                              ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white'
+                              : 'bg-transparent border border-gray-500 text-gray-300 hover:bg-gray-700/30'
+                            : selectedPlan === plan.key
+                              ? 'bg-[#f02c49] text-white'
+                              : 'bg-transparent border border-red-700/50 text-red-400 hover:bg-red-900/20'
                     }`}
                 >
-                  {plan.key === 'basic' 
-                    ? currentPlan === 'basic' ? 'Default Plan' : 'Included Free'
-                    : plan.key === currentPlan 
-                      ? 'Current Plan' 
-                      : selectedPlan === plan.key 
-                        ? `Selected` 
-                        : `Choose ${plan.name}`
+                  {
+                    plan.key === 'basic' ? currentPlan === 'basic' ? 'Default Plan' : 'Included Free' : plan.key === currentPlan ? 'Current Plan' : selectedPlan === plan.key ? `Selected` : `Choose ${plan.name}`
                   }
                 </button>
               </div>
@@ -279,7 +274,7 @@ const Subscription = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center">
                     <LocalOfferIcon className={`mr-3 ${selectedPlan === 'gold' ? 'text-yellow-500' :
-                        selectedPlan === 'platinum' ? 'text-gray-300' : 'text-red-500'
+                      selectedPlan === 'platinum' ? 'text-gray-300' : 'text-red-500'
                       }`} style={{ fontSize: '1.2rem' }} />
                     <div>
                       <h4 className="font-medium">
@@ -316,14 +311,14 @@ const Subscription = () => {
                   type="submit"
                   disabled={!stripe || loading || selectedPlan === currentPlan}
                   className={`w-full py-3.5 rounded-lg font-semibold text-center transition-all ${loading
-                      ? 'bg-gray-700 cursor-wait'
-                      : selectedPlan === currentPlan
-                        ? 'bg-gray-700 text-gray-300 cursor-not-allowed'
-                        : selectedPlan === 'gold'
-                          ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black hover:from-yellow-400 hover:to-amber-500'
-                          : selectedPlan === 'platinum'
-                            ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white hover:from-gray-300 hover:to-gray-500'
-                            : 'bg-[#f02c49] text-white hover:bg-[#e01c39]'
+                    ? 'bg-gray-700 cursor-wait'
+                    : selectedPlan === currentPlan
+                      ? 'bg-gray-700 text-gray-300 cursor-not-allowed'
+                      : selectedPlan === 'gold'
+                        ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black hover:from-yellow-400 hover:to-amber-500'
+                        : selectedPlan === 'platinum'
+                          ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white hover:from-gray-300 hover:to-gray-500'
+                          : 'bg-[#f02c49] text-white hover:bg-[#e01c39]'
                     }`}
                 >
                   {loading ? 'Processing...' : `Subscribe Now`}

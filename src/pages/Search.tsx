@@ -209,7 +209,7 @@ function Search() {
             <div className="flex items-center">
               <LocalMoviesIcon sx={{ color: '#e23145', marginRight: '12px' }} />
               <h2 className="text-2xl font-semibold text-white">
-                Results for <span className="text-[#e0f63bc3]">"{searchTerm}"</span>
+                Results for <span className="text-white">"{searchTerm}"</span>
                 {selectedGenre !== 'All' && (
                   <span className="ml-2 text-gray-400">
                     in <span className="text-white font-medium border-b border-[#e23145]/50">{selectedGenre}</span>

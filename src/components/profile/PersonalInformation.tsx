@@ -19,28 +19,28 @@ export class PersonalInformation extends Component<any> {
                 <div className="container max-w-6xl mx-auto px-4 py-6">
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                         <div className="md:col-span-4 space-y-4">
-                            <div className="bg-gradient-to-br from-gray-900 to-[#0f0f11] rounded-lg overflow-hidden border border-gray-800/50 relative hover:shadow-xl hover:shadow-black/10 transition-shadow duration-300">
+                            <div className="bg-black rounded-lg overflow-hidden border border-[#1a1a1a] hover:border-[#252525] relative hover:shadow-xl hover:shadow-black/10 transition-all duration-300">
                                 <div className="absolute top-0 inset-x-0 h-1">
                                     <div className="h-full w-1/3 bg-gradient-to-r from-transparent via-[#e23145] to-transparent"></div>
                                 </div>
                                 <div className="p-5">
-                                    <h3 className="text-lg font-medium mb-4 border-b border-gray-800/80 pb-2 flex items-center">
+                                    <h3 className="text-lg font-medium mb-4 border-b border-[#1a1a1a] pb-2 flex items-center">
                                         <AccountCircleIcon fontSize="small" sx={{ mr: 1, color: '#e23145' }} />
                                         <span>Account Info</span>
                                     </h3>
 
                                     <div className="space-y-3">
-                                        <div className="p-2 rounded-md bg-black/20 hover:bg-black/30 transition-colors duration-200">
+                                        <div className="p-2 rounded-md bg-black hover:bg-[#0a0a0a] border border-[#1a1a1a] transition-colors duration-200">
                                             <span className="block text-xs text-gray-500 mb-1">EMAIL</span>
                                             <span className="text-gray-200">{userInfo.email}</span>
                                         </div>
 
-                                        <div className="p-2 rounded-md bg-black/20 hover:bg-black/30 transition-colors duration-200">
+                                        <div className="p-2 rounded-md bg-black hover:bg-[#0a0a0a] border border-[#1a1a1a] transition-colors duration-200">
                                             <span className="block text-xs text-gray-500 mb-1">ROLE</span>
                                             <span className="text-gray-200 capitalize">{userInfo.role}</span>
                                         </div>
 
-                                        <div className="p-2 rounded-md bg-black/20 hover:bg-black/30 transition-colors duration-200">
+                                        <div className="p-2 rounded-md bg-black hover:bg-[#0a0a0a] border border-[#1a1a1a] transition-colors duration-200">
                                             <span className="block text-xs text-gray-500 mb-1">MEMBER SINCE</span>
                                             <span className="text-gray-200">
                                                 {new Date().toLocaleDateString()}
@@ -50,7 +50,7 @@ export class PersonalInformation extends Component<any> {
                                 </div>
                             </div>
                             {userInfo.role === 'supervisor' && (
-                                <div className="bg-gradient-to-br from-gray-900 to-[#15080a] rounded-lg overflow-hidden border border-gray-800/50 relative hover:shadow-xl hover:shadow-black/10 transition-shadow duration-300">
+                                <div className="bg-black rounded-lg overflow-hidden border border-[#1a1a1a] hover:border-[#252525] relative hover:shadow-xl hover:shadow-black/10 transition-all duration-300">
                                     <div className="absolute top-0 inset-x-0 h-1">
                                         <div className="h-full w-2/3 mx-auto bg-gradient-to-r from-[#78121e] via-[#e23145] to-[#78121e]"></div>
                                     </div>
@@ -89,10 +89,13 @@ export class PersonalInformation extends Component<any> {
                         </div>
 
                         <div className="md:col-span-8">
-                            <div className={`bg-gradient-to-br from-gray-900 to-[#0c0c10] rounded-lg overflow-hidden border border-gray-800/50 relative hover:shadow-xl hover:shadow-black/10 transition-shadow duration-300 ${currentUserPlan === 'gold' ? 'to-[#110d04]' :
-                                currentUserPlan === 'platinum' ? 'to-[#0c0e12]' :
-                                    'to-[#0c0c10]'
-                                }`}>
+                            <div className={`bg-black rounded-lg overflow-hidden border ${
+                                currentUserPlan === 'gold' 
+                                    ? 'border-amber-900/40' 
+                                    : currentUserPlan === 'platinum' 
+                                        ? 'border-slate-700/40' 
+                                        : 'border-[#1a1a1a]'
+                                } relative hover:shadow-xl hover:shadow-black/10 transition-shadow duration-300`}>
                                 <div className="absolute top-0 inset-x-0 h-1">
                                     <div className="h-full w-full bg-gradient-to-r from-transparent via-[#e23145] to-transparent"></div>
                                 </div>
@@ -140,10 +143,13 @@ export class PersonalInformation extends Component<any> {
                                         </div>
                                     ) : (
                                         <div className="space-y-5">
-                                            <div className={`p-4 rounded-lg border relative ${currentUserPlan === 'basic' ? 'border-gray-700/50 bg-gradient-to-br from-gray-800/30 to-gray-900/30' :
-                                                currentUserPlan === 'gold' ? 'border-amber-800/30 bg-gradient-to-br from-amber-900/20 to-amber-950/30' :
-                                                    'border-slate-700/30 bg-gradient-to-br from-slate-800/20 to-slate-950/30'
-                                                }`}>
+                                            <div className={`p-4 rounded-lg bg-black border ${
+                                                currentUserPlan === 'basic' 
+                                                    ? 'border-[#1a1a1a]' 
+                                                    : currentUserPlan === 'gold' 
+                                                        ? 'border-amber-900/40' 
+                                                        : 'border-slate-700/40'
+                                                } relative`}>
                                                 <div className="absolute inset-0 opacity-30 pointer-events-none">
                                                     <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-xl"></div>
                                                 </div>
@@ -183,7 +189,7 @@ export class PersonalInformation extends Component<any> {
 
                                             {subscriptionDetails && currentUserPlan !== 'basic' && (
                                                 <div className="flex flex-wrap gap-3">
-                                                    <div className="flex-1 min-w-[140px] p-3 bg-gradient-to-br from-gray-800/50 to-black/50 rounded-lg border border-gray-800/30 backdrop-blur-sm">
+                                                    <div className="flex-1 min-w-[140px] p-3 bg-black rounded-lg border border-[#1a1a1a] backdrop-blur-sm">
                                                         <div className="text-xs text-gray-400 flex items-center mb-1.5">
                                                             <CalendarTodayIcon sx={{ fontSize: 12, mr: 0.5 }} />
                                                             START DATE
@@ -191,7 +197,7 @@ export class PersonalInformation extends Component<any> {
                                                         <div className="text-sm">{formatDateForDisplay(subscriptionDetails.created_at)}</div>
                                                     </div>
 
-                                                    <div className="flex-1 min-w-[140px] p-3 bg-gradient-to-br from-gray-800/50 to-black/50 rounded-lg border border-gray-800/30 backdrop-blur-sm">
+                                                    <div className="flex-1 min-w-[140px] p-3 bg-black rounded-lg border border-[#1a1a1a] backdrop-blur-sm">
                                                         <div className="text-xs text-gray-400 flex items-center mb-1.5">
                                                             <AccessTimeIcon sx={{ fontSize: 12, mr: 0.5 }} />
                                                             EXPIRES
@@ -200,7 +206,7 @@ export class PersonalInformation extends Component<any> {
                                                     </div>
 
                                                     {getDaysRemaining() !== null && (
-                                                        <div className="flex-1 min-w-[140px] p-3 bg-gradient-to-br from-gray-800/50 to-black/50 rounded-lg border border-gray-800/30 backdrop-blur-sm">
+                                                        <div className="flex-1 min-w-[140px] p-3 bg-black rounded-lg border border-[#1a1a1a] backdrop-blur-sm">
                                                             <div className="text-xs text-gray-400 mb-1.5">TIME REMAINING</div>
                                                             <div className="text-sm flex items-center justify-between">
                                                                 <span>{getDaysRemaining()} days</span>
@@ -223,12 +229,15 @@ export class PersonalInformation extends Component<any> {
                                                 </div>
                                             )}
 
-                                            <div className="mb-2 bg-gradient-to-br from-black/40 to-gray-900/20 p-3 rounded-lg border border-gray-800/30">
+                                            <div className="mb-2 bg-black p-3 rounded-lg border border-[#1a1a1a]">
                                                 <div className="text-xs text-gray-400 mb-2 uppercase font-medium tracking-wide">Plan Features</div>
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                                     {planInfo.features.slice(0, 4).map((feature: any, index: number) => (
-                                                        <div key={index} className={`flex items-center p-1.5 rounded-md ${feature.available ? 'hover:bg-green-500/5' : 'hover:bg-gray-500/5'
-                                                            } transition-colors duration-200`}>
+                                                        <div key={index} className={`flex items-center p-1.5 rounded-md ${
+                                                            feature.available 
+                                                                ? 'hover:bg-[#0a0a0a] border border-transparent hover:border-green-900/20' 
+                                                                : 'hover:bg-[#0a0a0a] border border-transparent'
+                                                            } transition-all duration-200`}>
                                                             {feature.available ?
                                                                 <CheckCircleIcon fontSize="small" className="text-green-500 mr-1.5 flex-shrink-0" style={{ fontSize: '14px' }} /> :
                                                                 <CancelIcon fontSize="small" className="text-gray-500 mr-1.5 flex-shrink-0" style={{ fontSize: '14px' }} />

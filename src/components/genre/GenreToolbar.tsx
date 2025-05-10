@@ -64,17 +64,8 @@ export class GenreToolbar extends Component<GenreToolbarProps, GenreToolbarState
                                 whileHover={{ scale: 1.04 }}
                                 whileTap={{ scale: 0.97 }}
                                 className={`
-                                    relative px-5 py-2.5 mx-1 my-1
-                                    font-medium text-sm rounded-md md:rounded-lg
-                                    transition-all duration-300 ease-out
-                                    ${selectedGenre === genre.name
-                                        ? 'text-white shadow-lg'
-                                        : 'bg-gray-800/40 text-gray-300 hover:text-white'}
-                                    ${genre.name === 'All' && selectedGenre !== 'All'
-                                        ? 'bg-gray-800/40 text-gray-400'
-                                        : ''}
-                                `}
-                            >
+                                    relative px-5 py-2.5 mx-1 my-1 font-medium text-sm rounded-md md:rounded-lg transition-all duration-300 ease-out ${selectedGenre === genre.name ? 'text-white shadow-lg' : 'bg-gray-800/40 text-gray-300 hover:text-white'} ${genre.name === 'All' && selectedGenre !== 'All' ? 'bg-gray-800/40 text-gray-400' : ''}
+                                `}  >
 
                                 {selectedGenre === genre.name && (
                                     <motion.div 
