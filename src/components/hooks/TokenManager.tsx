@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode';
 import { useDispatch } from 'react-redux';
-import { setIsLoggedIn, setUser } from '../../redux/slices/userSlice';
 import { toast } from 'react-toastify';
+import { logoutUtil } from '../../utils/authActions';
+import { useNavigate } from 'react-router-dom';
 
 function TokenManager() {
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -14,6 +16,7 @@ function TokenManager() {
         checkAndHandleToken()
 
         const intervalId = setInterval(() => {
+            console.log("Checking token validity...")
             checkAndHandleToken()
         }, 1000 * 5 * 60);
 
@@ -50,9 +53,7 @@ function TokenManager() {
     }
 
     const logout = () => {
-        localStorage.removeItem('token');
-        dispatch(setUser({}));
-        dispatch(setIsLoggedIn(false));
+        logoutUtil(dispatch, navigate)
         setIsAuthenticated(false);
         toast.info("Your session has expired. Please log in again.", { autoClose: 3000, position: "top-right" });
     }
