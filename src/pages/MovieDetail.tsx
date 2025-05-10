@@ -25,11 +25,14 @@ class MovieDetail extends Component<any, any> {
     currentPlan = this.props.currentPlan;
 
     async componentDidMount() {
-        console.log('Movie ID:', this.movieId);
-
         if (this.movieId) {
-            this.getMovie(this.movieId);
+            await this.getMovie(this.movieId);
             this.findSimilarMovies(this.state.movie)
+
+            console.log("DEBUG INFO:");
+            console.log("- Current user plan:", this.currentPlan);
+            console.log("- Movie plan required:", this.state.movie?.plan);
+            console.log("- Authorization result:", authorizeUserForAccessMovie(this.currentPlan, this.state.movie));
         }
 
         if (this.mainRef.current) {
@@ -61,7 +64,6 @@ class MovieDetail extends Component<any, any> {
         if (!id) return;
         try {
             const data = await getMovieDetails(Number(id))
-            console.log(data?.data)
             this.setState({ movie: data?.data, isLoading: false });
 
         } catch (error) {
@@ -73,7 +75,6 @@ class MovieDetail extends Component<any, any> {
     }
 
     findSimilarMovies = (movie: Movie) => {
-        console.log("movie", movie);
         const similarMovies = this.props.movieList.filter((m: Movie) => (m.genre === movie.genre || m.genre === 'Action') && m.id !== this.state.movie.id).slice(0, 4);
 
         if (similarMovies.length > 0) {
