@@ -1,9 +1,11 @@
 import { current } from "@reduxjs/toolkit";
 
-export const authorizeUserForAccessMovie = (userInfo: any, movie: any): boolean => {
-    console.log("userInfo", userInfo);
-    console.log("movie", movie);
-    const currentPlan = userInfo?.active_plan
+export const authorizeUserForAccessMovie = (currentPlan: any, movie: any): boolean => {
+
+    console.log("inside authorizeUserForAccessMovie", currentPlan, movie?.plan)
+
+
+
     const moviePlan = movie?.plan
 
     if (!currentPlan || !moviePlan) {
