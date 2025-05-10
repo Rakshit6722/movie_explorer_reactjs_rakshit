@@ -59,13 +59,18 @@ const Subscription = () => {
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [selectedPlan, setSelectedPlan] = useState(localStorage.getItem('plan') || 'gold');
-
-
+  
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-  const currentPlan = useSelector((state: RootState) => state.user.currentPlan);
+  const currentPlan = useSelector((state: RootState) => state.user.currentPlan || 'basic'); // Default to basic
+  
+  const [selectedPlan, setSelectedPlan] = useState(currentPlan !== 'basic' ? currentPlan : 'gold');
 
   const handlePlanSelection = (planKey: string) => {
+    if (planKey === 'basic') {
+      setMessage("Basic is your default plan");
+      return;
+    }
+    
     if (planKey === currentPlan) {
       setMessage("You're already subscribed to this plan");
       return;
@@ -224,122 +229,129 @@ const Subscription = () => {
                       ? 'bg-gray-700 cursor-wait'
                       : plan.key === currentPlan
                         ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed border border-gray-700'
-                        : plan.key === 'gold'
-                          ? selectedPlan === plan.key
-                            ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black'
-                            : 'bg-transparent border border-yellow-600/70 text-yellow-400 hover:bg-yellow-800/20'
-                          : plan.key === 'platinum'
+                        : plan.key === 'basic'
+                          ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed border border-gray-700'
+                          : plan.key === 'gold'
                             ? selectedPlan === plan.key
-                              ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white'
-                              : 'bg-transparent border border-gray-500 text-gray-300 hover:bg-gray-700/30'
-                            : selectedPlan === plan.key
-                              ? 'bg-[#f02c49] text-white'
-                              : 'bg-transparent border border-red-700/50 text-red-400 hover:bg-red-900/20'
+                              ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black'
+                              : 'bg-transparent border border-yellow-600/70 text-yellow-400 hover:bg-yellow-800/20'
+                            : plan.key === 'platinum'
+                              ? selectedPlan === plan.key
+                                ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white'
+                                : 'bg-transparent border border-gray-500 text-gray-300 hover:bg-gray-700/30'
+                              : selectedPlan === plan.key
+                                ? 'bg-[#f02c49] text-white'
+                                : 'bg-transparent border border-red-700/50 text-red-400 hover:bg-red-900/20'
                     }`}
                 >
-                  {plan.key === currentPlan ? 'Current Plan' :
-                    selectedPlan === plan.key ? `Selected` : `Choose ${plan.name}`}
+                  {plan.key === 'basic' 
+                    ? currentPlan === 'basic' ? 'Default Plan' : 'Included Free'
+                    : plan.key === currentPlan 
+                      ? 'Current Plan' 
+                      : selectedPlan === plan.key 
+                        ? `Selected` 
+                        : `Choose ${plan.name}`
+                  }
                 </button>
               </div>
             </div>
           ))}
         </motion.div>
-
-
       </div>
-
-      <div id="payment-section" className="max-w-lg mx-auto px-4 py-8">
-        <motion.div
-          className="bg-gradient-to-b from-black/70 to-black/70 backdrop-blur-md rounded-2xl overflow-hidden border border-gray-700/50 shadow-2xl"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-        >
-          <div className="px-8 py-6 border-b border-gray-700/50 flex items-center justify-between">
-            <h3 className="text-xl font-semibold text-white">Checkout</h3>
-            <div className="flex items-center">
-              <span className="text-xs font-medium text-gray-400 mr-2">Secure payment</span>
-              <SecurityIcon className="text-gray-400" style={{ fontSize: '1rem' }} />
+      {selectedPlan !== 'basic' && (
+        <div id="payment-section" className="max-w-lg mx-auto px-4 py-8">
+          <motion.div
+            className="bg-gradient-to-b from-black/70 to-black/70 backdrop-blur-md rounded-2xl overflow-hidden border border-gray-700/50 shadow-2xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+          >
+            <div className="px-8 py-6 border-b border-gray-700/50 flex items-center justify-between">
+              <h3 className="text-xl font-semibold text-white">Checkout</h3>
+              <div className="flex items-center">
+                <span className="text-xs font-medium text-gray-400 mr-2">Secure payment</span>
+                <SecurityIcon className="text-gray-400" style={{ fontSize: '1rem' }} />
+              </div>
             </div>
-          </div>
 
-          <div className="px-8 py-6">
-            <div className="bg-gray-900/50 rounded-xl p-5 mb-8 border border-gray-800/80">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center">
-                  <LocalOfferIcon className={`mr-3 ${selectedPlan === 'gold' ? 'text-yellow-500' :
-                      selectedPlan === 'platinum' ? 'text-gray-300' : 'text-red-500'
-                    }`} style={{ fontSize: '1.2rem' }} />
-                  <div>
-                    <h4 className="font-medium">
-                      <span className="text-white">{plans.find(p => p.key === selectedPlan)?.name}</span>
-                      <span className="text-gray-400"> Plan</span>
-                    </h4>
-                    <p className="text-xs text-gray-500">Monthly subscription</p>
+            <div className="px-8 py-6">
+              <div className="bg-gray-900/50 rounded-xl p-5 mb-8 border border-gray-800/80">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center">
+                    <LocalOfferIcon className={`mr-3 ${selectedPlan === 'gold' ? 'text-yellow-500' :
+                        selectedPlan === 'platinum' ? 'text-gray-300' : 'text-red-500'
+                      }`} style={{ fontSize: '1.2rem' }} />
+                    <div>
+                      <h4 className="font-medium">
+                        <span className="text-white">{plans.find(p => p.key === selectedPlan)?.name}</span>
+                        <span className="text-gray-400"> Plan</span>
+                      </h4>
+                      <p className="text-xs text-gray-500">Monthly subscription</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-bold text-white">Rs.{plans.find(p => p.key === selectedPlan)?.price}</div>
+                    <p className="text-xs text-gray-500">per month</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold text-white">Rs.{plans.find(p => p.key === selectedPlan)?.price}</div>
-                  <p className="text-xs text-gray-500">per month</p>
+
+                <div className="space-y-2.5 text-sm">
+                  <div className="flex justify-between text-gray-400">
+                    <span>Billed monthly</span>
+                    <span className="text-white">Rs.{plans.find(p => p.key === selectedPlan)?.price}/mo</span>
+                  </div>
+                  <div className="flex justify-between text-gray-400">
+                    <span>Tax</span>
+                    <span className="text-white">Included</span>
+                  </div>
+                  <div className="pt-2 border-t border-gray-800 flex justify-between font-medium">
+                    <span className="text-gray-300">Today's total</span>
+                    <span className="text-white">Rs.{plans.find(p => p.key === selectedPlan)?.price}</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="space-y-2.5 text-sm">
-                <div className="flex justify-between text-gray-400">
-                  <span>Billed monthly</span>
-                  <span className="text-white">Rs.{plans.find(p => p.key === selectedPlan)?.price}/mo</span>
+              <form onSubmit={handlePaymentSubmit} className="space-y-6">
+                <button
+                  type="submit"
+                  disabled={!stripe || loading || selectedPlan === currentPlan}
+                  className={`w-full py-3.5 rounded-lg font-semibold text-center transition-all ${loading
+                      ? 'bg-gray-700 cursor-wait'
+                      : selectedPlan === currentPlan
+                        ? 'bg-gray-700 text-gray-300 cursor-not-allowed'
+                        : selectedPlan === 'gold'
+                          ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black hover:from-yellow-400 hover:to-amber-500'
+                          : selectedPlan === 'platinum'
+                            ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white hover:from-gray-300 hover:to-gray-500'
+                            : 'bg-[#f02c49] text-white hover:bg-[#e01c39]'
+                    }`}
+                >
+                  {loading ? 'Processing...' : `Subscribe Now`}
+                </button>
+
+                {message && (
+                  <div className="rounded-lg border border-[#f02c49]/20 bg-[#f02c49]/10 p-4 text-center">
+                    <p className="text-[#f02c49] text-sm font-medium">{message}</p>
+                  </div>
+                )}
+
+                <div className="text-center space-y-3">
+                  <div className="flex items-center justify-center">
+                    <div className="h-px bg-gray-800 flex-grow"></div>
+                    <span className="px-4 text-xs font-medium text-gray-500 uppercase">Secure Checkout</span>
+                    <div className="h-px bg-gray-800 flex-grow"></div>
+                  </div>
+
+                  <div className="text-xs text-center text-gray-500">
+                    <p>By continuing, you agree to our Terms of Use and Privacy Policy.</p>
+                    <p className="mt-1">Your subscription will automatically renew each month until cancelled.</p>
+                  </div>
                 </div>
-                <div className="flex justify-between text-gray-400">
-                  <span>Tax</span>
-                  <span className="text-white">Included</span>
-                </div>
-                <div className="pt-2 border-t border-gray-800 flex justify-between font-medium">
-                  <span className="text-gray-300">Today's total</span>
-                  <span className="text-white">Rs.{plans.find(p => p.key === selectedPlan)?.price}</span>
-                </div>
-              </div>
+              </form>
             </div>
-
-            <form onSubmit={handlePaymentSubmit} className="space-y-6">
-              <button
-                type="submit"
-                disabled={!stripe || loading || selectedPlan === currentPlan}
-                className={`w-full py-3.5 rounded-lg font-semibold text-center transition-all ${loading
-                    ? 'bg-gray-700 cursor-wait'
-                    : selectedPlan === currentPlan
-                      ? 'bg-gray-700 text-gray-300 cursor-not-allowed'
-                      : selectedPlan === 'gold'
-                        ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black hover:from-yellow-400 hover:to-amber-500'
-                        : selectedPlan === 'platinum'
-                          ? 'bg-gradient-to-r from-gray-400 to-gray-600 text-white hover:from-gray-300 hover:to-gray-500'
-                          : 'bg-[#f02c49] text-white hover:bg-[#e01c39]'
-                  }`}
-              >
-                {loading ? 'Processing...' : `Subscribe Now`}
-              </button>
-
-              {message && (
-                <div className="rounded-lg border border-[#f02c49]/20 bg-[#f02c49]/10 p-4 text-center">
-                  <p className="text-[#f02c49] text-sm font-medium">{message}</p>
-                </div>
-              )}
-
-              <div className="text-center space-y-3">
-                <div className="flex items-center justify-center">
-                  <div className="h-px bg-gray-800 flex-grow"></div>
-                  <span className="px-4 text-xs font-medium text-gray-500 uppercase">Secure Checkout</span>
-                  <div className="h-px bg-gray-800 flex-grow"></div>
-                </div>
-
-                <div className="text-xs text-center text-gray-500">
-                  <p>By continuing, you agree to our Terms of Use and Privacy Policy.</p>
-                  <p className="mt-1">Your subscription will automatically renew each month until cancelled.</p>
-                </div>
-              </div>
-            </form>
-          </div>
-        </motion.div>
-      </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
