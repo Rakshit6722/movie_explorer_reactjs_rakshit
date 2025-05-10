@@ -11,6 +11,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { PersistGate } from 'redux-persist/integration/react'
 import { AuthProvider } from './context/AuthContext.tsx'
 import StripeProvider from './context/StripeProvider.tsx'
+import FirebaseProvider from './context/FiresbaseProvider.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -18,12 +19,14 @@ createRoot(document.getElementById('root')!).render(
     <StripeProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <BrowserRouter>
-            <AuthProvider>
-              <App />
-            </AuthProvider>
-            <ToastContainer />
-          </BrowserRouter>
+          <FirebaseProvider>
+            <BrowserRouter>
+              <AuthProvider>
+                <App />
+              </AuthProvider>
+              <ToastContainer />
+            </BrowserRouter>
+          </FirebaseProvider>
         </PersistGate>
       </Provider>
     </StripeProvider>
