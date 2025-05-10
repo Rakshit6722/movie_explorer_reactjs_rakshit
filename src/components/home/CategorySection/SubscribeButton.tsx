@@ -7,6 +7,7 @@ import { User } from '../../../types/type';
 type Props = {
     navigate: (path: string) => void;
     currentPlan: string | null;
+    isLoggedIn: boolean;
 }
 
 type State = {
@@ -48,11 +49,12 @@ export class SubscribeButton extends Component<Props, State> {
     render() {
         const { userInfo } = this.state;
         const isBasicPlan = userInfo === 'basic' || userInfo === 'null';
+        const { isLoggedIn } = this.props;
 
         return (
             <div className="fixed top-4 right-4 z-50">
                 <AnimatePresence mode="wait">
-                    {!this.state.minimized && isBasicPlan ? (
+                    {!this.state.minimized && (isBasicPlan) ? (
                         <motion.div
                             key="dialog"
                             className="max-w-xs"
@@ -158,7 +160,7 @@ export class SubscribeButton extends Component<Props, State> {
                             }}
                             layoutId="subscribe-element"
                         >
-                            {isBasicPlan ? (
+                            {isBasicPlan || !isLoggedIn ? (
                                 <motion.button
                                     onClick={() => this.props.navigate('/subscription')}
                                     className="px-6 py-2 bg-gradient-to-r from-[#e23145] to-[#c41f33] text-white rounded-lg font-anton tracking-wider transition hover:opacity-80"
@@ -174,6 +176,7 @@ export class SubscribeButton extends Component<Props, State> {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                 >
+                                    
                                     {userInfo === 'gold' ? 'Upgrade to Platinum' : 'Manage Subscription'}
                                 </motion.button>
                             )}
