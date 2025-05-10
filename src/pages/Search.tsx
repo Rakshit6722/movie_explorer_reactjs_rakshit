@@ -3,8 +3,11 @@ import SearchHeader from '../components/search/SearchHeader';
 import { getMovieByPageApi } from '../services/movieApi';
 import { useNavigate, useLocation } from 'react-router-dom';
 import MoviesGrid from '../components/common/MoviesGrid/MoviesGrid';
-import Placeholder from '../components/common/Placeholder';
 import { Movie } from '../types/type';
+import { motion } from 'framer-motion';
+import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
+import SearchIcon from '@mui/icons-material/Search';
+import VideocamIcon from '@mui/icons-material/Videocam';
 
 function Search() {
   const navigate = useNavigate();
@@ -133,44 +136,110 @@ function Search() {
   }, []);
 
   return (
-    <div ref={mainRef} className="min-h-screen flex flex-col">
-      <div className="pt-4 px-6">
-        <SearchHeader
-          setSelectedGenre={handleGenreChange}
-          selectedGenre={selectedGenre}
-          searchTerm={searchTerm}
-          onSearchChange={handleSearchChange}
-        />
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      ref={mainRef} 
+      className="min-h-screen flex flex-col bg-gradient-to-b from-black via-[#0a0a0a] to-[#050505]"
+    >
+
+      <div className="relative">
+    
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="film-strip-top"></div>
+          <div className="film-strip-bottom"></div>
+        </div>
+        
+  
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[40vw] h-[30vh] bg-[#e23145]/10 blur-[120px] rounded-[100%] opacity-50"></div>
+        
+        <div className="pt-8 px-6 pb-12 relative z-10">
+          <div className="max-w-7xl mx-auto">
+            <motion.div 
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="mb-8 flex items-center justify-center"
+            >
+              <SearchIcon sx={{ fontSize: 28, color: '#e23145', marginRight: '12px' }} />
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                Explore Movies
+              </h1>
+            </motion.div>
+            
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <SearchHeader
+                setSelectedGenre={handleGenreChange}
+                selectedGenre={selectedGenre}
+                searchTerm={searchTerm}
+                onSearchChange={handleSearchChange}
+              />
+            </motion.div>
+          </div>
+        </div>
       </div>
       
-      <div className="flex-grow px-6 pb-5">
+      <div className="flex-grow px-6 pb-12">
         {searchTerm.trim() === '' ? (
-          <div className="flex items-center justify-center h-[60vh]">
-            <Placeholder />
-          </div>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center justify-center h-[60vh] text-center"
+          >
+            <div className="mb-8 p-6 bg-[#e23145]/5 rounded-full">
+              <VideocamIcon sx={{ fontSize: 64, color: '#e23145' }} />
+            </div>
+            <h2 className="text-2xl font-medium mb-3">Discover Your Next Favorite Movie</h2>
+            <p className="text-gray-400 max-w-lg">
+              Enter a title or any keyword to begin your cinematic journey
+            </p>
+          </motion.div>
         ) : (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-semibold">
-              Search Results for: <span className="font-bold">{searchTerm}</span>
-              {selectedGenre !== 'All' && (
-                <span className="ml-2 text-gray-400">
-                  in <span className="text-white font-medium">{selectedGenre}</span>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="space-y-8"
+          >
+            <div className="flex items-center">
+              <LocalMoviesIcon sx={{ color: '#e23145', marginRight: '12px' }} />
+              <h2 className="text-2xl font-semibold text-white">
+                Results for <span className="text-[#e0f63bc3]">"{searchTerm}"</span>
+                {selectedGenre !== 'All' && (
+                  <span className="ml-2 text-gray-400">
+                    in <span className="text-white font-medium border-b border-[#e23145]/50">{selectedGenre}</span>
+                  </span>
+                )}
+              </h2>
+            </div>
+            
+  
+            {!isLoading && (
+              <div className="flex items-center text-sm text-gray-500 mb-4">
+                <span className="mr-2 px-2 py-0.5 bg-gray-800/50 rounded-md font-medium">
+                  {totalPages > 0 ? `${Math.min(20, movies.length)} of ${totalPages * 20}+ results` : 'No results found'}
                 </span>
-              )}
-            </h2>
+              </div>
+            )}
             
             <MoviesGrid
               movieList={movies}
               onChange={handlePageChange}
               totalPages={totalPages}
               currentPage={currentPage}
-              type={'searcha'}
+              type={'search'}
               isLoading={isLoading}
             />
-          </div>
+          </motion.div>
         )}
       </div>
-    </div>
+    
+    </motion.div>
   );
 }
 
