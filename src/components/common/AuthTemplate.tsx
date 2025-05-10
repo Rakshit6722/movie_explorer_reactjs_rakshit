@@ -178,10 +178,9 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                     this.props.dispatch(setToken(response?.data?.token))
                     this.props.dispatch(setCurrentPlan(response?.data?.user?.active_plan))
                     localStorage.setItem("token", response?.data?.token)
-                    localStorage.setItem("plan", response?.data?.user?.active_plan)
                     this.props.navigate('/')
                     const fcmToken = await requestForToken()
-                    if(fcmToken){
+                    if (fcmToken) {
                         console.log("fcmToken", fcmToken)
                         await userNotificationApi({
                             device_token: fcmToken,
@@ -425,7 +424,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                         {
                             type === 'register' && (
                                 <div className='flex flex-col gap-3'>
-                                  
+
                                     <div className='flex flex-col sm:flex-row gap-3'>
                                         <div className='flex-1'>
                                             <TextField
@@ -442,7 +441,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                 InputLabelProps={{
                                                     style: {
                                                         color: 'rgba(255, 255, 255, 0.6)',
-                                                        fontSize: '0.85rem' 
+                                                        fontSize: '0.85rem'
                                                     }
                                                 }}
                                                 placeholder="Enter your first name"
@@ -485,7 +484,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                 InputLabelProps={{
                                                     style: {
                                                         color: 'rgba(255, 255, 255, 0.6)',
-                                                        fontSize: '0.85rem' 
+                                                        fontSize: '0.85rem'
                                                     }
                                                 }}
                                                 placeholder="Enter your last name"
@@ -515,7 +514,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                         </div>
                                     </div>
 
-                                 
+
                                     <div>
                                         <TextField
                                             id="email"
@@ -524,14 +523,14 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                             onChange={this.handleChange}
                                             value={formData.email}
                                             fullWidth
-                                            size="small" 
+                                            size="small"
                                             InputProps={{
                                                 style: { color: 'white' }
                                             }}
                                             InputLabelProps={{
                                                 style: {
                                                     color: 'rgba(255, 255, 255, 0.6)',
-                                                    fontSize: '0.85rem' 
+                                                    fontSize: '0.85rem'
                                                 }
                                             }}
                                             placeholder="Enter your email"
@@ -560,7 +559,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                         )}
                                     </div>
 
-                                   
+
                                     <div>
                                         <TextField
                                             id="number"
@@ -576,7 +575,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                             InputLabelProps={{
                                                 style: {
                                                     color: 'rgba(255, 255, 255, 0.6)',
-                                                    fontSize: '0.85rem' 
+                                                    fontSize: '0.85rem'
                                                 }
                                             }}
                                             placeholder="Enter your phone number"
@@ -605,7 +604,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                         )}
                                     </div>
 
-                                   
+
                                     <div className='flex flex-col sm:flex-row gap-3'>
                                         <div className='flex-1'>
                                             <div className='relative'>
@@ -617,7 +616,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                     value={formData.password}
                                                     type={showPassword ? "text" : "password"}
                                                     fullWidth
-                                                    size="small" 
+                                                    size="small"
                                                     InputProps={{
                                                         style: { color: 'white' }
                                                     }}
@@ -663,7 +662,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                         className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm' // Adjusted position and size
                                                         sx={{
                                                             color: 'rgba(255, 255, 255, 0.6)',
-                                                            fontSize: '1.2rem', 
+                                                            fontSize: '1.2rem',
                                                             '&:hover': { color: '#f02c48' }
                                                         }}
                                                         onClick={() => this.setState({ showPassword: !showPassword })}
@@ -684,14 +683,14 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                     value={formData.confirmpassword}
                                                     type={showConfirmPassword ? "text" : "password"}
                                                     fullWidth
-                                                    size="small" 
+                                                    size="small"
                                                     InputProps={{
                                                         style: { color: 'white' }
                                                     }}
                                                     InputLabelProps={{
                                                         style: {
                                                             color: 'rgba(255, 255, 255, 0.6)',
-                                                            fontSize: '0.85rem' 
+                                                            fontSize: '0.85rem'
                                                         }
                                                     }}
                                                     placeholder="Confirm password"
@@ -730,7 +729,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                         className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer text-sm' // Adjusted position and size
                                                         sx={{
                                                             color: 'rgba(255, 255, 255, 0.6)',
-                                                            fontSize: '1.2rem', 
+                                                            fontSize: '1.2rem',
                                                             '&:hover': { color: '#f02c48' }
                                                         }}
                                                         onClick={() => this.setState({ showConfirmPassword: !showConfirmPassword })}
