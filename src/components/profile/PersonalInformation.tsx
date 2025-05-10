@@ -127,12 +127,19 @@ export class PersonalInformation extends Component<any> {
                                             <CircularProgress size={24} sx={{ color: "#e23145" }} />
                                         </div>
                                     ) : error ? (
-                                        <div className="text-red-400 text-center py-4 text-sm">
+                                        <div className="text-red-400 flex flex-col items-center gap-2 text-center py-4 text-sm">
                                             {error}
+                                            <button onClick={() => window.location.href = '/subscription'}
+                                                className='mt-2 border w-[100px] border-red-400/50 rounded-md px-3 py-1.5 bg-red-400/10 hover:bg-red-400/20 transition-colors duration-200'>
+                                                <span
+                                                    className="text-white font-semibold cursor-pointer"
+                                                >
+                                                    Retry
+                                                </span>
+                                            </button>
                                         </div>
                                     ) : (
                                         <div className="space-y-5">
-                                            {/* Current plan summary */}
                                             <div className={`p-4 rounded-lg border relative ${currentUserPlan === 'basic' ? 'border-gray-700/50 bg-gradient-to-br from-gray-800/30 to-gray-900/30' :
                                                 currentUserPlan === 'gold' ? 'border-amber-800/30 bg-gradient-to-br from-amber-900/20 to-amber-950/30' :
                                                     'border-slate-700/30 bg-gradient-to-br from-slate-800/20 to-slate-950/30'

@@ -50,6 +50,11 @@ function Profile() {
       const response = await getSubscriptionDetailsApi();
 
       if (response?.plan) {
+        if(response?.status === 'pending') {
+          setError("You did not complete the payment, please try again.");
+          dispatch(setCurrentPlan("Basic"));
+          return
+        }
         dispatch(setCurrentPlan(response.plan));
         localStorage.setItem("plan", response.plan);
         setSubscriptionDetails(response);

@@ -90,6 +90,10 @@ const Index = () => {
     try {
       const response = await getSubscriptionDetailsApi()
       if (response) {
+        if (response?.status === 'pending') {
+          dispatch(setCurrentPlan("Basic"));
+          return
+        }
         dispatch(setCurrentPlan(response?.plan))
       }
     } catch (err: any) {
