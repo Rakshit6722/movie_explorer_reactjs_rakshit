@@ -36,7 +36,7 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
     };
 
     useEffect(() => {
-        setImageUrl(movie.poster_url || '');
+        setImageUrl(movie.poster_url);
     }, [movie.poster_url]);
 
     useEffect(() => {
@@ -101,7 +101,7 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
             
             <div className="absolute inset-0 rounded-md overflow-hidden shadow-lg group-hover:shadow-2xl">
                 <img
-                    src={imageUrl}
+                    src={imageUrl || 'https://via.placeholder.com/180x260?text=No+Image'}
                     alt={movie.title}
                     className="w-full h-full object-cover"
                     loading="lazy"
