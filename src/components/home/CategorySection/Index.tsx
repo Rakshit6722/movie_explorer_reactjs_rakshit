@@ -13,6 +13,9 @@ import { motion } from 'framer-motion';
 import { getSubscriptionDetailsApi } from '../../../services/api';
 import { setCurrentPlan } from '../../../redux/slices/userSlice';
 import { current } from '@reduxjs/toolkit';
+import ParallaxText from '../../common/ParallaxText';
+import NotificationCenter from '../../notification/NotificationCenter';
+import { addNotification } from '../../../redux/slices/notificationSlice';
 
 const Index = () => {
   const loading = useSelector((state: any) => state.movie.loading);
@@ -23,6 +26,7 @@ const Index = () => {
   useEffect(() => {
     fetchHomeMovies();
     currentFetchPlan()
+    syncStoredNotifications();
     if (containerRef.current) {
       containerRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -48,8 +52,29 @@ const Index = () => {
     };
   }, []);
 
+  const syncStoredNotifications = () => {
+    try {
+      const stored = localStorage.getItem('notifications');
+      if (stored) {
+        const notifications = JSON.parse(stored);
+
+        notifications.forEach((notification: any) => {
+          dispatch(addNotification({
+            title: notification.title,
+            body: notification.body,
+            timestamp: notification.timestamp || Date.now(),
+          }))
+        })
+
+        localStorage.removeItem('notifications');
+      }
+    } catch (err: any) {
+      console.log(err.message);
+    }
+  }
+
   const fetchHomeMovies = async () => {
-    
+
     dispatch(setLoading(true));
     try {
       const data = await getMoviesForHomePage(10);
@@ -62,12 +87,12 @@ const Index = () => {
   };
 
   const currentFetchPlan = async () => {
-    try{
+    try {
       const response = await getSubscriptionDetailsApi()
-      if(response){
+      if (response) {
         dispatch(setCurrentPlan(response?.plan))
       }
-    }catch(err: any){
+    } catch (err: any) {
       console.log(err.message);
     }
   }
@@ -142,8 +167,13 @@ const Index = () => {
 
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-black text-white">
-      {!loading && <SubscribeButton />}
+    {!loading && (
+      <div className="fixed top-0  z-50 p-4">
+        <NotificationCenter />
+      </div>
+    )}
 
+      {!loading && <SubscribeButton />}
       <section className="w-full mb-12">
         {loading ? (
           renderCarouselSkeleton()
@@ -164,6 +194,10 @@ const Index = () => {
           </>
         ) : (
           <>
+            {/* <motion.div {...scrollAnimProps} className="mb-8">
+              <ParallaxText baseVelocity={-5}>Movie Explorer</ParallaxText>
+              <ParallaxText baseVelocity={5}>Explorer Movie</ParallaxText>
+            </motion.div> */}
             <motion.div {...scrollAnimProps} className="mb-8">
               <CarouselSection type="Trending" heading="Top Trending" />
             </motion.div>

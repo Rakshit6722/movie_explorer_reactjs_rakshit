@@ -21,3 +21,13 @@ export interface User {
     phonenumber: string;
     active_plan: string;
 }
+
+
+export interface Notification {
+    id: string,
+    title: string,
+    body: string,
+    timestamp: string,
+    read: boolean,
+    imageUrl?: string
+}
