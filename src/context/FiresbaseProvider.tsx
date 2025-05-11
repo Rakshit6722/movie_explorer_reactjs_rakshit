@@ -1,116 +1,140 @@
-import { useEffect } from 'react';
-import { messaging, FIREBASE_VAPID_KEY } from '../firebase/firebase';
-import { getToken, onMessage } from 'firebase/messaging';
-import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
-import { addNotification } from '../redux/slices/notificationSlice';
+import { useEffect } from "react";
+import { messaging, FIREBASE_VAPID_KEY } from "../firebase/firebase";
+import { getToken, onMessage } from "firebase/messaging";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { addNotification } from "../redux/slices/notificationSlice";
 
-function FirebaseProvider({ children }: { children: React.ReactNode }) {
-  const dispatch = useDispatch();
-  const audioUrl = '/sounds/notification-sound.mp3';
+function FirebaseProvider({ children }: any) {
 
-  useEffect(() => {
-    if (!messaging) {
-      console.error('Firebase messaging not initialized');
-      toast.error('Firebase messaging not initialized');
-      return;
-    }
+    const dispatch = useDispatch()
 
-    const setupMessaging = async () => {
-      try {
-        // Register service worker
-        if ('serviceWorker' in navigator) {
-          try {
-            const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
-              scope: '/',
-            });
-            console.log('Service worker registered successfully:', registration.scope);
-          } catch (err) {
-            console.error('Service worker registration failed:', err);
-            toast.error('Failed to register service worker');
+    const audioUrl = '/sounds/notification-sound.mp3';
+
+    useEffect(() => {
+        if (!messaging) {
+            console.error('Firebase messaging not initialized');
             return;
-          }
-        } else {
-          console.error('Service workers not supported in this browser');
-          toast.error('Service workers not supported');
-          return;
         }
 
-        // Request notification permission
-        const permission = await Notification.requestPermission();
-        if (permission !== 'granted') {
-          console.warn('Notification permission denied');
-          toast.warn('Please enable notifications for updates');
-          return;
-        }
+        const setupMessaging = async () => {
+            try {
 
-        console.log('Notification permission granted');
+                if ('serviceWorker' in navigator) {
+                    try {
 
-        // Get FCM token
-        let currentToken;
-        try {
-          currentToken = await getToken(messaging, { vapidKey: FIREBASE_VAPID_KEY, serviceWorkerRegistration: navigator.serviceWorker });
-          if (currentToken) {
-            console.log('Got FCM token:', currentToken);
-          } else {
-            console.log('No token available');
-            toast.warn('No FCM token available');
-          }
-        } catch (err) {
-          console.error('Error getting FCM token:', err);
-          toast.error('Error setting up notifications');
-          return;
-        }
+                        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+                            scope: '/'
+                        });
+                        console.log('Service worker registered successfully:', registration.scope);
+                    } catch (err) {
+                        console.error('Service worker registration failed:', err);
+                    }
+                }
 
-        // Handle foreground messages
-        onMessage(messaging, (payload) => {
-          try {
-            console.log('Foreground message received:', payload);
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    console.log('Notification permission granted.');
 
-            // Play notification sound
-            const audio = new Audio(audioUrl);
-            audio.play().catch((err) => console.error('Sound play error:', err));
+                    try {
+                        const currentToken = await getToken(messaging, { vapidKey: FIREBASE_VAPID_KEY });
+                        if (currentToken) {
+                            console.log('Got FCM token:', currentToken);
+                        } else {
+                            console.log('No token available');
+                        }
+                    } catch (err) {
+                        console.log('An error occurred while getting token:', err);
+                    }
 
-            // Dispatch notification to Redux
-            dispatch(
-              addNotification({
-                id: Date.now().toString(),
-                title: payload.notification?.title || 'New Notification',
-                body: payload.notification?.body || '',
-                timestamp: Date.now(),
-                read: false,
-                ...payload.data,
-              })
-            );
+                    onMessage(messaging, (payload) => {
+                        try {
+                            console.log('Foreground message received:', payload);
 
-            // Show browser notification
-            if (Notification.permission === 'granted') {
-              navigator.serviceWorker.ready.then((registration) => {
-                registration.showNotification(payload.notification?.title || 'New Notification', {
-                  body: payload.notification?.body || '',
-                  icon: '/favicon.ico',
-                  tag: 'movie-explorer-notification',
-                  badge: '/favicon.ico',
-                  requireInteraction: true,
-                  data: payload.data,
-                });
-              });
+                            // Play notification sound
+                            const audio = new Audio(audioUrl);
+                            audio.play().catch(err => console.log('Sound play error:', err));
+
+                            // Add complete notification object with required fields
+                            dispatch(addNotification({
+                                id: Date.now().toString(),
+                                title: payload.notification?.title || 'New Notification',
+                                body: payload.notification?.body || '',
+                                timestamp: Date.now(),
+                                read: false,
+                                // Include any additional data from payload
+                                ...payload.data
+                            }));
+
+                            // Show browser notification with improved options
+                            if (Notification.permission === 'granted') {
+                                navigator.serviceWorker.ready.then(registration => {
+                                    registration.showNotification(
+                                        payload.notification?.title || 'New Notification',
+                                        {
+                                            body: payload.notification?.body || '',
+                                            icon: '/favicon.ico',
+                                            tag: 'movie-explorer-notification',
+                                            badge: '/favicon.ico',
+                                            requireInteraction: true,
+                                            data: payload.data
+                                        }
+                                    );
+                                });
+                            }
+                        } catch (error) {
+                            console.error('Error processing message:', error);
+                        }
+                    });
+
+                    // onMessage(messaging, (payload) => {
+                    //     console.log('Foreground message received:', payload);
+
+                    //     dispatch(addNotification({
+                    //         title: payload.notification?.title || 'New Notification',
+                    //         body: payload.notification?.body || ''
+                    //     }))
+
+                    //     if (Notification.permission === 'granted') {
+                    //         const notification = new Notification(payload.notification?.title || 'New Notification', {
+                    //             body: payload.notification?.body || '',
+                    //             tag: 'movie-explorer-notification',
+                    //             silent: false
+                    //         });
+                    //         notification.onclick = () => {
+                    //             window.focus();
+                    //             notification.close();
+                    //         };
+
+                    //         setTimeout(() => notification.close(), 5000);
+                    //     }
+
+
+                    //     //   <div>
+                    //     //     <h4 className="font-bold">{payload.notification?.title || 'New Notification'}</h4>
+                    //     //     <p>{payload.notification?.body || ''}</p>
+                    //     //   </div>,
+                    //     //   {
+                    //     //     position: "top-right",
+                    //     //     autoClose: 5000,
+                    //     //     hideProgressBar: false,
+                    //     //     closeOnClick: true,
+                    //     //     pauseOnHover: true,
+                    //     //     draggable: true
+                    //     //   }
+                    //     // );
+                    // });
+                }
+            } catch (error) {
+                console.error('Error setting up notifications:', error);
             }
-          } catch (error) {
-            console.error('Error processing message:', error);
-            toast.error('Error processing notification');
-          }
-        });
-      } catch (error) {
-        console.error('Error setting up notifications:', error);
-        toast.error('Error setting up notifications');
-      }
-    };
+        };
 
-    setupMessaging();
-  }, [dispatch]);
+        setupMessaging();
+    }, []);
 
-  return <>{children}</>;
+    return <>{children}</>;
 }
+
 
 export default FirebaseProvider;
