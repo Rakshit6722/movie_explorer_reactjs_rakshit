@@ -17,7 +17,7 @@ type CarouselState = {
 };
 
 class Carousel extends Component<CarouselProps, CarouselState> {
-carouselRef: any;
+  carouselRef: any;
 
   constructor(props: CarouselProps) {
     super(props);
@@ -31,11 +31,11 @@ carouselRef: any;
 
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
-    
+
     if (this.carouselRef.current) {
       this.carouselRef.current.addEventListener('scroll', this.checkScrollPosition);
     }
-    
+
     this.checkScrollPosition();
   }
 
@@ -47,7 +47,7 @@ carouselRef: any;
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
-    
+
     if (this.carouselRef.current) {
       this.carouselRef.current.removeEventListener('scroll', this.checkScrollPosition);
     }
@@ -102,7 +102,7 @@ carouselRef: any;
 
         <div
           ref={this.carouselRef}
-          className="flex space-x-2 overflow-x-auto py-4 px-0 scrollbar-hide snap-x snap-mandatory"
+          className={`flex ${type === 'Trending' ? "space-x-7" : "space-x-2"} overflow-x-auto py-4 px-0 scrollbar-hide snap-x snap-mandatory`}
         >
           {movieList.map((movie, index) => (
             <div key={movie.id} className="flex-shrink-0">

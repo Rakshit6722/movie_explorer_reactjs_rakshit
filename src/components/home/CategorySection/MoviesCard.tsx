@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Movie } from '../../../types/type';
 import { useNavigate } from 'react-router-dom';
-import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
 
 type MoviesCardProps = {
     movie: Movie;
@@ -68,24 +68,33 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
         };
     }, []);
 
-    
     const renderPlanIcon = () => {
         if (!movie?.plan || movie.plan === 'basic') return null;
-        
-        const iconColor = movie.plan === 'gold' 
-            ? 'text-amber-400' 
-            : 'text-slate-300';
-        
-        const bgColor = movie.plan === 'gold' 
-            ? 'bg-black/70 border border-amber-500/40' 
-            : 'bg-black/70 border border-slate-400/40';
-        
+
+        const badgeStyles = movie.plan === 'gold' 
+            ? {
+                iconColor: 'text-amber-300',
+                textColor: 'text-amber-200',
+                bgGradient: 'bg-gradient-to-br from-amber-600 to-amber-800',
+                border: 'border-amber-400/50',
+                shadow: 'shadow-[0_0_8px_rgba(251,191,36,0.5)]',
+                label: 'GOLD'
+              }
+            : {
+                iconColor: 'text-slate-200',
+                textColor: 'text-slate-100',
+                bgGradient: 'bg-gradient-to-br from-slate-400 to-slate-600',
+                border: 'border-slate-300/50',
+                shadow: 'shadow-[0_0_8px_rgba(203,213,225,0.5)]',
+                label: 'PLATINUM'
+              };
+
         return (
-            <div className={`absolute top-2 right-2 ${bgColor} px-2 py-1 rounded-md z-20 group-hover:opacity-0 transition-opacity flex items-center gap-1`}>
-                <WorkspacePremiumIcon className={`${iconColor}`} sx={{ fontSize: 16 }} />
-                {movie.plan === 'gold' && (
-                    <span className="text-xs font-medium text-amber-400">PRO</span>
-                )}
+            <div 
+                className={`absolute top-2 right-2 ${badgeStyles.bgGradient} ${badgeStyles.border} ${badgeStyles.shadow} px-2.5 py-1 rounded-lg z-20 group-hover:opacity-0 transition-opacity duration-300 flex items-center gap-1.5 animate-pulse-subtle`}
+            >
+                <StarRoundedIcon className={`${badgeStyles.iconColor}`} sx={{ fontSize: 18 }} />
+                <span className={`text-xs font-semibold ${badgeStyles.textColor} tracking-wide`}>{badgeStyles.label}</span>
             </div>
         );
     };

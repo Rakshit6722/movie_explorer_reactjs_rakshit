@@ -50,13 +50,10 @@ export class GenreToolbar extends Component<GenreToolbarProps, GenreToolbarState
                         <p className="text-gray-400 text-sm">Find movies from your favorite categories</p>
                     </div>
                 )}
-                
-                <div className="bg-gray-900/40 backdrop-blur-sm rounded-xl p-0.5 border border-gray-800/50 shadow-inner overflow-hidden">
-                    <div className={`
-                        ${isSearchMode 
-                            ? 'flex flex-wrap gap-1 p-2' 
-                            : 'flex items-center p-2 overflow-x-auto hide-scrollbar'}
-                    `}>
+
+                <div className="bg-gray-900/40 backdrop-blur-sm rounded-xl p-0.5 border text-center border-gray-800/50 shadow-inner w-fit overflow-hidden">
+                    <div className={`${isSearchMode ? 'flex flex-wrap gap-1 p-2'
+                            : 'inline-flex flex-wrap items-center justify-center p-2 overflow-x-auto hide-scrollbar'}`}>
                         {genres.map((genre) => (
                             <motion.button
                                 onClick={() => this.props.setSelectedGenre(genre.name)}
@@ -68,7 +65,7 @@ export class GenreToolbar extends Component<GenreToolbarProps, GenreToolbarState
                                 `}  >
 
                                 {selectedGenre === genre.name && (
-                                    <motion.div 
+                                    <motion.div
                                         layoutId="selectedGenre"
                                         className={`absolute inset-0 bg-gradient-to-br ${genreGradients[genre.name]} rounded-md md:rounded-lg -z-10`}
                                         initial={{ opacity: 0 }}
