@@ -19,6 +19,19 @@ function FirebaseProvider({ children }: any) {
 
         const setupMessaging = async () => {
             try {
+
+                if ('serviceWorker' in navigator) {
+                    try {
+
+                        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+                            scope: '/'
+                        });
+                        console.log('Service worker registered successfully:', registration.scope);
+                    } catch (err) {
+                        console.error('Service worker registration failed:', err);
+                    }
+                }
+
                 const permission = await Notification.requestPermission();
                 if (permission === 'granted') {
                     console.log('Notification permission granted.');
@@ -57,7 +70,7 @@ function FirebaseProvider({ children }: any) {
                             setTimeout(() => notification.close(), 5000);
                         }
 
-             
+
                         //   <div>
                         //     <h4 className="font-bold">{payload.notification?.title || 'New Notification'}</h4>
                         //     <p>{payload.notification?.body || ''}</p>

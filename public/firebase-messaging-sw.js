@@ -52,12 +52,11 @@ const storeNotification = async (payload) => {
     const storedNotifications = await getStoredNotifications();
     storedNotifications.unshift(newNotification);
 
-    // Limit to 50 notifications
     const updatedNotifications = storedNotifications.slice(0, 50);
 
     await saveNotifications(updatedNotifications);
 
-    // Post message to client for immediate UI update
+
     self.clients.matchAll().then(clients => {
       clients.forEach(client => {
         client.postMessage({
@@ -104,7 +103,6 @@ const getStoredNotifications = async () => {
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {
         const notifications = request.result || [];
-        // Sort by timestamp, newest first
         notifications.sort((a, b) => b.timestamp - a.timestamp);
         resolve(notifications);
       };
@@ -116,11 +114,8 @@ const getStoredNotifications = async () => {
 };
 messaging.onBackgroundMessage(function (payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
-
-  // Store notification asynchronously (won't block)
   storeNotification(payload);
 
-  // Show the notification
   const notificationOptions = {
     body: payload.notification.body,
     icon: '/favicon.ico'
