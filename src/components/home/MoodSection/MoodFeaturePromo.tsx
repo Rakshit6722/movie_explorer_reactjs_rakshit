@@ -78,7 +78,7 @@ const MoodFeaturePromo = () => {
                 </p>
 
                 <button
-                    onClick={() => navigate('/mood')}
+                    onClick={() => navigate('/moods')}
                     className="w-full bg-white/10 backdrop-blur-sm border border-white/10 hover:bg-[#e23145]/70 hover:border-[#e23145]/30 text-white text-sm py-2 rounded-md flex items-center justify-center transition-all duration-300"
                 >
                     <span>Explore By Mood</span>

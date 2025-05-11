@@ -51,22 +51,20 @@ function FirebaseProvider({ children }: any) {
                         try {
                             console.log('Foreground message received:', payload);
 
-                            // Play notification sound
+              
                             const audio = new Audio(audioUrl);
                             audio.play().catch(err => console.log('Sound play error:', err));
 
-                            // Add complete notification object with required fields
+                        
                             dispatch(addNotification({
                                 id: Date.now().toString(),
                                 title: payload.notification?.title || 'New Notification',
                                 body: payload.notification?.body || '',
                                 timestamp: Date.now(),
                                 read: false,
-                                // Include any additional data from payload
                                 ...payload.data
                             }));
 
-                            // Show browser notification with improved options
                             if (Notification.permission === 'granted') {
                                 navigator.serviceWorker.ready.then(registration => {
                                     registration.showNotification(
@@ -86,44 +84,7 @@ function FirebaseProvider({ children }: any) {
                             console.error('Error processing message:', error);
                         }
                     });
-
-                    // onMessage(messaging, (payload) => {
-                    //     console.log('Foreground message received:', payload);
-
-                    //     dispatch(addNotification({
-                    //         title: payload.notification?.title || 'New Notification',
-                    //         body: payload.notification?.body || ''
-                    //     }))
-
-                    //     if (Notification.permission === 'granted') {
-                    //         const notification = new Notification(payload.notification?.title || 'New Notification', {
-                    //             body: payload.notification?.body || '',
-                    //             tag: 'movie-explorer-notification',
-                    //             silent: false
-                    //         });
-                    //         notification.onclick = () => {
-                    //             window.focus();
-                    //             notification.close();
-                    //         };
-
-                    //         setTimeout(() => notification.close(), 5000);
-                    //     }
-
-
-                    //     //   <div>
-                    //     //     <h4 className="font-bold">{payload.notification?.title || 'New Notification'}</h4>
-                    //     //     <p>{payload.notification?.body || ''}</p>
-                    //     //   </div>,
-                    //     //   {
-                    //     //     position: "top-right",
-                    //     //     autoClose: 5000,
-                    //     //     hideProgressBar: false,
-                    //     //     closeOnClick: true,
-                    //     //     pauseOnHover: true,
-                    //     //     draggable: true
-                    //     //   }
-                    //     // );
-                    // });
+                  
                 }
             } catch (error) {
                 console.error('Error setting up notifications:', error);
