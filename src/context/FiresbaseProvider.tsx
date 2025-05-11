@@ -49,6 +49,8 @@ function FirebaseProvider({ children }: any) {
 
                     onMessage(messaging, (payload) => {
                         try {
+                            console.log("inside onMessage");
+                            console.log('Message received. ', payload);
                             console.log('Foreground message received:', payload);
 
               

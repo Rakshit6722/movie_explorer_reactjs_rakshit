@@ -119,7 +119,6 @@ const NotificationCenter: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Content area with more transparency */}
                         <div className="overflow-y-auto notification-scrollbar bg-black/30" style={{ maxHeight: 'calc(80vh - 120px)' }}>
                             <div className="divide-y divide-gray-800/20">
                                 {items.length === 0 ? (

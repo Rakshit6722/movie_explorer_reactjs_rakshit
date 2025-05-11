@@ -12,6 +12,8 @@ firebase.initializeApp({
   measurementId: "G-YR2NW0T0XW"
 });
 
+const messaging = firebase.messaging();
+
 messaging.onBackgroundMessage((payload) => {
   console.log('Service Worker: Background message received:', payload);
   const notificationTitle = payload.notification?.title || 'New Notification';
@@ -25,7 +27,6 @@ messaging.onBackgroundMessage((payload) => {
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-// Log foreground messages for debugging
 messaging.onMessage((payload) => {
   console.log('Service Worker: Foreground message received:', payload);
 });
