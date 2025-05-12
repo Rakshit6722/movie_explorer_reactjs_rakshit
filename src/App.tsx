@@ -13,6 +13,7 @@ const Profile = lazy(() => import('./pages/Profile'))
 const MovieDetail = lazy(() => import('./pages/MovieDetail'))
 const Subscription = lazy(() => import('./pages/Subscription'))
 const SubscriptionSuccess = lazy(() => import('./pages/SubscriptionSuccess'))
+const SubscriptionCancel = lazy(() => import('./pages/SubscriptionCancel'))
 
 
 const App = () => {
@@ -73,6 +74,11 @@ const App = () => {
         <Route path='subscription-success' element={
           <Suspense fallback={<LoadingFallback />}>
             <SubscriptionSuccess />
+          </Suspense>
+        } />
+        <Route path='subscription-cancel' element={
+          <Suspense fallback={<LoadingFallback />}>
+            <SubscriptionCancel />
           </Suspense>
         } />
       </Routes>

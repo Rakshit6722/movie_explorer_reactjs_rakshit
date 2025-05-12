@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { resetUser } from '../../redux/slices/userSlice';
 
 function TokenManager() {
+
+    const dispatch = useDispatch()
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -47,6 +51,7 @@ function TokenManager() {
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('plan');
+        dispatch(resetUser())
         localStorage.removeItem('persist:root')
         setIsAuthenticated(false);
         toast.info("Your session has expired. Please log in again.", { autoClose: 3000, position: "top-right" });

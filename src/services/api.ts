@@ -129,3 +129,15 @@ export const updatePaymentStatus = async (sessionId: string | null): Promise<any
         throw err
     }
 }
+
+export const updatePaymentCancelStatus = async (sessionId: string | null): Promise<any> => {
+    try{
+        const response = await apiConnector(
+            "GET",
+            `${BASE_URL}/subscriptions/cancel?session_id=${sessionId}`,
+        )
+        return response
+    }catch(err: any){
+        throw err
+    }
+}
