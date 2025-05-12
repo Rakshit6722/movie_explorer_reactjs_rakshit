@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { jwtDecode } from 'jwt-decode';
-import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { logoutUtil } from '../../utils/authActions';
-import { useNavigate } from 'react-router-dom';
 
 function TokenManager() {
-
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
