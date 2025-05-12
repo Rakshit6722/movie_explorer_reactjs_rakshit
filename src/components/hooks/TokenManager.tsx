@@ -53,7 +53,9 @@ function TokenManager() {
     }
 
     const logout = () => {
-        logoutUtil(dispatch, navigate)
+        localStorage.removeItem('token');
+        localStorage.removeItem('plan');
+        localStorage.removeItem('persist:root')
         setIsAuthenticated(false);
         toast.info("Your session has expired. Please log in again.", { autoClose: 3000, position: "top-right" });
     }
