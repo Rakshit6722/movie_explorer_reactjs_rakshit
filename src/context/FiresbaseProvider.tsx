@@ -13,51 +13,40 @@ function FirebaseProvider({ children }: any) {
 
     useEffect(() => {
         if (!messaging) {
-            console.error('Firebase messaging not initialized');
+            toast.error("Firebase messaging is not initialized");
             return;
         }
 
         const setupMessaging = async () => {
             try {
-
                 if ('serviceWorker' in navigator) {
                     try {
 
                         const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
                             scope: '/'
                         });
-                        console.log('Service worker registered successfully:', registration.scope);
-                    } catch (err) {
-                        console.error('Service worker registration failed:', err);
+                    } catch (err: any) {
+                        toast.error(err?.message || "Couldn't register service worker");
                     }
                 }
 
                 const permission = await Notification.requestPermission();
                 if (permission === 'granted') {
-                    console.log('Notification permission granted.');
 
                     try {
                         const currentToken = await getToken(messaging, { vapidKey: FIREBASE_VAPID_KEY });
-                        if (currentToken) {
-                            console.log('Got FCM token:', currentToken);
-                        } else {
-                            console.log('No token available');
-                        }
-                    } catch (err) {
-                        console.log('An error occurred while getting token:', err);
+                    } catch (err: any) {
+                        toast.error(err?.message || "Couldn't get token");
                     }
 
                     onMessage(messaging, (payload) => {
                         try {
-                            console.log("inside onMessage");
-                            console.log('Message received. ', payload);
-                            console.log('Foreground message received:', payload);
-
-              
+            
                             const audio = new Audio(audioUrl);
-                            audio.play().catch(err => console.log('Sound play error:', err));
+                            audio.volume = 1
+                            audio.play()
 
-                        
+
                             dispatch(addNotification({
                                 id: Date.now().toString(),
                                 title: payload.notification?.title || 'New Notification',
@@ -82,14 +71,14 @@ function FirebaseProvider({ children }: any) {
                                     );
                                 });
                             }
-                        } catch (error) {
-                            console.error('Error processing message:', error);
+                        } catch (error: any) {
+                            toast.error(error?.message || "Couldn't handle notification");
                         }
                     });
-                  
+
                 }
-            } catch (error) {
-                console.error('Error setting up notifications:', error);
+            } catch (error: any) {
+                toast.error(error?.message || "Couldn't setup messaging");
             }
         };
 

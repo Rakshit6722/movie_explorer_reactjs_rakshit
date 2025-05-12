@@ -16,8 +16,8 @@ import logo from '../../assets/images/movieExplorerLogoNew.png'
 
 type AuthTemplateProps = {
     type: 'login' | 'register',
-    navigate?: any,
-    dispatch?: any
+    navigate: (path: string) => void,
+    dispatch: (action: any) => void,
 }
 
 type AuthTemplateState = {
@@ -150,7 +150,6 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
 
     handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log("inside handle submit")
         const { formData } = this.state
         const isValid = this.isValid(formData)
 
@@ -172,7 +171,6 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
         if (this.props.type === 'login') {
             try {
                 const response = await loginApi({ email, password })
-                console.log("response", response)
 
                 if (response?.status === 200) {
                     this.props.dispatch(setUser(response?.data?.user))
@@ -182,7 +180,6 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                     this.props.navigate('/')
                     const fcmToken = await requestForToken()
                     if (fcmToken) {
-                        console.log("fcmToken", fcmToken)
                         await userNotificationApi({
                             device_token: fcmToken,
                             notifications_enabled: true
@@ -208,7 +205,6 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                     toast.success("User Created Successfully")
                 }
             } catch (err: any) {
-                console.log(err.message)
                 toast.error(err?.message || "Something went wrong, please try again")
             }
 
@@ -301,7 +297,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                     backdropFilter: 'blur(0.5rem)',
                     WebkitBackdropFilter: 'blur(0.5rem)',
                 }}>
-                    <div className='mb-6'>
+                    <div data-testid="mainHeading" className='mb-6'>
                         <Typography variant="h4" gutterBottom sx={{ color: 'white', fontSize: '1.5rem', lineHeight: '1.5rem', marginBottom: '0.5rem', fontFamily: 'Anton' }}>
                             {type === 'login' ? 'Sign In' : type === 'register' ? 'Create Account' : ''}
                         </Typography>
@@ -419,7 +415,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                         <div>
                                             {
                                                 showPassword ? (
-                                                    <VisibilityOffIcon
+                                                    <VisibilityOffIcon data-testid="visibility-icon"
                                                         className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer'
                                                         sx={{
                                                             color: 'rgba(255, 255, 255, 0.6)',
@@ -430,7 +426,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                                         onClick={() => this.setState({ showPassword: !showPassword })}
                                                     />
                                                 ) : (
-                                                    <VisibilityIcon
+                                                    <VisibilityIcon data-testid="visibility-icon"
                                                         className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer'
                                                         sx={{
                                                             color: 'rgba(255, 255, 255, 0.6)',

@@ -11,7 +11,6 @@ export const loginUser = async (response: any, dispatch: any, navigate: any) => 
     navigate('/')
     const fcmToken = await requestForToken()
     if (fcmToken) {
-        console.log("fcmToken", fcmToken)
         await userNotificationApi({
             device_token: fcmToken,
             notifications_enabled: true
@@ -31,6 +30,6 @@ export const logoutUtil = async (dispatch?: any, navigate?: any) => {
             toast.success("Logout successful")
         }
     } catch (err: any) {
-        console.log(err)
+        throw new Error(err?.message || "Couldn't logout")
     }
 }

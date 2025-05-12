@@ -4,7 +4,7 @@ import { creatMovieApi } from '../../../services/adminApi';
 import WithRouter from '../../hoc/WithRouter';
 import axios from 'axios';
 
-// Types
+
 interface ImageData {
   base64: string;
   filename: string;
@@ -37,7 +37,6 @@ interface Errors {
   coverimage: string;
 }
 
-// Image Preview Component
 const ImagePreview = ({ imageFile, onImageChange, label, name, error }: {
   imageFile: ImageData | null;
   onImageChange: (name: string, data: ImageData) => void;
@@ -296,31 +295,18 @@ const CreateMovieForm = (props: any) => {
     e.preventDefault();
 
     try {
-      const dummyData: any = {
-        title: 'The Great Adventure',
-        genre: 'Action',
-        release_year: 2023,
-        rating: 8.8,
-        director: 'Jane Doe',
-        duration: 120, 
-        description: 'An epic tale of courage and discovery in a fantastical world.',
-        plan: 'platinum', 
-        poster: null, 
-        banner: null,
-      };
-
       const formData = new FormData();
-      Object.keys(dummyData).forEach((key) => {
-        if (dummyData[key] !== null) {
-          formData.append(key, dummyData[key]);
-        }
-      });
+      formData.append('title', 'The Great Adventure');
+      formData.append('genre', 'Action');
+      formData.append('release_year', '2023');
+      formData.append('rating', '8.8');
+      formData.append('director', 'Jane Doe');
+      formData.append('duration', '120');
+      formData.append('description', 'An epic tale of courage and discovery in a fantastical world.');
+      formData.append('plan', 'platinum');
+      formData.append('poster', new File(['dummy poster content'], 'poster.jpg', { type: 'image/jpeg' }));
+      formData.append('banner', new File(['dummy banner content'], 'banner.jpg', { type: 'image/jpeg' }));
 
-      const dummyPoster = new File([''], 'poster.jpg', { type: 'image/jpeg' });
-      const dummyBanner = new File([''], 'banner.jpg', { type: 'image/jpeg' });
-      formData.append('poster', dummyPoster);
-      formData.append('banner', dummyBanner);
- 
 
       const response = await axios.post(`https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1/movies`, formData, {
         headers: {
@@ -329,218 +315,218 @@ const CreateMovieForm = (props: any) => {
         },
       });
 
-      console.log("response",response) 
-    }catch (error: any) {
-  console.error('Error creating movie:', error.response?.data);
-  throw error.response?.data?.errors || 'Failed to create movie';
-}
+      console.log("response", response)
+    } catch (error: any) {
+      console.error('Error creating movie:', error.response?.data);
+      throw error.response?.data?.errors || 'Failed to create movie';
+    }
   };
 
 
 
-const renderError = (field: keyof Errors) => (
-  errors[field] ? <p className="text-[#ff6b6b] text-xs mt-1">{errors[field]}</p> : null
-);
+  const renderError = (field: keyof Errors) => (
+    errors[field] ? <p className="text-[#ff6b6b] text-xs mt-1">{errors[field]}</p> : null
+  );
 
-return (
-  <div
-    className="bg-white/10 p-7 text-white rounded-lg w-full backdrop-blur-sm"
-    style={{
-      maxWidth: '100%',
-      margin: '0 auto',
-      maxHeight: '80vh',
-      display: 'flex',
-      flexDirection: 'column',
-      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-    }}
-  >
-    <h2 className="font-anton text-2xl tracking-wide mb-4 text-center relative">
-      <span className="relative z-10">Add Movie</span>
-      <span className="absolute inset-0 bg-gradient-to-r from-[#e23145]/40 to-transparent h-[2px] bottom-0 w-40 mx-auto left-0 right-0"></span>
-    </h2>
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-      <div className="flex flex-col">
-        <TextField
-          fullWidth
-          label="Title"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          variant="outlined"
-          size="small"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{
-            style: { color: 'white' },
-            sx: { '&:hover': { '& .MuiOutlinedInput-notchedOutline': { borderColor: '#e23145' } } }
-          }}
-          error={!!errors.title}
-        />
-        {renderError('title')}
-      </div>
+  return (
+    <div
+      className="bg-white/10 p-7 text-white rounded-lg w-full backdrop-blur-sm"
+      style={{
+        maxWidth: '100%',
+        margin: '0 auto',
+        maxHeight: '80vh',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+      }}
+    >
+      <h2 className="font-anton text-2xl tracking-wide mb-4 text-center relative">
+        <span className="relative z-10">Add Movie</span>
+        <span className="absolute inset-0 bg-gradient-to-r from-[#e23145]/40 to-transparent h-[2px] bottom-0 w-40 mx-auto left-0 right-0"></span>
+      </h2>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="flex flex-col">
+          <TextField
+            fullWidth
+            label="Title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            variant="outlined"
+            size="small"
+            InputLabelProps={{ style: { color: 'white' } }}
+            InputProps={{
+              style: { color: 'white' },
+              sx: { '&:hover': { '& .MuiOutlinedInput-notchedOutline': { borderColor: '#e23145' } } }
+            }}
+            error={!!errors.title}
+          />
+          {renderError('title')}
+        </div>
 
-      <div className="flex flex-col">
-        <TextField
-          fullWidth
-          label="Genre"
-          name="genre"
-          value={formData.genre}
-          onChange={handleChange}
-          variant="outlined"
-          size="small"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white' } }}
-          error={!!errors.genre}
-        />
-        {renderError('genre')}
-      </div>
+        <div className="flex flex-col">
+          <TextField
+            fullWidth
+            label="Genre"
+            name="genre"
+            value={formData.genre}
+            onChange={handleChange}
+            variant="outlined"
+            size="small"
+            InputLabelProps={{ style: { color: 'white' } }}
+            InputProps={{ style: { color: 'white' } }}
+            error={!!errors.genre}
+          />
+          {renderError('genre')}
+        </div>
 
-      <div className="flex flex-col">
-        <TextField
-          fullWidth
-          label="Release Year"
-          name="release_year"
-          value={formData.release_year}
-          onChange={handleChange}
-          variant="outlined"
-          type="number"
-          size="small"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white' } }}
-          error={!!errors.release_year}
-        />
-        {renderError('release_year')}
-      </div>
+        <div className="flex flex-col">
+          <TextField
+            fullWidth
+            label="Release Year"
+            name="release_year"
+            value={formData.release_year}
+            onChange={handleChange}
+            variant="outlined"
+            type="number"
+            size="small"
+            InputLabelProps={{ style: { color: 'white' } }}
+            InputProps={{ style: { color: 'white' } }}
+            error={!!errors.release_year}
+          />
+          {renderError('release_year')}
+        </div>
 
-      <div className="flex flex-col">
-        <TextField
-          fullWidth
-          label="Rating"
-          name="rating"
-          value={formData.rating}
-          onChange={handleChange}
-          variant="outlined"
-          type="number"
-          size="small"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white' } }}
-          error={!!errors.rating}
-        />
-        {renderError('rating')}
-      </div>
+        <div className="flex flex-col">
+          <TextField
+            fullWidth
+            label="Rating"
+            name="rating"
+            value={formData.rating}
+            onChange={handleChange}
+            variant="outlined"
+            type="number"
+            size="small"
+            InputLabelProps={{ style: { color: 'white' } }}
+            InputProps={{ style: { color: 'white' } }}
+            error={!!errors.rating}
+          />
+          {renderError('rating')}
+        </div>
 
-      <div className="flex flex-col">
-        <TextField
-          fullWidth
-          label="Director"
-          name="director"
-          value={formData.director}
-          onChange={handleChange}
-          variant="outlined"
-          size="small"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white' } }}
-          error={!!errors.director}
-        />
-        {renderError('director')}
-      </div>
+        <div className="flex flex-col">
+          <TextField
+            fullWidth
+            label="Director"
+            name="director"
+            value={formData.director}
+            onChange={handleChange}
+            variant="outlined"
+            size="small"
+            InputLabelProps={{ style: { color: 'white' } }}
+            InputProps={{ style: { color: 'white' } }}
+            error={!!errors.director}
+          />
+          {renderError('director')}
+        </div>
 
-      <div className="flex flex-col">
-        <TextField
-          fullWidth
-          label="Duration (min)"
-          name="duration"
-          value={formData.duration}
-          onChange={handleChange}
-          variant="outlined"
-          type="number"
-          size="small"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white' } }}
-          error={!!errors.duration}
-        />
-        {renderError('duration')}
-      </div>
+        <div className="flex flex-col">
+          <TextField
+            fullWidth
+            label="Duration (min)"
+            name="duration"
+            value={formData.duration}
+            onChange={handleChange}
+            variant="outlined"
+            type="number"
+            size="small"
+            InputLabelProps={{ style: { color: 'white' } }}
+            InputProps={{ style: { color: 'white' } }}
+            error={!!errors.duration}
+          />
+          {renderError('duration')}
+        </div>
 
-      <div className="flex flex-col col-span-1 sm:col-span-1 lg:col-span-1">
-        <TextField
-          select
-          fullWidth
-          label="Plan"
-          name="plan"
-          value={formData.plan}
-          onChange={handleChange}
-          variant="outlined"
-          size="small"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{ style: { color: 'white' } }}
-          error={!!errors.plan}
-        >
-          <MenuItem value="basic">Basic</MenuItem>
-          <MenuItem value="gold">Gold</MenuItem>
-          <MenuItem value="platinum">Platinum</MenuItem>
-        </TextField>
-        {renderError('plan')}
-      </div>
+        <div className="flex flex-col col-span-1 sm:col-span-1 lg:col-span-1">
+          <TextField
+            select
+            fullWidth
+            label="Plan"
+            name="plan"
+            value={formData.plan}
+            onChange={handleChange}
+            variant="outlined"
+            size="small"
+            InputLabelProps={{ style: { color: 'white' } }}
+            InputProps={{ style: { color: 'white' } }}
+            error={!!errors.plan}
+          >
+            <MenuItem value="basic">Basic</MenuItem>
+            <MenuItem value="gold">Gold</MenuItem>
+            <MenuItem value="platinum">Platinum</MenuItem>
+          </TextField>
+          {renderError('plan')}
+        </div>
 
-      <div className="flex flex-col col-span-1 sm:col-span-2 lg:col-span-2">
-        <TextField
-          fullWidth
-          label="Description"
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          variant="outlined"
-          multiline
-          rows={2}
-          size="small"
-          InputLabelProps={{ style: { color: 'white' } }}
-          InputProps={{
-            style: { color: 'white' },
-            sx: { '&:hover': { '& .MuiOutlinedInput-notchedOutline': { borderColor: '#e23145' } } }
-          }}
-          error={!!errors.description}
-        />
-        {renderError('description')}
-      </div>
+        <div className="flex flex-col col-span-1 sm:col-span-2 lg:col-span-2">
+          <TextField
+            fullWidth
+            label="Description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            variant="outlined"
+            multiline
+            rows={2}
+            size="small"
+            InputLabelProps={{ style: { color: 'white' } }}
+            InputProps={{
+              style: { color: 'white' },
+              sx: { '&:hover': { '& .MuiOutlinedInput-notchedOutline': { borderColor: '#e23145' } } }
+            }}
+            error={!!errors.description}
+          />
+          {renderError('description')}
+        </div>
 
-      <div className="col-span-1 sm:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <ImagePreview
-          imageFile={formData.poster}
-          onImageChange={handleFileChange}
-          label="Poster Image"
-          name="poster"
-          error={errors.poster}
-        />
-        <ImagePreview
-          imageFile={formData.coverimage}
-          onImageChange={handleFileChange}
-          label="Cover Image"
-          name="coverimage"
-          error={errors.coverimage}
-        />
-      </div>
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <ImagePreview
+            imageFile={formData.poster}
+            onImageChange={handleFileChange}
+            label="Poster Image"
+            name="poster"
+            error={errors.poster}
+          />
+          <ImagePreview
+            imageFile={formData.coverimage}
+            onImageChange={handleFileChange}
+            label="Cover Image"
+            name="coverimage"
+            error={errors.coverimage}
+          />
+        </div>
 
-      <div className="col-span-1 sm:col-span-2 lg:col-span-3">
-        <Button
-          type="submit"
-          variant="contained"
-          fullWidth
-          style={{
-            background: 'linear-gradient(to right, #e23145, #a8182e)',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            fontFamily: 'Anton, sans-serif',
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-            padding: '8px 0',
-          }}
-        >
-          Add Movie
-        </Button>
-      </div>
-    </form>
-  </div>
-);
+        <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            style={{
+              background: 'linear-gradient(to right, #e23145, #a8182e)',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              fontFamily: 'Anton, sans-serif',
+              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+              padding: '8px 0',
+            }}
+          >
+            Add Movie
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default WithRouter(CreateMovieForm);

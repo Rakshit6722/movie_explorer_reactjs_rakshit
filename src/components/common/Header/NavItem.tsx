@@ -7,7 +7,9 @@ interface NavItemProps {
   label: string;
   href: string;
   expanded?: boolean;
-  location: any; 
+  location: {
+    pathname: string;
+  };
 }
 
 interface NavItemState {
@@ -18,14 +20,14 @@ class NavItem extends Component<NavItemProps, NavItemState> {
   constructor(props: NavItemProps) {
     super(props);
     this.state = {
-      activePage: props.location.pathname === props.href.split("?")[0], // Compare only the base path
+      activePage: props.location.pathname === props.href.split("?")[0],
     };
   }
 
   componentDidUpdate(prevProps: NavItemProps) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
       this.setState({
-        activePage: this.props.location.pathname === this.props.href.split("?")[0], // Compare only the base path
+        activePage: this.props.location.pathname === this.props.href.split("?")[0],
       });
     }
   }

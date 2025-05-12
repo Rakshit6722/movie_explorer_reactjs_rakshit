@@ -119,6 +119,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
 
         {((innerWidth >= 768) && isRightVisible) && (
           <button
+          data-testid="scroll-right-button"
             onClick={this.scrollRight}
             className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-4 rounded-full border border-gray-700 hover:border-[#f02c49] hover:bg-black/60 transition-all duration-300 z-10"
           >

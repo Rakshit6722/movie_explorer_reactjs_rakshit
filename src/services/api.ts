@@ -15,12 +15,18 @@ export const loginApi = async (data: { email: string, password: string }) => {
         const response = await apiConnector('POST', `${BASE_URL}/login`, payload)
         return response
     } catch (err: any) {
-        console.log(err)
-        console.log(err?.status)
-
         if (err?.status === 401) {
             toast.error(err?.response?.data?.error ?? 'Something went wrong, try again!')
         }
+        else if (err?.status === 422) {
+            toast.error(err?.response?.data?.error ?? 'Something went wrong, try again!')
+        }
+        else if (err?.status === 500) {
+            toast.error(err?.response?.data?.error ?? 'Something went wrong, try again!')
+        } else {
+            toast.error(err?.message ?? 'Something went wrong, try again!')
+        }
+
     }
 }
 
@@ -30,7 +36,6 @@ export const registerApi = async (data: { first_name: string, last_name: string,
         return response
     } catch (err: any) {
         throw err
-        console.log(err)
     }
 }
 
@@ -44,19 +49,15 @@ export const logoutUser = async () => {
         });
         return response
     } catch (err: any) {
-        console.log(err);
+        toast.error(err?.message ?? 'Something went wrong, try again!')
     }
 }
 
 
 export const userNotificationApi = async (data: { device_token: string, notifications_enabled: boolean }) => {
     const localStorageToken = localStorage.getItem('token')
-    console.log("fcm from userNotificationApi", data.device_token)
     if (!localStorageToken) return
     try {
-        // const response = await apiConnector('POST', `${BASE_URL}/update_preferences`, data, {
-        //     Authorization: `Bearer ${localStorageToken}`
-        // })
         const response = await axios.post(
             'https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1/update_preferences',
             {
@@ -71,9 +72,7 @@ export const userNotificationApi = async (data: { device_token: string, notifica
                 }
             }
         );
-        console.log("response", response)
     } catch (err: any) {
-        console.log(err)
         throw err
     }
 }
@@ -93,7 +92,6 @@ export const addSubscriptioApi = async (plan: string): Promise<any> => {
         );
         return response.data
     } catch (err: any) {
-        console.log(err)
         throw err
     }
 }
@@ -113,10 +111,9 @@ export const getSubscriptionDetailsApi = async (): Promise<any> => {
             null,
             null
         );
-        console.log("response", response)
         return response?.data?.subscriptions
     } catch (err: any) {
-        console
+        throw err
     }
 }
 
@@ -129,7 +126,6 @@ export const updatePaymentStatus = async (sessionId: string | null): Promise<any
         )
         return response
     } catch (err: any) {
-        console.log(err)
         throw err
     }
 }

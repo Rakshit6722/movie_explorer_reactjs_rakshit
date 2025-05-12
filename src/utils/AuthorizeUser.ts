@@ -1,10 +1,11 @@
 import { current } from "@reduxjs/toolkit";
 
-export const authorizeUserForAccessMovie = (currentPlan: any, movie: any): boolean => {
-
-    console.log("inside authorizeUserForAccessMovie", currentPlan, movie?.plan)
+export const authorizeUserForAccessMovie = (currentPlan: any, movie: any, role: string): boolean => {
 
 
+    if(role === 'supervisor' || role === 'admin') {
+        return true;
+    }
 
     const moviePlan = movie?.plan
 
@@ -19,7 +20,7 @@ export const authorizeUserForAccessMovie = (currentPlan: any, movie: any): boole
         return moviePlan === 'basic' || moviePlan === 'gold';
     }
 
-    if (currentPlan === 'basic') {
+    if (currentPlan === 'basic' || currentPlan === null) {
         return moviePlan === 'basic';
     }
     

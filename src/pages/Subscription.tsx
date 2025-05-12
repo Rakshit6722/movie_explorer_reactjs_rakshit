@@ -101,7 +101,6 @@ const Subscription = () => {
     }
 
     const data = await addSubscriptioApi(selectedPlan);
-    console.log("response data", data)
 
     if (data?.session_id) {
       await stripe.redirectToCheckout({ sessionId: data.session_id });

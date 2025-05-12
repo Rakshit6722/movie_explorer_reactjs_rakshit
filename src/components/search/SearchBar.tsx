@@ -1,4 +1,4 @@
-import React from 'react'; // Make sure React is imported
+import React from 'react'; 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { IoSearch } from "react-icons/io5";
@@ -13,7 +13,6 @@ type AutocompleteProps = {
   hideTitle?: boolean;
 };
 
-// Simplified StyledAutocomplete - remove styles trying to hide MUI icons
 const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   '& .MuiInputBase-root': {
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
@@ -21,8 +20,8 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
     border: '1px solid #1f2937',
     borderRadius: '0.5rem',
     color: '#d1d5db',
-    padding: '0.25rem 0', // Base padding
-    paddingRight: '2.5rem', // Add space for the custom clear button
+    padding: '0.25rem 0',
+    paddingRight: '2.5rem', 
     transition: 'all 0.3s',
     '&:hover': {
       borderColor: '#374151',
@@ -35,14 +34,11 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
   '& .MuiOutlinedInput-notchedOutline': {
     border: 'none'
   },
-  // Keep input padding for search icon
   '& .MuiInputBase-input': {
     paddingLeft: '2.75rem !important',
     color: '#d1d5db',
-    // Ensure input padding doesn't conflict with custom end adornment
     paddingRight: '0.5rem !important',
   },
-  // Keep listbox styles
   '& .MuiAutocomplete-listbox': {
     backgroundColor: '#0f172a',
     border: '1px solid #1f2937',
@@ -93,7 +89,6 @@ export default function SearchBar({ searchTerm, onSearchChange, removeMargins = 
 
   return (
     <div className={`w-full ${removeMargins ? '' : 'px-4 py-6 mb-6'}`}>
-      {/* Only show title when not hidden */}
       {!hideTitle && (
         <div className="flex flex-col mb-4">
           <p className='font-anton text-gray-300 tracking-wide text-3xl lg:text-4xl'>Explore Movies</p>
@@ -101,9 +96,7 @@ export default function SearchBar({ searchTerm, onSearchChange, removeMargins = 
         </div>
       )}
 
-      {/* Remove max-w-4xl to allow full width */}
       <div className="relative w-full">
-        {/* Search Icon */}
         <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 z-10 pointer-events-none">
           <IoSearch size={20} />
         </div>
@@ -152,7 +145,6 @@ export default function SearchBar({ searchTerm, onSearchChange, removeMargins = 
   );
 }
 
-// Top 100 films array...
 const top100Films = [
   { title: 'The Shawshank Redemption', year: 1994 },
   { title: 'The Godfather', year: 1972 },

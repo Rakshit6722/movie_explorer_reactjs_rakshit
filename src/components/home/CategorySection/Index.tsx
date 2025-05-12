@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Skeleton, Box, stepButtonClasses } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import CarouselSection from './CarouselSection';
 import MainCarousel from '../MainCarousel';
 import MoodFeaturePromo from '../MoodSection/MoodFeaturePromo';
@@ -12,16 +11,16 @@ import SubscribeButton from './SubscribeButton';
 import { motion } from 'framer-motion';
 import { getSubscriptionDetailsApi } from '../../../services/api';
 import { setCurrentPlan } from '../../../redux/slices/userSlice';
-import { current } from '@reduxjs/toolkit';
-import ParallaxText from '../../common/ParallaxText';
-import NotificationCenter from '../../notification/NotificationCenter';
+import NotificationCenter from '../../notification/NotificationCenter'
 import { addNotification } from '../../../redux/slices/notificationSlice';
+import { toast } from 'react-toastify';
+
 
 const Index = () => {
   const loading = useSelector((state: any) => state.movie.loading);
   const containerRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
 
   useEffect(() => {
     fetchHomeMovies();
@@ -69,7 +68,7 @@ const Index = () => {
         localStorage.removeItem('notifications');
       }
     } catch (err: any) {
-      console.log(err.message);
+      toast.error(err?.message || "Couldn't sync notifications");
     }
   }
 
@@ -77,10 +76,10 @@ const Index = () => {
 
     dispatch(setLoading(true));
     try {
-      const data = await getMoviesForHomePage(10);
+      const data = await getMoviesForHomePage();
       if (data) dispatch(setMovies(data));
     } catch (err: any) {
-      console.log(err.message);
+      toast.error(err?.message || "Couldn't fetch movies");
     } finally {
       dispatch(setLoading(false));
     }
@@ -97,7 +96,7 @@ const Index = () => {
         dispatch(setCurrentPlan(response?.plan))
       }
     } catch (err: any) {
-      console.log(err.message);
+      toast.error(err?.message || "Couldn't fetch subscription details");
     }
   }
 

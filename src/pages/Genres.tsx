@@ -8,6 +8,7 @@ import { Movie } from '../types/type';
 import { getMovieByPageApi } from '../services/movieApi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { genreImages } from '../utils/loadImages';
+import { toast } from 'react-toastify';
 
 const genreBackgrounds = {
     "All": {
@@ -104,8 +105,8 @@ function Genres() {
             
             setPageMovies(response?.data || []);
             setTotalPages(response?.totalPages || 0);
-        } catch (err) {
-            console.error("Error fetching page data:", err);
+        } catch (err: any) {
+            toast.error(err?.message || "Couldn't fetch movies");
             setPageMovies([]);
         } finally {
             setIsLoading(false);

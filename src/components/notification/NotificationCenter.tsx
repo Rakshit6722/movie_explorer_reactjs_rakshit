@@ -72,6 +72,8 @@ const NotificationCenter: React.FC = () => {
                 <>
 
                     <div
+                    data-testid="backdrop
+                    "
                         className="fixed inset-0 z-40 bg-black/5"
                         onClick={() => setIsOpen(false)}
                     ></div>

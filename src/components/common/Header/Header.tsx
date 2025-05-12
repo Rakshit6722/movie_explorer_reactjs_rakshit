@@ -8,14 +8,12 @@ import { LuSearchCode } from "react-icons/lu";
 import Logo from '../../../assets/images/movieExplorerLogoNew.png';
 import NavItem from './NavItem';
 import WithReduxState from '../../hoc/WithReduxState';
+import { User } from '../../../types/type';
 
-interface NavItemProps {
+interface NavItemType {
   icon: any;
   label: string;
   href: string;
-  location?: any;
-  userInfo?: any;
-  isLoggedIn?: boolean;
 }
 
 interface HeaderState {
@@ -23,9 +21,17 @@ interface HeaderState {
   windowWidth: number;
 }
 
-class Header extends Component<any, HeaderState> {
+interface HeaderProps {
+  location: {
+    pathname: string;
+  }
+  isLoggedIn: boolean;
+  userInfo: User
+}
+
+class Header extends Component<HeaderProps, HeaderState> {
   clickOutisideRef: React.RefObject<HTMLDivElement | null>;
-  constructor(props: any) {
+  constructor(props: HeaderProps) {
     super(props);
     this.clickOutisideRef = React.createRef<HTMLDivElement>();
     this.state = {
@@ -66,7 +72,7 @@ class Header extends Component<any, HeaderState> {
   };
 
   handleClickOutside = (event: MouseEvent) => {
-    if(this.clickOutisideRef.current && !this.clickOutisideRef.current.contains(event.target as Node)) {
+    if (this.clickOutisideRef.current && !this.clickOutisideRef.current.contains(event.target as Node)) {
       this.setState({ expanded: false });
     }
   }
@@ -79,7 +85,7 @@ class Header extends Component<any, HeaderState> {
 
   render() {
 
-    const NAV_ITEMS: Array<NavItemProps> = [
+    const NAV_ITEMS: Array<NavItemType> = [
       {
         icon: {
           outline: <RiHome2Line size={22} />,
@@ -159,6 +165,7 @@ class Header extends Component<any, HeaderState> {
           <div className="flex flex-col space-y-7 pl-2 pt-[167px]">
             {NAV_ITEMS.map((item) => (
               <NavLink
+                data-testid="nav-link"
                 to={item.href}
                 key={item.label}
                 className={({ isActive }: any) =>

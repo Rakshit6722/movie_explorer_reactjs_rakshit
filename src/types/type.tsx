@@ -15,8 +15,8 @@ export interface Movie {
 export interface User {
     id: number;
     email: string;
-    firstname: string;
-    lastname: string;
+    first_name: string;
+    last_name: string;
     role: string;
     phonenumber: string;
     active_plan: string;

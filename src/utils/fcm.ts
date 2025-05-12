@@ -1,23 +1,23 @@
+import { toast } from 'react-toastify';
 import { messaging, FIREBASE_VAPID_KEY } from '../firebase/firebase';
 import { getToken } from "firebase/messaging";
 
 export const requestForToken = async () => {
   try {
     if (!messaging) {
-      console.error('Firebase messaging not initialized');
+      toast.error("Firebase messaging is not initialized");
       return null;
     }
 
     const currentToken = await getToken(messaging, { vapidKey: FIREBASE_VAPID_KEY });
     if (currentToken) {
-      console.log('FCM device token:', currentToken);
       return currentToken;
     } else {
-      console.log('No registration token available. Request permission to generate one.');
+      toast.error("No registration token available. Request permission to generate one.");
       return null;
     }
-  } catch (err) {
-    console.log('An error occurred while retrieving token. ', err);
+  } catch (err: any) {
+    toast.error(err?.message || "Couldn't get token");
     return null;
   }
 }

@@ -6,6 +6,7 @@ import { NavLink } from 'react-router-dom';
 import { getMovieDetails } from '../services/movieApi';
 import { authorizeUserForAccessMovie } from '../utils/AuthorizeUser';
 import AuthorizedContent from '../components/common/AuthorizedContent';
+import { toast } from 'react-toastify';
 
 class MovieDetail extends Component<any, any> {
     constructor(props: any) {
@@ -28,11 +29,6 @@ class MovieDetail extends Component<any, any> {
         if (this.movieId) {
             await this.getMovie(this.movieId);
             this.findSimilarMovies(this.state.movie)
-
-            console.log("DEBUG INFO:");
-            console.log("- Current user plan:", this.currentPlan);
-            console.log("- Movie plan required:", this.state.movie?.plan);
-            console.log("- Authorization result:", authorizeUserForAccessMovie(this.currentPlan, this.state.movie));
         }
 
         if (this.mainRef.current) {
@@ -66,8 +62,8 @@ class MovieDetail extends Component<any, any> {
             const data = await getMovieDetails(Number(id))
             this.setState({ movie: data?.data, isLoading: false });
 
-        } catch (error) {
-            console.error("Error fetching movie details:", error);
+        } catch (error: any) {
+            toast.error(error?.message || "Couldn't fetch movie details");
             this.setState({ isLoading: false });
             return;
         }
@@ -110,7 +106,7 @@ class MovieDetail extends Component<any, any> {
 
     render() {
         const { movie, isLoading, imageError } = this.state;
-        const isAuthorized = authorizeUserForAccessMovie(this.currentPlan, movie);
+        const isAuthorized = authorizeUserForAccessMovie(this.currentPlan, movie, this.props.userInfo.role);
 
 
         if (isLoading) {

@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 import SearchIcon from '@mui/icons-material/Search';
 import VideocamIcon from '@mui/icons-material/Videocam';
+import { toast } from 'react-toastify';
 
 function Search() {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ function Search() {
         setTotalPages(response?.totalPages || 0);
       }
     } catch (error) {
-      console.error('Search error:', error);
+      toast.error('Error fetching movies. Please try again later.');
       setMovies([]);
       setTotalPages(0);
     } finally {

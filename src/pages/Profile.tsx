@@ -140,6 +140,7 @@ function Profile() {
             className="flex items-center gap-2 py-1.5 px-3 text-sm bg-black/40 hover:bg-[#e23145]/15 rounded-lg border border-gray-800/40 hover:border-[#e23145]/30 text-gray-300 hover:text-white transition-all duration-200 group"
           >
             <LogOutIcon
+              
               fontSize="small"
               className="text-gray-400 group-hover:text-[#e23145] transition-colors"
             />

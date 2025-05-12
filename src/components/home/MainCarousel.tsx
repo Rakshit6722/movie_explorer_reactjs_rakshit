@@ -15,9 +15,6 @@ const MainCarousel = () => {
         ? [...moviesFromStore].sort((a: any, b: any) => b.rating - a.rating).slice(0, 10)
         : [];
 
-    const user = useSelector((state: any) => state.user.userInfo);
-    const token = useSelector((state: any) => state.user.token);
-
     const NextArrow = (props: any) => {
         const { onClick } = props;
         return (
@@ -59,7 +56,7 @@ const MainCarousel = () => {
             <Slider {...settings}>
                 {carouselMovie.map((movie: Movie, index: number) => (
                     <div key={movie.id || `movie-${index}`}>
-                        <MainCarouselMovieCard movie={movie} />
+                        <MainCarouselMovieCard data-testId="carousel-movie-card" movie={movie} />
                     </div>
                 ))}
             </Slider>

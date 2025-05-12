@@ -10,7 +10,6 @@ function TokenManager() {
         checkAndHandleToken()
 
         const intervalId = setInterval(() => {
-            console.log("Checking token validity...")
             checkAndHandleToken()
         }, 1000 * 5 * 60);
 
@@ -33,15 +32,14 @@ function TokenManager() {
             const token = localStorage.getItem('token');
             if (token) {
                 const decodedToken = jwtDecode(token);
-                console.log("Decoded Token:", decodedToken)
                 if (!decodedToken.exp) return false
 
                 const currentTime = Math.floor(Date.now() / 1000)
                 return decodedToken.exp > currentTime
             }
             return false;
-        } catch (err) {
-            console.error('Error decoding token:', err);
+        } catch (err: any) {
+            toast.error(err?.message || "Couldn't decode token");
             return false;
         }
     }

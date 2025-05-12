@@ -9,6 +9,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import { Button } from '@mui/material';
 import confetti from 'canvas-confetti';
+import { toast } from 'react-toastify'
 
 const SubscriptionSuccess = () => {
 
@@ -29,7 +30,7 @@ const SubscriptionSuccess = () => {
     if (paymentIntentId) {
       updatePaymentSuccessStatus()
     } else {
-      console.error("No payment intent ID found in the URL.")
+      toast.error("Payment ID not found")
     }
   }, [])
 
@@ -46,7 +47,6 @@ const SubscriptionSuccess = () => {
   const updatePaymentSuccessStatus = async () => {
     try {
       const response = await updatePaymentStatus(paymentIntentId)
-      console.log("Payment status response:", response)
       if (response) {
         dispatch(setCurrentPlan(response?.data?.plan))
         setSubscriptionData({
@@ -60,7 +60,7 @@ const SubscriptionSuccess = () => {
       }
 
     } catch (err: any) {
-      console.error("Error updating payment status:", err)
+      toast.error("Couldn't update payment status", err?.message)
     }
   }
 

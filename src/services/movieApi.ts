@@ -22,23 +22,23 @@ export const getMovieByPageApi = async (page?: number, genre?: string | null, se
             throw new Error("Failed to fetch movies")
         }
     } catch (err: any) {
-        console.error("API Error:", err.response ? err.response.data : err.message);
         throw err
     }
 }
 
-export const getMoviesForHomePage = async (pageCount: number) => {
+export const getMoviesForHomePage = async () => {
     try{
-        const pagesToFetch = Array.from({ length: pageCount }, (_, i) => i + 1);
-
-        const responses = await Promise.all(
-            pagesToFetch.map((page) => getMovieByPageApi(page))
+        const response = await apiConnector(
+            "GET",
+            `${BASE_URL}/all`,
+            null,
+            null,
+            null,
         )
-
-        const allMovies = responses.flatMap((response) => response.data);
-        return allMovies
+        if(response?.status === 200) {
+            return response?.data?.movies
+        }
     }catch(err: any){
-        console.error("API Error:", err.response ? err.response.data : err.message);
         throw err
     }
 }
@@ -56,7 +56,6 @@ export const getMovieDetails = async (id: number): Promise<any> => {
 
         return response
     }catch(err: any){
-        console.error("API Error:", err.response ? err.response.data : err.message);
         throw err
     }
 }
