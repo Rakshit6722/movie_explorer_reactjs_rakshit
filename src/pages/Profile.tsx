@@ -52,7 +52,9 @@ function Profile() {
       if (response?.plan) {
         if(response?.status === 'pending') {
           setError("You did not complete the payment, please try again.");
-          dispatch(setCurrentPlan("Basic"));
+          return
+        }else if(response?.status === 'cancelled') {
+          setError("Your subscription has been cancelled, please subscribe again or login again.");
           return
         }
         dispatch(setCurrentPlan(response.plan));
