@@ -151,171 +151,226 @@ export class PersonalInformation extends Component<any> {
                         </div>
 
                         <div className="md:col-span-8">
-                            <div className={`rounded-lg overflow-hidden border relative hover:shadow-xl hover:shadow-black/10 transition-shadow duration-300 ${style.container}`}>
-                                
-                                {/* Render all effects from the array */}
-                                {style.effects.map((effect) => effect)}
-                                
-                                <div className="absolute top-0 inset-x-0 h-1">
-                                    <div className={`h-full w-full ${style.topBar}`}></div>
+                            <div className={`rounded-lg overflow-hidden border relative group transform transition-all duration-300
+    ${style.container} hover:translate-y-[-2px] hover:shadow-2xl hover:shadow-${currentPlan === 'gold' ? 'amber' : currentPlan === 'platinum' ? 'slate' : 'red'}-900/20`}>
+    
+    {/* Background Pattern - More subtle */}
+    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiIGlkPSJhIj48c3RvcCBzdG9wLWNvbG9yPSIjRkZGIiBzdG9wLW9wYWNpdHk9Ii4wNSIgb2Zmc2V0PSIwJSIvPjxzdG9wIHN0b3AtY29sb3I9IiNGRkYiIHN0b3Atb3BhY2l0eT0iMCIgb2Zmc2V0PSIxMDAlIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHBhdGggZD0iTTAgMGg2MHY2MEgwVjB6IiBmaWxsPSJ1cmwoI2EpIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIG9wYWNpdHk9Ii4yIi8+PC9zdmc+')] opacity-10"></div>
+    
+    {/* Render all effects from the array */}
+    {style.effects.map((effect) => effect)}
+    
+    {/* Top accent bar with animation */}
+    <div className="absolute top-0 inset-x-0 h-1 overflow-hidden">
+        <div className={`h-full w-full ${style.topBar} group-hover:opacity-100 opacity-80 transition-opacity duration-500`}></div>
+    </div>
+    
+    <div className="p-6 relative z-10">
+        {/* Header with premium styling */}
+        <div className="flex items-center justify-between border-b border-gray-800/80 pb-3 mb-5">
+            <h3 className="text-xl font-medium flex items-center">
+                <WorkspacePremiumIcon
+                    className={`${style.icon} transition-transform group-hover:scale-110 duration-300`}
+                    fontSize="small"
+                    sx={{ mr: 1.5 }}
+                />
+                <span className="tracking-wide">Your Subscription</span>
+            </h3>
+            
+            {!loading && subscriptionDetails && (
+                <span className={`text-xs px-2.5 py-0.5 rounded-full flex items-center backdrop-blur-sm transition-all duration-300
+                    ${subscriptionDetails.status?.toLowerCase() === 'active'
+                        ? 'bg-green-900/30 text-green-400 border border-green-800/50 group-hover:bg-green-900/40'
+                        : 'bg-gray-800/50 text-gray-400 border border-gray-700/50 group-hover:bg-gray-800/60'
+                    }`}>
+                    <span className={`w-2 h-2 rounded-full mr-1.5 transition-all duration-300
+                        ${subscriptionDetails.status?.toLowerCase() === 'active' 
+                            ? 'bg-green-400 group-hover:animate-pulse' 
+                            : 'bg-gray-500'
+                        }`}>
+                    </span>
+                    {getStatusDisplay()}
+                </span>
+            )}
+        </div>
+
+        {/* Content section with improved spacing and visuals */}
+        {loading ? (
+            <div className="h-52 flex flex-col items-center justify-center gap-3">
+                <CircularProgress size={28} sx={{ color: currentPlan === 'gold' ? "#d97706" : currentPlan === 'platinum' ? "#94a3b8" : "#e23145" }} />
+                <span className="text-sm text-gray-400">Loading subscription details...</span>
+            </div>
+        ) : error ? (
+            <div className="text-red-400 flex flex-col items-center gap-2 text-center py-8 text-sm">
+                {error}
+                <button onClick={() => window.location.href = '/subscription'}
+                    className='mt-2 border border-red-400/50 rounded-md px-4 py-2 bg-red-400/10 hover:bg-red-400/20 transition-all duration-200 hover:scale-105'>
+                    <span className="text-white font-medium cursor-pointer">Retry</span>
+                </button>
+            </div>
+        ) : (
+            <div className="space-y-6">
+                {/* Plan info box with enhanced styling */}
+                <div className={`p-5 rounded-xl border relative overflow-hidden backdrop-blur-sm transition-all duration-300
+                    ${style.infoBox} transform group-hover:translate-y-[-2px] group-hover:shadow-lg`}>
+                    
+                    {/* Render info box effects */}
+                    {style.infoBoxEffects && style.infoBoxEffects.map((effect) => effect)}
+                    
+                    <div className="relative z-10 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className={`p-2.5 rounded-full ${
+                                currentPlan === 'gold' 
+                                    ? 'bg-gradient-to-br from-amber-700/30 to-amber-900/30 border border-amber-600/30' 
+                                    : currentPlan === 'platinum' 
+                                        ? 'bg-gradient-to-br from-slate-700/30 to-slate-900/30 border border-slate-600/30'
+                                        : 'bg-gradient-to-br from-red-700/20 to-red-900/20 border border-red-800/20'
+                            } transition-all duration-300 group-hover:scale-105`}>
+                                <WorkspacePremiumIcon
+                                    className={`${style.icon} transition-transform duration-300`}
+                                    sx={{ fontSize: 32 }}
+                                />
+                            </div>
+                            <div>
+                                <span className="text-lg font-medium block tracking-wide">
+                                    {planInfo.name} Plan
+                                </span>
+                                <span className={`text-xs px-2 py-0.5 rounded-md inline-block mt-1 font-medium tracking-wide ${style.badge}`}>
+                                    {currentPlan?.toUpperCase()}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div className="text-right">
+                            <div className={`font-semibold text-xl ${
+                                currentPlan === 'gold' 
+                                    ? 'text-amber-300'
+                                    : currentPlan === 'platinum'
+                                        ? 'text-slate-300' 
+                                        : 'text-white'
+                            }`}>
+                                {planInfo.price === 0 ? 'FREE' : `₹${planInfo.price}`}
+                            </div>
+                            <span className="text-xs text-gray-400 tracking-wide">
+                                {planInfo.price > 0 ? 'per month' : ''}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Stats/info cards with improved styling */}
+                {subscriptionDetails && currentPlan !== 'basic' && (
+                    <div className="flex flex-wrap gap-4">
+                        <div className="flex-1 min-w-[140px] p-4 rounded-xl border border-opacity-30 backdrop-blur-sm 
+                            bg-gradient-to-br from-black/60 to-black/80 hover:from-black/80 hover:to-black/60 
+                            transition-all duration-300 hover:shadow-lg group-hover:border-opacity-50">
+                            <div className="text-xs text-gray-400 flex items-center mb-2 font-medium">
+                                <CalendarTodayIcon sx={{ fontSize: 14, mr: 0.8 }} />
+                                START DATE
+                            </div>
+                            <div className="text-sm font-medium">{formatDateForDisplay(subscriptionDetails.created_at)}</div>
+                        </div>
+
+                        <div className="flex-1 min-w-[140px] p-4 rounded-xl border border-opacity-30 backdrop-blur-sm 
+                            bg-gradient-to-br from-black/60 to-black/80 hover:from-black/80 hover:to-black/60 
+                            transition-all duration-300 hover:shadow-lg group-hover:border-opacity-50">
+                            <div className="text-xs text-gray-400 flex items-center mb-2 font-medium">
+                                <AccessTimeIcon sx={{ fontSize: 14, mr: 0.8 }} />
+                                EXPIRES
+                            </div>
+                            <div className="text-sm font-medium">{formatDateForDisplay(subscriptionDetails.expiry_date)}</div>
+                        </div>
+
+                        {getDaysRemaining() !== null && (
+                            <div className="flex-1 min-w-[140px] p-4 rounded-xl border border-opacity-30 backdrop-blur-sm 
+                                bg-gradient-to-br from-black/60 to-black/80 hover:from-black/80 hover:to-black/60 
+                                transition-all duration-300 hover:shadow-lg group-hover:border-opacity-50">
+                                <div className="text-xs text-gray-400 mb-2 font-medium">TIME REMAINING</div>
+                                <div className="text-sm font-medium flex items-center justify-between">
+                                    <span>{getDaysRemaining()} days</span>
+                                    <span className={`text-xs font-medium ${subscriptionDetails.status?.toLowerCase() === 'active' ? 'text-green-400' : 'text-gray-400'}`}>
+                                        {Math.min(Math.round(getDaysRemaining() / 30 * 100), 100)}%
+                                    </span>
                                 </div>
-                                
-                                <div className="p-5 relative z-10">
-                                    <div className="flex items-center justify-between border-b border-gray-800/80 pb-2 mb-4">
-                                        <h3 className="text-lg font-medium flex items-center">
-                                            <WorkspacePremiumIcon
-                                                className={style.icon}
-                                                fontSize="small"
-                                                sx={{ mr: 1 }}
-                                            />
-                                            Your Subscription
-                                        </h3>
-                                        
-                                        {!loading && subscriptionDetails && (
-                                            <span className={`text-xs px-2 py-0.5 rounded-full flex items-center ${subscriptionDetails.status?.toLowerCase() === 'active'
-                                                ? 'bg-green-900/30 text-green-400 border border-green-800/50'
-                                                : 'bg-gray-800/50 text-gray-400 border border-gray-700/50'
-                                                }`}>
-                                                <span className={`w-1.5 h-1.5 rounded-full mr-1 ${subscriptionDetails.status?.toLowerCase() === 'active' ? 'bg-green-400' : 'bg-gray-500'
-                                                    }`}></span>
-                                                {getStatusDisplay()}
-                                            </span>
-                                        )}
+                                <div className="w-full bg-black/80 rounded-full h-1.5 mt-2.5 overflow-hidden">
+                                    <div className={`h-full rounded-full relative ${
+                                        subscriptionDetails.status?.toLowerCase() === "active" 
+                                            ? "bg-gradient-to-r from-green-500 to-green-400" 
+                                            : "bg-gray-500"
+                                        }`}
+                                        style={{
+                                            width: `${Math.min(getDaysRemaining() / 30 * 100, 100)}%`
+                                        }}>
+                                        <div className="absolute inset-0 bg-white/30 rounded-full animate-pulse"></div>
                                     </div>
-
-                                    {loading ? (
-                                        <div className="h-40 flex items-center justify-center">
-                                            <CircularProgress size={24} sx={{ color: "#e23145" }} />
-                                        </div>
-                                    ) : error ? (
-                                        <div className="text-red-400 flex flex-col items-center gap-2 text-center py-4 text-sm">
-                                            {error}
-                                            <button onClick={() => window.location.href = '/subscription'}
-                                                className='mt-2 border w-[100px] border-red-400/50 rounded-md px-3 py-1.5 bg-red-400/10 hover:bg-red-400/20 transition-colors duration-200'>
-                                                <span
-                                                    className="text-white font-semibold cursor-pointer"
-                                                >
-                                                    Retry
-                                                </span>
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div className="space-y-5">
-                                            <div className={`p-4 rounded-lg border relative overflow-hidden ${style.infoBox}`}>
-                                                
-                                                {/* Render info box effects */}
-                                                {style.infoBoxEffects && style.infoBoxEffects.map((effect) => effect)}
-                                                
-                                                <div className="relative z-10">
-                                                    <div className="flex items-center justify-between">
-                                                        <WorkspacePremiumIcon
-                                                            className={style.icon}
-                                                            sx={{ mr: 2, fontSize: 28 }}
-                                                        />
-                                                        <div>
-                                                            <span className="text-base font-medium block">
-                                                                {planInfo.name} Plan
-                                                            </span>
-                                                            <span className={`text-xs px-1.5 py-0.5 rounded inline-block mt-1 ${style.badge}`}>
-                                                                {currentPlan?.toUpperCase()}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div className="text-right">
-                                                        <div className="font-medium text-lg">
-                                                            {planInfo.price === 0 ? 'FREE' : `₹${planInfo.price}`}
-                                                        </div>
-                                                        <span className="text-xs text-gray-500">
-                                                            {planInfo.price > 0 ? 'per month' : ''}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {subscriptionDetails && currentPlan !== 'basic' && (
-                                                <div className="flex flex-wrap gap-3">
-                                                    <div className="flex-1 min-w-[140px] p-3 bg-black rounded-lg border border-[#1a1a1a] backdrop-blur-sm">
-                                                        <div className="text-xs text-gray-400 flex items-center mb-1.5">
-                                                            <CalendarTodayIcon sx={{ fontSize: 12, mr: 0.5 }} />
-                                                            START DATE
-                                                        </div>
-                                                        <div className="text-sm">{formatDateForDisplay(subscriptionDetails.created_at)}</div>
-                                                    </div>
-
-                                                    <div className="flex-1 min-w-[140px] p-3 bg-black rounded-lg border border-[#1a1a1a] backdrop-blur-sm">
-                                                        <div className="text-xs text-gray-400 flex items-center mb-1.5">
-                                                            <AccessTimeIcon sx={{ fontSize: 12, mr: 0.5 }} />
-                                                            EXPIRES
-                                                        </div>
-                                                        <div className="text-sm">{formatDateForDisplay(subscriptionDetails.expiry_date)}</div>
-                                                    </div>
-
-                                                    {getDaysRemaining() !== null && (
-                                                        <div className="flex-1 min-w-[140px] p-3 bg-black rounded-lg border border-[#1a1a1a] backdrop-blur-sm">
-                                                            <div className="text-xs text-gray-400 mb-1.5">TIME REMAINING</div>
-                                                            <div className="text-sm flex items-center justify-between">
-                                                                <span>{getDaysRemaining()} days</span>
-                                                                <span className={`text-xs ${subscriptionDetails.status?.toLowerCase() === 'active' ? 'text-green-400' : 'text-gray-400'
-                                                                    }`}>
-                                                                    {Math.min(Math.round(getDaysRemaining() / 30 * 100), 100)}%
-                                                                </span>
-                                                            </div>
-                                                            <div className="w-full bg-black/50 rounded-full h-1.5 mt-1.5 overflow-hidden">
-                                                                <div className={`h-full rounded-full relative ${subscriptionDetails.status?.toLowerCase() === "active" ? "bg-green-500" : "bg-gray-500"
-                                                                    }`}
-                                                                    style={{
-                                                                        width: `${Math.min(getDaysRemaining() / 30 * 100, 100)}%`
-                                                                    }}>
-                                                                    <div className="absolute inset-0 bg-white/30 rounded-full animate-pulse"></div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )}
-
-                                            <div className="mb-2 bg-black p-3 rounded-lg border border-[#1a1a1a]">
-                                                <div className="text-xs text-gray-400 mb-2 uppercase font-medium tracking-wide">Plan Features</div>
-                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                                    {planInfo.features.slice(0, 4).map((feature: any, index: number) => (
-                                                        <div key={index} className={`flex items-center p-1.5 rounded-md ${
-                                                            feature.available 
-                                                                ? 'hover:bg-[#0a0a0a] border border-transparent hover:border-green-900/20' 
-                                                                : 'hover:bg-[#0a0a0a] border border-transparent'
-                                                            } transition-all duration-200`}>
-                                                            {feature.available ?
-                                                                <CheckCircleIcon fontSize="small" className="text-green-500 mr-1.5 flex-shrink-0" style={{ fontSize: '14px' }} /> :
-                                                                <CancelIcon fontSize="small" className="text-gray-500 mr-1.5 flex-shrink-0" style={{ fontSize: '14px' }} />
-                                                            }
-                                                            <span className={`text-xs ${feature.available ? 'text-gray-200' : 'text-gray-500'}`}>
-                                                                {feature.text}
-                                                            </span>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            {/* Action button */}
-                                            <div className="pt-1">
-                                                <button
-                                                    onClick={() => window.location.href = '/subscription'}
-                                                    className={`w-full py-2.5 text-sm text-center rounded-md transition-all duration-300 relative overflow-hidden group ${style.button}`}
-                                                >
-                                                    <span className="relative z-10">
-                                                        {currentPlan === 'basic'
-                                                            ? 'Upgrade Plan'
-                                                            : subscriptionDetails?.status?.toLowerCase() === 'active'
-                                                                ? 'Manage Plan'
-                                                                : 'Renew Plan'}
-                                                    </span>
-                                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-white transition-opacity duration-300"></div>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
+                        )}
+                    </div>
+                )}
+
+                {/* Features section */}
+                <div className="p-4 rounded-xl border border-opacity-20 
+                    bg-gradient-to-br from-black/60 to-black/80 backdrop-blur-sm">
+                    <div className="text-xs text-gray-400 mb-3 uppercase font-medium tracking-wide">Plan Features</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {planInfo.features.slice(0, 4).map((feature: any, index: number) => (
+                            <div key={index} className={`flex items-center p-2.5 rounded-lg transition-all duration-200
+                                ${feature.available 
+                                    ? 'border border-opacity-10 hover:border-opacity-30 hover:shadow-inner' 
+                                    : 'border border-transparent hover:bg-black/40'
+                                }`}
+                                style={{
+                                    borderColor: feature.available 
+                                        ? currentPlan === 'gold' 
+                                            ? '#92400e' 
+                                            : currentPlan === 'platinum' 
+                                                ? '#475569' 
+                                                : '#991b1b'
+                                        : 'transparent'
+                                }}>
+                                {feature.available ?
+                                    <CheckCircleIcon 
+                                        className={`mr-2 flex-shrink-0 ${
+                                            currentPlan === 'gold' 
+                                                ? 'text-amber-500' 
+                                                : currentPlan === 'platinum' 
+                                                    ? 'text-slate-400' 
+                                                    : 'text-green-500'
+                                        }`} 
+                                        style={{ fontSize: '16px' }} /> :
+                                    <CancelIcon className="text-gray-500 mr-2 flex-shrink-0" style={{ fontSize: '16px' }} />
+                                }
+                                <span className={`text-sm ${feature.available ? 'text-gray-100' : 'text-gray-500'}`}>
+                                    {feature.text}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Action button with enhanced styling */}
+                <div className="pt-1">
+                    <button
+                        onClick={() => window.location.href = '/subscription'}
+                        className={`w-full py-3 text-sm font-medium tracking-wide text-center rounded-lg 
+                            transition-all duration-300 relative overflow-hidden group ${style.button}
+                            transform hover:translate-y-[-1px]`}
+                    >
+                        <span className="relative z-10">
+                            {currentPlan === 'basic'
+                                ? 'Upgrade Plan'
+                                : subscriptionDetails?.status?.toLowerCase() === 'active'
+                                    ? 'Manage Plan'
+                                    : 'Renew Plan'}
+                        </span>
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-20 bg-white transition-opacity duration-300"></div>
+                    </button>
+                </div>
+            </div>
+        )}
+    </div>
+</div>
                         </div>
                     </div>
                 </div>
