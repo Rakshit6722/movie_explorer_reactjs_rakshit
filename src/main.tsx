@@ -27,7 +27,9 @@ createRoot(document.getElementById('root')!).render(
                 <AuthProvider>
                   <App />
                 </AuthProvider>
-                <ToastContainer />
+                <ToastContainer
+                  toastClassName={'my-toast'}
+                />
               </BrowserRouter>
             </FirebaseProvider>
           </QueryClientProvider>
