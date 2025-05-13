@@ -10,13 +10,14 @@ export default {
         anton: ['Anton', 'sans-serif'],
       },
       animation: {
-        shine: 'shine 3s ease-in-out infinite',
+        'shine-slow': 'shine 8s ease-in-out infinite',
       },
       keyframes: {
         shine: {
-          '0%, 100%': { transform: 'translateX(-100%) skewX(-45deg)' },
-          '50%': { transform: 'translateX(100%) skewX(-45deg)' },
-        }
+          '0%': { transform: 'translateX(-100%) rotate(-45deg)' },
+          '50%': { transform: 'translateX(100%) rotate(-45deg)' },
+          '100%': { transform: 'translateX(100%) rotate(-45deg)' },
+        },
       },
     },
   },
