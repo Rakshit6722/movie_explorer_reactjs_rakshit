@@ -97,7 +97,7 @@ export class PersonalInformation extends Component<any> {
                                         : 'border-[#1a1a1a] bg-black'
                                 }`}>
 
-                                =    {currentUserPlan === 'gold' && (
+                                  {currentUserPlan === 'gold' && (
                                     <>
                                         <div className="absolute inset-0 opacity-10 pointer-events-none">
                                             <div className="absolute top-0 left-0 right-0 h-40 bg-amber-700 blur-[80px]"></div>
@@ -117,7 +117,7 @@ export class PersonalInformation extends Component<any> {
                                         </div>
                                         <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-br from-slate-300/10 to-transparent rounded-full blur-xl"></div>
                                         <div className="absolute bottom-20 left-10 w-32 h-32 bg-gradient-to-br from-slate-400/5 to-transparent rounded-full blur-xl"></div>
-                                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNDMEM0Q0MiIGZpbGwtb3BhY2l0eT0iMC4wOCI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDF2NWgtMXYtNXptLTIgMGgxdjJoLTF2LTJ6bS0yIDBoMXYyaC0xdi0yem0tMi0xaDEwdjFoLTEwdi0xeiIvPjwvZz48L2c+PC9zdmc+')] opacity-20"></div>
+                                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNDMEM0Q0MiIGZpbGwtb3BhY2l0eT0iMC4wOCI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDF2NWgtMXYtNXptLTIgMGgxdjJoLTF2LTJ6bS0yem0tMi0xaDEwdjFoLTEwdi0xeiIvPjwvZz48L2c+PC9zdmc+')] opacity-20"></div>
                                     </>
                                 )}
 
@@ -130,9 +130,7 @@ export class PersonalInformation extends Component<any> {
                                         }`}></div>
                                 </div>
 
-                                {/* Rest of the content */}
                                 <div className="p-5 relative z-10">
-                                    {/* Existing content */}
                                     <div className="flex items-center justify-between border-b border-gray-800/80 pb-2 mb-4">
                                         <h3 className="text-lg font-medium flex items-center">
                                             <WorkspacePremiumIcon
@@ -177,12 +175,12 @@ export class PersonalInformation extends Component<any> {
                                     ) : (
                                         <div className="space-y-5">
                                             <div className={`p-4 rounded-lg border relative overflow-hidden
-    ${currentUserPlan === 'basic'
-                                                    ? 'border-[#1a1a1a] bg-black/60'
-                                                    : currentUserPlan === 'gold'
-                                                        ? 'border-amber-900/40 bg-gradient-to-br from-[#120d02] to-[#0c0901]'
-                                                        : 'border-slate-700/40 bg-gradient-to-br from-[#0f1115] to-[#0a0c10]'
-                                                }`}>
+    ${currentUserPlan === 'basic' 
+        ? 'border-[#1a1a1a] bg-black/80' 
+        : currentUserPlan === 'gold' 
+            ? 'border-amber-700/40 bg-gradient-to-br from-[#1a1404] to-[#0f0a01]' 
+            : 'border-slate-600/40 bg-gradient-to-br from-[#141821] to-[#0d1017]'
+    }`}>
 
                                                 {currentUserPlan !== 'basic' && (
                                                     <div className="absolute -inset-1 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-45deg] transform-gpu animate-shine pointer-events-none"></div>
@@ -297,7 +295,6 @@ export class PersonalInformation extends Component<any> {
                                                 </div>
                                             </div>
 
-                                            {/* Action button */}
                                             <div className="pt-1">
                                                 <button
                                                     onClick={() => window.location.href = '/subscription'}
