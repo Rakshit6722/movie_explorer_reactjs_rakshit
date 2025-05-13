@@ -7,7 +7,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
-import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 
 
@@ -90,17 +89,50 @@ export class PersonalInformation extends Component<any> {
                         </div>
 
                         <div className="md:col-span-8">
-                            <div className={`bg-black rounded-lg overflow-hidden border ${
-                                currentUserPlan === 'gold' 
-                                    ? 'border-amber-900/40' 
-                                    : currentUserPlan === 'platinum' 
-                                        ? 'border-slate-700/40' 
-                                        : 'border-[#1a1a1a]'
-                                } relative hover:shadow-xl hover:shadow-black/10 transition-shadow duration-300`}>
+                            <div className={`rounded-lg overflow-hidden border relative hover:shadow-xl hover:shadow-black/10 transition-shadow duration-300 
+    ${currentUserPlan === 'gold'
+                                    ? 'border-amber-700/60 bg-gradient-to-br from-black via-[#151005] to-[#1c1505]'
+                                    : currentUserPlan === 'platinum'
+                                        ? 'border-slate-600/60 bg-gradient-to-br from-black via-[#101114] to-[#181a1e]'
+                                        : 'border-[#1a1a1a] bg-black'
+                                }`}>
+
+                                =    {currentUserPlan === 'gold' && (
+                                    <>
+                                        <div className="absolute inset-0 opacity-10 pointer-events-none">
+                                            <div className="absolute top-0 left-0 right-0 h-40 bg-amber-700 blur-[80px]"></div>
+                                            <div className="absolute bottom-0 right-0 w-40 h-40 bg-amber-600 blur-[100px] opacity-30"></div>
+                                        </div>
+                                        <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-amber-400/10 to-transparent rounded-full blur-xl"></div>
+                                        <div className="absolute bottom-10 left-10 w-32 h-32 bg-gradient-to-br from-amber-600/5 to-transparent rounded-full blur-xl"></div>
+                                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNGQUQ2MDciIGZpbGwtb3BhY2l0eT0iMC4wOCI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDF2NWgtMXYtNXptLTIgMGgxdjJoLTF2LTJ6bS0yIDBoMXYyaC0xdi0yem0tMi0xaDEwdjFoLTEwdi0xeiIvPjwvZz48L2c+PC9zdmc+')] opacity-20"></div>
+                                    </>
+                                )}
+
+                                {currentUserPlan === 'platinum' && (
+                                    <>
+                                        <div className="absolute inset-0 opacity-10 pointer-events-none">
+                                            <div className="absolute top-0 left-0 right-0 h-40 bg-slate-500 blur-[80px]"></div>
+                                            <div className="absolute bottom-0 right-0 w-40 h-40 bg-slate-400 blur-[100px] opacity-30"></div>
+                                        </div>
+                                        <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-br from-slate-300/10 to-transparent rounded-full blur-xl"></div>
+                                        <div className="absolute bottom-20 left-10 w-32 h-32 bg-gradient-to-br from-slate-400/5 to-transparent rounded-full blur-xl"></div>
+                                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNDMEM0Q0MiIGZpbGwtb3BhY2l0eT0iMC4wOCI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDF2NWgtMXYtNXptLTIgMGgxdjJoLTF2LTJ6bS0yIDBoMXYyaC0xdi0yem0tMi0xaDEwdjFoLTEwdi0xeiIvPjwvZz48L2c+PC9zdmc+')] opacity-20"></div>
+                                    </>
+                                )}
+
                                 <div className="absolute top-0 inset-x-0 h-1">
-                                    <div className="h-full w-full bg-gradient-to-r from-transparent via-[#e23145] to-transparent"></div>
+                                    <div className={`h-full w-full ${currentUserPlan === 'gold'
+                                        ? 'bg-gradient-to-r from-amber-800/50 via-amber-500 to-amber-800/50'
+                                        : currentUserPlan === 'platinum'
+                                            ? 'bg-gradient-to-r from-slate-700/50 via-slate-400 to-slate-700/50'
+                                            : 'bg-gradient-to-r from-transparent via-[#e23145] to-transparent'
+                                        }`}></div>
                                 </div>
-                                <div className="p-5">
+
+                                {/* Rest of the content */}
+                                <div className="p-5 relative z-10">
+                                    {/* Existing content */}
                                     <div className="flex items-center justify-between border-b border-gray-800/80 pb-2 mb-4">
                                         <h3 className="text-lg font-medium flex items-center">
                                             <WorkspacePremiumIcon
@@ -144,19 +176,34 @@ export class PersonalInformation extends Component<any> {
                                         </div>
                                     ) : (
                                         <div className="space-y-5">
-                                            <div className={`p-4 rounded-lg bg-black border ${
-                                                currentUserPlan === 'basic' 
-                                                    ? 'border-[#1a1a1a]' 
-                                                    : currentUserPlan === 'gold' 
-                                                        ? 'border-amber-900/40' 
-                                                        : 'border-slate-700/40'
-                                                } relative`}>
-                                                <div className="absolute inset-0 opacity-30 pointer-events-none">
-                                                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-xl"></div>
-                                                </div>
+                                            <div className={`p-4 rounded-lg border relative overflow-hidden
+    ${currentUserPlan === 'basic'
+                                                    ? 'border-[#1a1a1a] bg-black/60'
+                                                    : currentUserPlan === 'gold'
+                                                        ? 'border-amber-900/40 bg-gradient-to-br from-[#120d02] to-[#0c0901]'
+                                                        : 'border-slate-700/40 bg-gradient-to-br from-[#0f1115] to-[#0a0c10]'
+                                                }`}>
 
-                                                <div className="flex items-center justify-between">
-                                                    <div className="flex items-center">
+                                                {currentUserPlan !== 'basic' && (
+                                                    <div className="absolute -inset-1 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-45deg] transform-gpu animate-shine pointer-events-none"></div>
+                                                )}
+
+                                                {currentUserPlan === 'gold' && (
+                                                    <>
+                                                        <div className="absolute top-0 right-0 w-20 h-20 bg-amber-600/10 rounded-full blur-xl"></div>
+                                                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-amber-500/10 rounded-full blur-xl"></div>
+                                                    </>
+                                                )}
+
+                                                {currentUserPlan === 'platinum' && (
+                                                    <>
+                                                        <div className="absolute top-0 right-0 w-20 h-20 bg-slate-400/10 rounded-full blur-xl"></div>
+                                                        <div className="absolute bottom-0 left-0 w-20 h-20 bg-slate-300/10 rounded-full blur-xl"></div>
+                                                    </>
+                                                )}
+
+                                                <div className="relative z-10">
+                                                    <div className="flex items-center justify-between">
                                                         <WorkspacePremiumIcon
                                                             className={
                                                                 currentUserPlan === 'gold' ? 'text-amber-400' :
@@ -234,10 +281,9 @@ export class PersonalInformation extends Component<any> {
                                                 <div className="text-xs text-gray-400 mb-2 uppercase font-medium tracking-wide">Plan Features</div>
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                                     {planInfo.features.slice(0, 4).map((feature: any, index: number) => (
-                                                        <div key={index} className={`flex items-center p-1.5 rounded-md ${
-                                                            feature.available 
-                                                                ? 'hover:bg-[#0a0a0a] border border-transparent hover:border-green-900/20' 
-                                                                : 'hover:bg-[#0a0a0a] border border-transparent'
+                                                        <div key={index} className={`flex items-center p-1.5 rounded-md ${feature.available
+                                                            ? 'hover:bg-[#0a0a0a] border border-transparent hover:border-green-900/20'
+                                                            : 'hover:bg-[#0a0a0a] border border-transparent'
                                                             } transition-all duration-200`}>
                                                             {feature.available ?
                                                                 <CheckCircleIcon fontSize="small" className="text-green-500 mr-1.5 flex-shrink-0" style={{ fontSize: '14px' }} /> :

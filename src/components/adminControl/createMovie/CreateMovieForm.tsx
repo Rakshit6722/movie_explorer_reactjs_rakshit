@@ -298,10 +298,10 @@ const CreateMovieForm = (props: any) => {
       const formData = new FormData();
       formData.append('title', 'The Great Adventure');
       formData.append('genre', 'Action');
-      formData.append('release_year', '2023');
-      formData.append('rating', '8.8');
+      formData.append('release_year', "2023");
+      formData.append('rating', "8.8");
       formData.append('director', 'Jane Doe');
-      formData.append('duration', '120');
+      formData.append('duration', "120");
       formData.append('description', 'An epic tale of courage and discovery in a fantastical world.');
       formData.append('plan', 'platinum');
       formData.append('poster', new File(['dummy poster content'], 'poster.jpg', { type: 'image/jpeg' }));
