@@ -9,14 +9,73 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CircularProgress from '@mui/material/CircularProgress';
 
-
+// At the beginning of your class component, add this styling configuration
+const planStyles = {
+  basic: {
+    container: "border-[#1a1a1a] bg-black",
+    topBar: "bg-gradient-to-r from-transparent via-[#e23145] to-transparent",
+    icon: "text-gray-400",
+    infoBox: "border-[#1a1a1a] bg-black/80",
+    badge: "bg-gray-700 text-gray-300",
+    effects: [], // No effects for basic
+    button: "bg-gradient-to-r from-[#e23145] to-[#78121e] text-white shadow-md shadow-[#e23145]/20"
+  },
+  gold: {
+    container: "border-amber-700/60 bg-gradient-to-br from-black via-[#151005] to-[#1c1505]",
+    topBar: "bg-gradient-to-r from-amber-800/50 via-amber-500 to-amber-800/50",
+    icon: "text-amber-400",
+    infoBox: "border-amber-700/40 bg-gradient-to-br from-[#1a1404] to-[#0f0a01]",
+    badge: "bg-amber-900/50 text-amber-200",
+    effects: [
+      // Gold effects - each item will be a component
+      <div key="gold-glow-1" className="absolute inset-0 opacity-20 pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 h-40 bg-amber-700 blur-[60px]"></div> 
+        <div className="absolute bottom-0 right-0 w-40 h-40 bg-amber-600 blur-[80px] opacity-40"></div>
+      </div>,
+      <div key="gold-glow-2" className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-amber-400/20 to-transparent rounded-full blur-xl"></div>,
+      <div key="gold-glow-3" className="absolute bottom-10 left-10 w-32 h-32 bg-gradient-to-br from-amber-600/15 to-transparent rounded-full blur-xl"></div>,
+      <div key="gold-pattern" className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNGQUQ2MDciIGZpbGwtb3BhY2l0eT0iMC4xNSI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDF2NWgtMXYtNXptLTIgMGgxdjJoLTF2LTJ6bS0yIDBoMXYyaC0xdi0yem0tMi0xaDEwdjFoLTEwdi0xeiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div>
+    ],
+    infoBoxEffects: [
+      <div key="gold-info-shine" className="absolute -inset-1 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-45deg] transform-gpu animate-shine pointer-events-none"></div>,
+      <div key="gold-info-glow-1" className="absolute top-0 right-0 w-20 h-20 bg-amber-600/10 rounded-full blur-xl"></div>,
+      <div key="gold-info-glow-2" className="absolute bottom-0 left-0 w-20 h-20 bg-amber-500/10 rounded-full blur-xl"></div>
+    ],
+    button: "bg-gradient-to-r from-gray-800 to-gray-900 text-gray-300 hover:from-gray-700 hover:to-gray-800"
+  },
+  platinum: {
+    container: "border-slate-600/60 bg-gradient-to-br from-black via-[#101114] to-[#181a1e]",
+    topBar: "bg-gradient-to-r from-slate-700/50 via-slate-400 to-slate-700/50",
+    icon: "text-slate-300",
+    infoBox: "border-slate-600/40 bg-gradient-to-br from-[#141821] to-[#0d1017]",
+    badge: "bg-slate-800/50 text-slate-300",
+    effects: [
+      <div key="plat-glow-1" className="absolute inset-0 opacity-20 pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 h-40 bg-slate-500 blur-[60px]"></div>
+        <div className="absolute bottom-0 right-0 w-40 h-40 bg-slate-400 blur-[80px] opacity-40"></div>
+      </div>,
+      <div key="plat-glow-2" className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-br from-slate-300/20 to-transparent rounded-full blur-xl"></div>,
+      <div key="plat-glow-3" className="absolute bottom-20 left-10 w-32 h-32 bg-gradient-to-br from-slate-400/15 to-transparent rounded-full blur-xl"></div>,
+      <div key="plat-pattern" className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNDMEM0Q0MiIGZpbGwtb3BhY2l0eT0iMC4xNSI+PHBhdGggZD0iTTM2IDM0aDR2MWgtNHYtMXptMC0yaDF2NWgtMXYtNXptLTIgMGgxdjJoLTF2LTJ6bS0yIDBoMXYyaC0xdi0yem0tMi0xaDEwdjFoLTEwdi0xeiIvPjwvZz48L2c+PC9zdmc+')] opacity-30"></div>
+    ],
+    infoBoxEffects: [
+      <div key="plat-info-shine" className="absolute -inset-1 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-45deg] transform-gpu animate-shine pointer-events-none"></div>,
+      <div key="plat-info-glow-1" className="absolute top-0 right-0 w-20 h-20 bg-slate-400/10 rounded-full blur-xl"></div>,
+      <div key="plat-info-glow-2" className="absolute bottom-0 left-0 w-20 h-20 bg-slate-300/10 rounded-full blur-xl"></div>
+    ],
+    button: "bg-gradient-to-r from-gray-800 to-gray-900 text-gray-300 hover:from-gray-700 hover:to-gray-800"
+  }
+};
 
 export class PersonalInformation extends Component<any> {
     componentDidMount(): void {
-        console.log("current plan",this.props.currentPlan)
     }
     render() {
         const { userInfo, handleClickOpen, currentPlan, loading, subscriptionDetails, getStatusDisplay, error, planInfo, formatDateForDisplay, getDaysRemaining } = this.props;
+        
+        // Get the appropriate style set based on current plan
+        const style = planStyles[currentPlan] || planStyles.basic;
+        
         return (
             <>
                 <div className="container max-w-6xl mx-auto px-4 py-6">
@@ -92,30 +151,26 @@ export class PersonalInformation extends Component<any> {
                         </div>
 
                         <div className="md:col-span-8">
-                            <div className={`bg-black rounded-lg overflow-hidden border ${
-                                currentPlan === 'gold' 
-                                    ? 'border-amber-900/40' 
-                                    : currentPlan === 'platinum' 
-                                        ? 'border-slate-700/40' 
-                                        : 'border-[#1a1a1a]'
-                                } relative hover:shadow-xl hover:shadow-black/10 transition-shadow duration-300`}>
+                            <div className={`rounded-lg overflow-hidden border relative hover:shadow-xl hover:shadow-black/10 transition-shadow duration-300 ${style.container}`}>
+                                
+                                {/* Render all effects from the array */}
+                                {style.effects.map((effect) => effect)}
+                                
                                 <div className="absolute top-0 inset-x-0 h-1">
-                                    <div className="h-full w-full bg-gradient-to-r from-transparent via-[#e23145] to-transparent"></div>
+                                    <div className={`h-full w-full ${style.topBar}`}></div>
                                 </div>
-                                <div className="p-5">
+                                
+                                <div className="p-5 relative z-10">
                                     <div className="flex items-center justify-between border-b border-gray-800/80 pb-2 mb-4">
                                         <h3 className="text-lg font-medium flex items-center">
                                             <WorkspacePremiumIcon
-                                                className={
-                                                    currentPlan === 'gold' ? 'text-amber-400' :
-                                                        currentPlan === 'platinum' ? 'text-slate-300' : 'text-gray-400'
-                                                }
+                                                className={style.icon}
                                                 fontSize="small"
                                                 sx={{ mr: 1 }}
                                             />
                                             Your Subscription
                                         </h3>
-
+                                        
                                         {!loading && subscriptionDetails && (
                                             <span className={`text-xs px-2 py-0.5 rounded-full flex items-center ${subscriptionDetails.status?.toLowerCase() === 'active'
                                                 ? 'bg-green-900/30 text-green-400 border border-green-800/50'
@@ -146,39 +201,27 @@ export class PersonalInformation extends Component<any> {
                                         </div>
                                     ) : (
                                         <div className="space-y-5">
-                                            <div className={`p-4 rounded-lg bg-black border ${
-                                                currentPlan === 'basic' 
-                                                    ? 'border-[#1a1a1a]' 
-                                                    : currentPlan === 'gold' 
-                                                        ? 'border-amber-900/40' 
-                                                        : 'border-slate-700/40'
-                                                } relative`}>
-                                                <div className="absolute inset-0 opacity-30 pointer-events-none">
-                                                    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-xl"></div>
-                                                </div>
-
-                                                <div className="flex items-center justify-between">
-                                                    <div className="flex items-center">
+                                            <div className={`p-4 rounded-lg border relative overflow-hidden ${style.infoBox}`}>
+                                                
+                                                {/* Render info box effects */}
+                                                {style.infoBoxEffects && style.infoBoxEffects.map((effect) => effect)}
+                                                
+                                                <div className="relative z-10">
+                                                    <div className="flex items-center justify-between">
                                                         <WorkspacePremiumIcon
-                                                            className={
-                                                                currentPlan === 'gold' ? 'text-amber-400' :
-                                                                    currentPlan === 'platinum' ? 'text-slate-300' : 'text-gray-400'
-                                                            }
+                                                            className={style.icon}
                                                             sx={{ mr: 2, fontSize: 28 }}
                                                         />
                                                         <div>
                                                             <span className="text-base font-medium block">
                                                                 {planInfo.name} Plan
                                                             </span>
-                                                            <span className={`text-xs px-1.5 py-0.5 rounded inline-block mt-1 ${currentPlan === 'basic' ? 'bg-gray-700 text-gray-300' :
-                                                                currentPlan === 'gold' ? 'bg-amber-900/50 text-amber-200' :
-                                                                    'bg-slate-800/50 text-slate-300'
-                                                                }`}>
+                                                            <span className={`text-xs px-1.5 py-0.5 rounded inline-block mt-1 ${style.badge}`}>
                                                                 {currentPlan?.toUpperCase()}
                                                             </span>
                                                         </div>
                                                     </div>
-
+                                                    
                                                     <div className="text-right">
                                                         <div className="font-medium text-lg">
                                                             {planInfo.price === 0 ? 'FREE' : `₹${planInfo.price}`}
@@ -257,10 +300,7 @@ export class PersonalInformation extends Component<any> {
                                             <div className="pt-1">
                                                 <button
                                                     onClick={() => window.location.href = '/subscription'}
-                                                    className={`w-full py-2.5 text-sm text-center rounded-md transition-all duration-300 relative overflow-hidden group ${currentPlan === 'basic'
-                                                        ? 'bg-gradient-to-r from-[#e23145] to-[#78121e] text-white shadow-md shadow-[#e23145]/20'
-                                                        : 'bg-gradient-to-r from-gray-800 to-gray-900 text-gray-300 hover:from-gray-700 hover:to-gray-800'
-                                                        }`}
+                                                    className={`w-full py-2.5 text-sm text-center rounded-md transition-all duration-300 relative overflow-hidden group ${style.button}`}
                                                 >
                                                     <span className="relative z-10">
                                                         {currentPlan === 'basic'
