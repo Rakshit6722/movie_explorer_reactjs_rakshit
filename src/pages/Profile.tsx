@@ -27,7 +27,8 @@ function Profile() {
 
   const userInfo = useSelector((state: any) => state.user.userInfo);
   const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
-  const currentUserPlan = useSelector((state: any) => state.user.currentPlan);
+
+  const [currentUserPlan, setCurrentUserPlan] = useState(useSelector((state: any) => state.user.currentPlan))
 
   const [open, setOpen] = useState(false);
   const [planInfo, setPlanInfo] = useState(plans.find((plan) => plan.key === currentUserPlan) || plans[0]);
