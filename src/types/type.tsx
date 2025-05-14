@@ -31,3 +31,48 @@ export interface Notification {
     read: boolean,
     imageUrl?: string
 }
+
+
+
+export interface ImageData {
+    base64: string;
+    filename: string;
+    mimeType: string;
+}
+
+export interface FormData {
+    title: string;
+    genre: string;
+    release_year: string;
+    rating: string;
+    director: string;
+    duration: string;
+    description: string;
+    plan: string;
+    poster: ImageData | null;
+    coverimage: ImageData | null;
+}
+
+export interface Errors {
+    title: string;
+    genre: string;
+    release_year: string;
+    rating: string;
+    director: string;
+    duration: string;
+    description: string;
+    plan: string;
+    poster: string;
+    coverimage: string;
+}
+
+export interface MovieFormState {
+    formData: FormData;
+    errors: Errors;
+    loading: boolean;
+    submitting: boolean;
+    isEditMode: boolean;
+    movieId: number | null;
+    mode: string | null
+}
+
