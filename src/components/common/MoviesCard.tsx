@@ -130,7 +130,7 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
                 className={`absolute top-2 right-2 ${badgeStyles.bgGradient} ${badgeStyles.border} ${badgeStyles.shadow} px-2.5 py-1 rounded-lg z-20 group-hover:opacity-0 transition-opacity duration-300 flex items-center gap-1.5 animate-pulse-subtle`}
             >
                 <StarRoundedIcon className={`${badgeStyles.iconColor}`} sx={{ fontSize: 18 }} />
-                <span className={`text-xs font-semibold ${badgeStyles.textColor} tracking-wide`}>{badgeStyles.label}</span>
+                <span className={`hidden md:block text-xs font-semibold ${badgeStyles.textColor} tracking-wide`}>{badgeStyles.label}</span>
             </div>
         );
     };
