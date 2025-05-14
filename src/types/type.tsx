@@ -32,14 +32,6 @@ export interface Notification {
     imageUrl?: string
 }
 
-
-
-export interface ImageData {
-    base64: string;
-    filename: string;
-    mimeType: string;
-}
-
 export interface FormData {
     title: string;
     genre: string;
@@ -49,8 +41,8 @@ export interface FormData {
     duration: string;
     description: string;
     plan: string;
-    poster: ImageData | null;
-    coverimage: ImageData | null;
+    poster: File | null;
+    coverimage: File | null;
 }
 
 export interface Errors {
