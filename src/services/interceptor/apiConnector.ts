@@ -24,7 +24,7 @@ export const apiConnector = (method: Method, url: string, data?: any, headers?: 
     return axiosInstance({
         method,
         url,
-        data: data ? data : null,
+        data: data ? data : {},
         headers: {
             'Content-Type': formData ? 'multipart/form-data' : 'application/json',
             ...headers
