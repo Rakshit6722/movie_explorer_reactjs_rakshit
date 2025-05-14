@@ -1,25 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { styled } from '@mui/material/styles';
-import Dialog from '@mui/material/Dialog';
-import CreateMovieForm from '../components/adminControl/createMovie/CreateMovieForm';
 import { plans } from './Subscription';
-import { getSubscriptionDetailsApi, logoutUser } from '../services/api';
-import { resetUser, setCurrentPlan } from '../redux/slices/userSlice';
+import { getSubscriptionDetailsApi } from '../services/api';
+import { setCurrentPlan } from '../redux/slices/userSlice';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import PersonalInformation from '../components/profile/PersonalInformation';
 import { LogOutIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { logoutUtil } from '../utils/authActions';
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    padding: theme.spacing(2),
-  },
-  '& .MuiDialogActions-root': {
-    padding: theme.spacing(1),
-  },
-}));
 
 function Profile() {
   const dispatch = useDispatch();
@@ -30,7 +19,6 @@ function Profile() {
 
   const [currentUserPlan, setCurrentUserPlan] = useState(useSelector((state: any) => state.user.currentPlan))
 
-  const [open, setOpen] = useState(false);
   const [planInfo, setPlanInfo] = useState(plans.find((plan) => plan.key === currentUserPlan) || plans[0]);
   const [subscriptionDetails, setSubscriptionDetails] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -41,8 +29,6 @@ function Profile() {
     setPlanInfo(plans.find((plan) => plan.key === currentUserPlan) || plans[0]);
   }, [currentUserPlan]);
 
-  const handleClickOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const fetchPlanDetails = async () => {
     setLoading(true);
@@ -152,24 +138,8 @@ function Profile() {
         </div>
       </header>
 
-      <PersonalInformation userInfo={userInfo} currentPlan={currentUserPlan} handleClickOpen={handleClickOpen} loading={loading} error={error} planInfo={planInfo} formatDateForDisplay={formatDateForDisplay} getDaysRemaining={getDaysRemaining} subscriptionDetails={subscriptionDetails} getStatusDisplay={getStatusDisplay} />
+      <PersonalInformation userInfo={userInfo} currentPlan={currentUserPlan} loading={loading} error={error} planInfo={planInfo} formatDateForDisplay={formatDateForDisplay} getDaysRemaining={getDaysRemaining} subscriptionDetails={subscriptionDetails} getStatusDisplay={getStatusDisplay} />
 
-      <BootstrapDialog
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-        sx={{
-          '& .MuiPaper-root': {
-            backgroundColor: 'rgba(30, 30, 30, 0.9)',
-            backdropFilter: 'blur(8px)',
-            borderRadius: '8px',
-          },
-        }}
-      >
-        <div>
-          <CreateMovieForm />
-        </div>
-      </BootstrapDialog>
     </div>
   );
 }
