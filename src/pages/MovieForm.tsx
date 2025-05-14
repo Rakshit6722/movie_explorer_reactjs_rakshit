@@ -167,26 +167,15 @@ export class MovieForm extends Component<{}, MovieFormState> {
         try {
             const response = await fetch(url);
             const blob = await response.blob();
+            const filename = url.split('/').pop() || 'image';
+            const file = new File([blob], filename, { type: blob.type });
 
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                if (reader.result) {
-                    const filename = url.split('/').pop() || 'image';
-
-                    this.setState(prevState => ({
-                        formData: {
-                            ...prevState.formData,
-                            [fieldName]: {
-                                base64: reader.result as string,
-                                filename: filename,
-                                mimeType: blob.type
-                            }
-                        }
-                    }));
+            this.setState(prevState => ({
+                formData: {
+                    ...prevState.formData,
+                    [fieldName]: file
                 }
-            };
-
-            reader.readAsDataURL(blob);
+            }));
         } catch (error) {
             console.error(`Error loading ${fieldName} image:`, error);
         }
@@ -207,32 +196,20 @@ export class MovieForm extends Component<{}, MovieFormState> {
         }));
     };
 
-    handleFileChange = (fieldName: string) => async (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleFileChange = (fieldName: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-
+        
         if (file) {
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-                if (reader.result) {
-                    this.setState(prevState => ({
-                        formData: {
-                            ...prevState.formData,
-                            [fieldName]: {
-                                base64: reader.result as string,
-                                filename: file.name,
-                                mimeType: file.type
-                            }
-                        },
-                        errors: {
-                            ...prevState.errors,
-                            [fieldName]: ''
-                        }
-                    }));
+            this.setState(prevState => ({
+                formData: {
+                    ...prevState.formData,
+                    [fieldName]: file
+                },
+                errors: {
+                    ...prevState.errors,
+                    [fieldName]: ''
                 }
-            };
-
-            reader.readAsDataURL(file);
+            }));
         }
     };
 
@@ -333,20 +310,17 @@ export class MovieForm extends Component<{}, MovieFormState> {
             submitData.append('description', formData.description);
             submitData.append('plan', formData.plan);
 
-            if (formData.poster) {
-                const posterBlob = base64ToBlob(formData.poster.base64, formData.poster.mimeType);
-                if (posterBlob) {
-                    submitData.append('poster', posterBlob, formData.poster.filename);
-                }
+            if (formData.poster instanceof File) {
+                submitData.append('poster', formData.poster, formData.poster.name);
+            }
+            if (formData.coverimage instanceof File) {
+                submitData.append('banner', formData.coverimage, formData.coverimage.name);
             }
 
-            if (formData.coverimage) {
-                const bannerBlob = base64ToBlob(formData.coverimage.base64, formData.coverimage.mimeType);
-                if (bannerBlob) {
-                    submitData.append('banner', bannerBlob, formData.coverimage.filename);
-                }
+            submitData.forEach((value, key) => {
+                console.log(key, value);
             }
-
+            );
             let response;
 
             if (isEditMode && movieId) {
@@ -588,7 +562,7 @@ export class MovieForm extends Component<{}, MovieFormState> {
                                     {formData.poster ? (
                                         <>
                                             <img
-                                                src={formData.poster.base64}
+                                                src={URL.createObjectURL(formData.poster)}
                                                 alt="Poster Preview"
                                                 className="w-full h-full object-contain"
                                             />
@@ -629,7 +603,7 @@ export class MovieForm extends Component<{}, MovieFormState> {
                                 {this.renderError('poster')}
                                 {formData.poster && (
                                     <p className="text-xs text-gray-400 mt-1 truncate">
-                                        {formData.poster.filename}
+                                        {formData.poster.name}
                                     </p>
                                 )}
                             </div>
@@ -648,7 +622,7 @@ export class MovieForm extends Component<{}, MovieFormState> {
                                     {formData.coverimage ? (
                                         <>
                                             <img
-                                                src={formData.coverimage.base64}
+                                                src={URL.createObjectURL(formData.coverimage)}
                                                 alt="Banner Preview"
                                                 className="w-full h-full object-contain"
                                             />
@@ -689,7 +663,7 @@ export class MovieForm extends Component<{}, MovieFormState> {
                                 {this.renderError('coverimage')}
                                 {formData.coverimage && (
                                     <p className="text-xs text-gray-400 mt-1 truncate">
-                                        {formData.coverimage.filename}
+                                        {formData.coverimage.name}
                                     </p>
                                 )}
                             </div>
