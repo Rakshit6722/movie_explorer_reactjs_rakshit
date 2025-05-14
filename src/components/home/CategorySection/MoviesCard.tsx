@@ -2,15 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { Movie } from '../../../types/type';
 import { useNavigate } from 'react-router-dom';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
+import { deleteMovie } from '../../../services/adminApi';
+import { toast } from 'react-toastify';
+import { motion } from 'framer-motion';
 
 type MoviesCardProps = {
     movie: Movie;
     index?: number;
-    type?: 'standard' | 'trending'
+    type?: 'standard' | 'trending';
 };
 
 function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
     const navigate = useNavigate();
+    const userInfo = useSelector((state: RootState) => state.user.userInfo);
+    const role : {} = userInfo.role;
+    
     const [imageUrl, setImageUrl] = useState<string>('');
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [showDetails, setShowDetails] = useState<boolean>(false);
@@ -24,14 +34,43 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
 
     const formatDuration = (minutes: number) => {
         if (!minutes && minutes !== 0) return 'N/A';
+        
         const hours = Math.floor(minutes / 60);
         const mins = minutes % 60;
+        
         if (hours === 0) {
             return `${mins}m`;
         } else if (mins === 0) {
             return `${hours}h`;
         } else {
             return `${hours}h ${mins}m`;
+        }
+    };
+    
+    const handleEdit = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        localStorage.setItem('editMovieId', movie.id.toString());
+        navigate('/movieForm');
+    };
+    
+    const handleDelete = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        
+        if (!confirm(`Are you sure you want to delete "${movie.title}"?`)) {
+            return;
+        }
+        
+        try {
+            const response = await deleteMovie(movie.id);
+            if (response.status === 200) {
+                toast.success('Movie deleted successfully');
+                navigate(0); 
+            } else {
+                toast.error('Failed to delete movie');
+            }
+        } catch (error) {
+            toast.error('Error while deleting movie');
+            console.error('Delete error:', error);
         }
     };
 
@@ -62,10 +101,7 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
         };
 
         document.addEventListener('visibilitychange', handleVisibilityChange);
-
-        return () => {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-        };
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
     }, []);
 
     const renderPlanIcon = () => {
@@ -99,6 +135,33 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
         );
     };
 
+const renderAdminControls = () => {
+    if (role !== 'supervisor' && role !== 'admin') return null;
+    
+    return (
+        <>
+            <motion.button 
+                onClick={handleEdit}
+                className="absolute bottom-16 left-4 z-30 opacity-0 group-hover:opacity-100 flex items-center justify-center bg-blue-500/90 text-white w-8 h-8 rounded-full shadow-md transition-all duration-200"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Edit Movie"
+            >
+                <EditRoundedIcon sx={{ fontSize: 18 }} />
+            </motion.button>
+            
+            <motion.button 
+                onClick={handleDelete}
+                className="absolute bottom-16 right-4 z-30 opacity-0 group-hover:opacity-100 flex items-center justify-center bg-red-500/90 text-white w-8 h-8 rounded-full shadow-md transition-all duration-200"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Delete Movie"
+            >
+                <DeleteOutlineRoundedIcon sx={{ fontSize: 18 }} />
+            </motion.button>
+        </>
+    );
+};
     return (
         <div
             className={`relative w-[140px] h-[230px] md:w-[180px] md:h-[260px] group transition-all duration-300 ${
@@ -107,6 +170,7 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
             onClick={() => isMobile && setShowDetails(!showDetails)} 
         >
             {renderPlanIcon()}
+            {renderAdminControls()}
             
             <div className="absolute inset-0 rounded-md overflow-hidden shadow-lg group-hover:shadow-2xl">
                 <img
@@ -143,11 +207,6 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
                         <span className="bg-gray-700 text-xs px-2 py-1 rounded-full text-gray-300">
                             {movie.genre}
                         </span>
-                        {movie.genre.length > 2 && (
-                            <span className="bg-gray-700 text-xs px-2 py-1 rounded-full text-gray-300">
-                                +{movie.genre.length - 2}
-                            </span>
-                        )}
                     </div>
                 </div>
 
