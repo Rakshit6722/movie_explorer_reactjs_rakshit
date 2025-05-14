@@ -43,7 +43,7 @@ function FirebaseProvider({ children }: any) {
                         try {
             
                             const audio = new Audio(audioUrl);
-                            audio.volume = 5
+                            audio.volume = 1
                             audio.play()
 
 
