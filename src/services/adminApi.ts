@@ -25,7 +25,7 @@ export const updateMovieDetails = async (id: number, data: any): Promise<any> =>
     try{
         const response = await apiConnector(
             "PATCH",
-          `${BASE_URL}`,
+          `${BASE_URL}/${id}`,
             data,
             null,
             true,
