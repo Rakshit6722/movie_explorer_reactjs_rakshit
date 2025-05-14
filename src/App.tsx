@@ -6,6 +6,7 @@ import MovieDashboard from './pages/MovieDashboard'
 import Search from './pages/Search'
 import LoadingFallback from './components/common/LoadingFallback'
 import AuthRoute from './components/protectedRoute/AuthRoute'
+import MovieForm from './pages/MovieForm'
 const Home = lazy(() => import('./pages/Home'))
 const MoodMain = lazy(() => import('./pages/MoodMain'))
 const Genres = lazy(() => import('./pages/Genres'))
@@ -68,6 +69,7 @@ const App = () => {
               <Subscription />
             </Suspense>
           } />
+          <Route path='movieForm' element={<MovieForm />} />
 
           <Route path='*' element={<div>404 Not Found</div>} />
         </Route>
