@@ -1,6 +1,6 @@
 import { apiConnector } from "./interceptor/apiConnector"
 
-const BASE_URL = 'https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1'
+const BASE_URL = 'https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1/movies'
 
 
 export const addMovie = async (data: any): Promise<any> => {
