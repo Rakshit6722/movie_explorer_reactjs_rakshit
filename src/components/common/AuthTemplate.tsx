@@ -13,6 +13,7 @@ import { setCurrentPlan, setToken, setUser } from '../../redux/slices/userSlice'
 import { requestForToken } from '../../utils/fcm';
 import logo from '../../assets/images/movieExplorerLogoNew.png'
 import {motion} from 'framer-motion';
+import { loginUser } from '../../utils/authActions';
 
 type AuthTemplateProps = {
     type: 'login' | 'register',
@@ -173,18 +174,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                 const response = await loginApi({ email, password })
 
                 if (response?.status === 200) {
-                    this.props.dispatch(setUser(response?.data?.user))
-                    this.props.dispatch(setToken(response?.data?.token))
-                    this.props.dispatch(setCurrentPlan(response?.data?.user?.active_plan))
-                    localStorage.setItem("token", response?.data?.token)
-                    this.props.navigate('/')
-                    const fcmToken = await requestForToken()
-                    if (fcmToken) {
-                        await userNotificationApi({
-                            device_token: fcmToken,
-                            notifications_enabled: true
-                        })
-                    }
+                    loginUser(response, this.props.dispatch,this.props.navigate)
                     toast.success('Login Successfull')
                 }
             } catch (err: any) {
