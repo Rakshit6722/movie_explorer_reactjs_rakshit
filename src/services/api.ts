@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import { apiConnector } from './apiConnector'
+import { apiConnector } from './interceptor/apiConnector'
 import { toast } from 'react-toastify'
 
 const BASE_URL = 'https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1'
@@ -44,9 +44,7 @@ export const logoutUser = async () => {
     if (!token) return
 
     try {
-        const response = await apiConnector('POST', `${BASE_URL}/logout`, {}, {
-            Authorization: `Bearer ${token}`
-        });
+        const response = await apiConnector('POST', `${BASE_URL}/logout`, null, null, null, true);
         return response
     } catch (err: any) {
         toast.error(err?.message ?? 'Something went wrong, try again!')
@@ -55,40 +53,33 @@ export const logoutUser = async () => {
 
 
 export const userNotificationApi = async (data: { device_token: string, notifications_enabled: boolean }) => {
-    const localStorageToken = localStorage.getItem('token')
-    if (!localStorageToken) return
+
     try {
-        const response = await axios.post(
-            'https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1/update_preferences',
+        const response = await apiConnector(
+            'POST',
+            `${BASE_URL}/update_preferences`,
             {
                 device_token: data.device_token,
                 notifications_enabled: data.notifications_enabled
             },
-            {
-                headers: {
-                    'accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorageToken}`
-                }
-            }
-        );
+            null,
+            null,
+            true
+        )
     } catch (err: any) {
         throw err
     }
 }
 
 export const addSubscriptioApi = async (plan: string): Promise<any> => {
-    const token = localStorage.getItem('token')
-    if (!token) return
     try {
         const response = await apiConnector(
             'POST',
             `${BASE_URL}/subscriptions`,
             { plan },
-            {
-                'accept': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            }
+            null,
+            null,
+            true
         );
         return response.data
     } catch (err: any) {
@@ -104,12 +95,9 @@ export const getSubscriptionDetailsApi = async (): Promise<any> => {
             "GET",
             `${BASE_URL}/subscriptions`,
             null,
-            {
-                'Authorization': `Bearer ${token}`,
-                'accept': 'application/json'
-            },
             null,
-            null
+            null,
+            true
         );
         return response?.data?.subscriptions
     } catch (err: any) {

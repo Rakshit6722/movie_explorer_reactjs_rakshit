@@ -1,4 +1,4 @@
-import { apiConnector } from "./apiConnector";
+import { apiConnector } from "./interceptor/apiConnector";
 
 const BASE_URL = `https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1/movies`
 
@@ -59,3 +59,4 @@ export const getMovieDetails = async (id: number): Promise<any> => {
         throw err
     }
 }
+
