@@ -10,6 +10,7 @@ export const addMovie = async (data: any): Promise<any> => {
             `${BASE_URL}`,
             data,
             null,
+            true,
             null,
             true
         )
@@ -24,9 +25,10 @@ export const updateMovieDetails = async (id: number, data: any): Promise<any> =>
     try{
         const response = await apiConnector(
             "PATCH",
-            `${BASE_URL}/${id}`,
+          `${BASE_URL}`,
             data,
             null,
+            true,
             null,
             true
         )
