@@ -93,7 +93,7 @@ export const getSubscriptionDetailsApi = async (): Promise<any> => {
     try {
         const response = await apiConnector(
             "GET",
-            `${BASE_URL}/subscriptions`,
+            `${BASE_URL}/subscriptions/check_status`,
             null,
             null,
             null,
