@@ -1,7 +1,6 @@
 import React, { Component, createRef } from 'react';
-import MoviesCard from './MoviesCard';
+import MoviesCard from '../../common/MoviesCard';
 import { HiArrowSmLeft, HiOutlineArrowSmRight } from "react-icons/hi";
-import { NavLink } from 'react-router-dom';
 import { Movie } from '../../../types/type';
 
 
