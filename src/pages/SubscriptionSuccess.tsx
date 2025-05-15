@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { updatePaymentStatus } from '../services/api'
 import { useDispatch } from 'react-redux'

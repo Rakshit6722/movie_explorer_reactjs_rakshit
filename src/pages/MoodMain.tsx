@@ -4,30 +4,8 @@ import MoodToolbar from '../components/home/MoodSection/MoodToolbar';
 import MoviesGrid from '../components/common/MoviesGrid/MoviesGrid';
 import Footer from '../components/common/Footer';
 import { motion } from 'framer-motion';
+import { moodBackgroundColors, moodGenreMapping, moodHeadings } from '../constants/mood';
 
-const moodBackgroundColors: any = {
-    happy: 'from-amber-500/20 via-amber-400/10 to-transparent',
-    sad: 'from-blue-600/20 via-blue-500/10 to-transparent',
-    angry: 'from-red-600/20 via-red-500/10 to-transparent',
-    excited: 'from-orange-500/20 via-orange-400/10 to-transparent',
-    bored: 'from-gray-600/20 via-gray-500/10 to-transparent',
-};
-
-const moodHeadings: any = {
-    happy: 'Uplifting Cinema Collection',
-    sad: 'Emotionally Resonant Films',
-    angry: 'High-Energy Action Selection',
-    excited: 'Thrilling Entertainment',
-    bored: 'Engaging Cinematic Experiences',
-};
-
-const moodGenreMapping: any = {
-    happy: ["Romance", "Comedy", "Drama", "Adventure", "Music"],
-    sad: ["Drama", "Romance", "Biography"],
-    angry: ["Action", "Thriller", "Crime"],
-    excited: ["Action", "Sci-Fi", "Adventure"],
-    bored: ["Biography", "Drama"]
-};
 
 function MoodMain() {
     const selectedMood = useSelector((state: any) => state.mood.selectedMood);

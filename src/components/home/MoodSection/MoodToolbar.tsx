@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMood } from '../../../redux/slices/moodSlice';
+import { moodColors } from '../../../constants/mood';
 
-const moodColors: any = {
-    happy: '#FFD700',
-    sad: '#1E90FF',
-    angry: '#FF4500',
-    excited: '#FFA500',
-    bored: '#808080',
-}
 
 function MoodToolbar() {
   const dispatch = useDispatch();

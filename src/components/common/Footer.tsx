@@ -1,18 +1,9 @@
 import React from 'react';
 import { FaTwitter, FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa';
+import { quickLinks } from '../../constants/footer';
 
-const quickLinks = [
-  { label: 'Home', href: '#' },
-  { label: 'Movies', href: '#' },
-  { label: 'TV Shows', href: '#' },
-  { label: 'New Releases', href: '#' },
-  { label: 'About Us', href: '#' },
-  { label: 'Contact', href: '#' },
-  { label: 'Privacy Policy', href: '#' },
-  { label: 'Terms of Use', href: '#' },
-];
 
-const socialLinks = [
+export const socialLinks = [
   { icon: <FaTwitter size={24} />, href: 'https://twitter.com', label: 'Twitter' },
   { icon: <FaFacebookF size={24} />, href: 'https://facebook.com', label: 'Facebook' },
   { icon: <FaInstagram size={24} />, href: 'https://instagram.com', label: 'Instagram' },

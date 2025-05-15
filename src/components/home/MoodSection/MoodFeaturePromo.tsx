@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MdSettingsSystemDaydream } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
 const MoodFeaturePromo = () => {

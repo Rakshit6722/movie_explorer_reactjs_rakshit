@@ -7,54 +7,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Movie } from '../types/type';
 import { getMovieByPageApi } from '../services/movieApi';
 import { motion, AnimatePresence } from 'framer-motion';
-import { genreImages } from '../utils/loadImages';
 import { toast } from 'react-toastify';
+import { genreBackgrounds } from '../constants/genre';
 
-const genreBackgrounds = {
-    "All": {
-        gradient: "from-black/40 to-black/90",
-        image: genreImages['All']
-    },
-    "Action": {
-        gradient: "from-red-900/40 to-black/80", 
-        image: genreImages['Action']
-    },
-    "Adventure": {
-        gradient: "from-amber-900/40 to-black/80", 
-        image: genreImages['Adventure']
-    },
-    " Comedy": {
-        gradient: "from-yellow-800/40 to-black/80", 
-        image: genreImages['Comedy']
-    },
-    "Drama": {
-        gradient: "from-purple-900/40 to-black/80", 
-        image: genreImages['Drama']
-    },
-    "Fantasy": {
-        gradient: "from-blue-900/40 to-black/80", 
-        image: genreImages['Fantasy']
-    },
-    "Horror": {
-        gradient: "from-gray-900/40 to-black/90", 
-        image: genreImages['Horror']
-    },
-    "Romance": {
-        gradient: "from-pink-900/80 to-black/80", 
-        image: genreImages['Romance']
-    },
-    "Sci-Fi": {
-        gradient: "from-cyan-900/40 to-black/80", 
-        image: genreImages['SciFi']
-    },
-    " Thriller": {
-        gradient: "from-red-950/40 to-black/80", 
-        image: genreImages['Thriller']
-    }
-};
 
 function Genres() {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
     const mainRef = useRef<HTMLDivElement>(null);

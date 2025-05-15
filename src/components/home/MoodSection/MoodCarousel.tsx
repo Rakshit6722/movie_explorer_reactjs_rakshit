@@ -3,14 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setMood } from '../../../redux/slices/moodSlice';
 import MoodToolbar from './MoodToolbar';
 import Carousel from '../CategorySection/Carousel';
+import { moodGenreMapping } from '../../../constants/mood';
 
-const moodGenreMapping: any = {
-    happy: ["Romance", "Comedy", "Drama", "Adventure", "Music"],
-    sad: ["Drama", "Romance", "Biography"],
-    angry: ["Action", "Thriller", "Crime"],
-    excited: ["Action", "Sci-Fi", "Adventure"],
-    bored: ["Biography", "Drama"]
-};
 
 function MoodCarousel() {
 

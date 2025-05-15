@@ -5,11 +5,6 @@ type Props = {
   movie: Movie;
 };
 
-type State = {
-  coverUrl: string;
-  bannerUrl: string;
-};
-
 export class MainCarouselMovieCard extends Component<Props> {
   state = {
     coverUrl: this.props.movie.poster_url,

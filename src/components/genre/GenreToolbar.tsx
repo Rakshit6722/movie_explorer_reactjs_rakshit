@@ -1,31 +1,8 @@
 import React, { Component } from 'react';
 import { motion } from 'framer-motion';
+import { genreGradients, genres } from '../../constants/genre';
 
-const genres = [
-    { id: 0, name: "All" },
-    { id: 1, name: "Action" },
-    { id: 2, name: "Adventure" },
-    { id: 3, name: " Comedy" },
-    { id: 4, name: "Drama" },
-    { id: 5, name: "Horror" },
-    { id: 6, name: "Romance" },
-    { id: 7, name: "Sci-Fi" },
-    { id: 8, name: " Thriller" },
-    { id: 9, name: "Fantasy" },
-]
 
-const genreGradients: Record<string, string> = {
-    "All": "from-blue-700/80 to-indigo-800/80",
-    "Action": "from-red-700/80 to-red-900/80",
-    "Adventure": "from-amber-600/80 to-orange-800/80",
-    "Comedy": "from-yellow-600/80 to-amber-800/80",
-    "Drama": "from-purple-700/80 to-purple-900/80",
-    "Horror": "from-gray-800/80 to-black",
-    "Romance": "from-pink-600/80 to-pink-800/80",
-    "Sci-Fi": "from-cyan-600/80 to-blue-800/80",
-    "Thriller": "from-red-800/80 to-red-950/80",
-    "Fantasy": "from-green-600/80 to-green-800/80",
-};
 
 interface GenreToolbarProps {
     selectedGenre: string;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { plans } from './Subscription';
+import { plans } from '../constants/subscriptionPlans';
 import { getSubscriptionDetailsApi } from '../services/api';
 import { setCurrentPlan } from '../redux/slices/userSlice';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
