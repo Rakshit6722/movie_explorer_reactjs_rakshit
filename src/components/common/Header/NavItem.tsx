@@ -46,6 +46,7 @@ class NavItem extends Component<NavItemProps, NavItemState> {
 
     return (
       <NavLink
+        data-testid={/nav-link/i}
         to={href}
         className="flex items-center justify-center w-10 h-10 rounded-lg transition-colors duration-200"
         title={label}
@@ -59,7 +60,7 @@ class NavItem extends Component<NavItemProps, NavItemState> {
           `}
         >
           {activePage ? (
-            <span className="text-white">{icon.filled}</span>
+            <span data-testid={"filled-icon"} className="text-white">{icon.filled}</span>
           ) : (
             <span className="text-gray-400">{icon.outline}</span>
           )}

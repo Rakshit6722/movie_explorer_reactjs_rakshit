@@ -9,6 +9,7 @@ import Logo from '../../../assets/images/movieExplorerLogoNew.png';
 import NavItem from './NavItem';
 import WithReduxState from '../../hoc/WithReduxState';
 import { User } from '../../../types/type';
+import LetterAvatars from './NameBadge';
 
 interface NavItemType {
   icon: any;
@@ -120,8 +121,8 @@ class Header extends Component<HeaderProps, HeaderState> {
       },
       {
         icon: {
-          outline: <FaRegUser size={22} />,
-          filled: <FaUser size={22} />,
+          outline: this.props.isLoggedIn ? <LetterAvatars firstLetter={this.props.userInfo.first_name[0]} /> : <FaRegUser size={22} />,
+          filled: this.props.isLoggedIn ? <LetterAvatars firstLetter={this.props.userInfo.first_name[0]} /> : <FaUser size={22} />,
         },
         label: this.props.isLoggedIn ? `Hi, ${this.props.userInfo.first_name}` : "Login",
         href: this.props.isLoggedIn ? '/profile' : "/login",
