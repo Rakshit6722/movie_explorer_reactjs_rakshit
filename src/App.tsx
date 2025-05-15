@@ -7,6 +7,7 @@ import Search from './pages/Search'
 import LoadingFallback from './components/common/LoadingFallback'
 import AuthRoute from './components/protectedRoute/AuthRoute'
 import MovieForm from './pages/MovieForm'
+import Default from './pages/Default'
 
 const Home = lazy(() => import('./pages/Home'))
 const MoodMain = lazy(() => import('./pages/MoodMain'))
@@ -83,7 +84,7 @@ const App = () => {
             <SubscriptionCancel />
           </Suspense>
         } />
-        <Route path='*' element={<div>404 Not Found</div>} />
+        <Route path='*' element={<Default />} />
       </Routes>
     </div>
   )
