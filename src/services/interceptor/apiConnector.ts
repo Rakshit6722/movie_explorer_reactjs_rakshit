@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios'
-import { toast } from 'react-toastify'
 
 const axiosInstance = axios.create({})
 
