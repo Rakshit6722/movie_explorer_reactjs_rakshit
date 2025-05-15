@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { Skeleton, Box, stepButtonClasses } from '@mui/material';
+import { Skeleton, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import CarouselSection from './CarouselSection';
 import MainCarousel from '../MainCarousel';
 import MoodFeaturePromo from '../MoodSection/MoodFeaturePromo';
 import MidCarousel from './CompactCarouselSection';
-import { getMoviesForHomePage } from '../../../services/movieApi';
-import { setLoading, setMovies } from '../../../redux/slices/movieSlice';
+import { fetchMovies } from '../../../redux/slices/movieSlice';
 import SubscribeButton from './SubscribeButton';
 import { motion } from 'framer-motion';
 import { getSubscriptionDetailsApi } from '../../../services/api';
@@ -14,12 +13,13 @@ import { setCurrentPlan } from '../../../redux/slices/userSlice';
 import NotificationCenter from '../../notification/NotificationCenter'
 import { addNotification } from '../../../redux/slices/notificationSlice';
 import { toast } from 'react-toastify';
+import { AppDispatch } from '../../../redux/store';
 
 
 const Index = () => {
   const loading = useSelector((state: any) => state.movie.loading);
   const containerRef = useRef<HTMLDivElement>(null);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
 
   useEffect(() => {
@@ -73,16 +73,7 @@ const Index = () => {
   }
 
   const fetchHomeMovies = async () => {
-
-    dispatch(setLoading(true));
-    try {
-      const data = await getMoviesForHomePage();
-      if (data) dispatch(setMovies(data));
-    } catch (err: any) {
-      toast.error(err?.message || "Couldn't fetch movies");
-    } finally {
-      dispatch(setLoading(false));
-    }
+    dispatch(fetchMovies())
   };
 
   const currentFetchPlan = async () => {
