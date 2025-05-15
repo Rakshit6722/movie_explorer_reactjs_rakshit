@@ -1,5 +1,5 @@
 import { toast } from "react-toastify"
-import { resetUser, setCurrentPlan, setToken, setUser } from "../redux/slices/userSlice"
+import { resetToken, resetUser, setCurrentPlan, setToken, setUser } from "../redux/slices/userSlice"
 import { logoutUser, userNotificationApi } from "../services/api"
 import { requestForToken } from "./fcm"
 
@@ -23,6 +23,7 @@ export const logoutUtil = async (dispatch?: any, navigate?: any) => {
         const response = await logoutUser()
         if (response?.data?.message === "Logout successful") {
             dispatch(resetUser())
+            dispatch(resetToken())
             localStorage.removeItem("persist:root");
             localStorage.removeItem("token")
             localStorage.removeItem("plan")
