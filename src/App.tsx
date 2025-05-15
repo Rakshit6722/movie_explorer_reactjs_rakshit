@@ -1,12 +1,13 @@
-import React, { lazy, Suspense, useEffect } from 'react'
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import React, { lazy, Suspense } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import MovieDashboard from './pages/MovieDashboard'
+import MovieDashboard from './layout/MovieDashboard'
 import Search from './pages/Search'
 import LoadingFallback from './components/common/LoadingFallback'
 import AuthRoute from './components/protectedRoute/AuthRoute'
 import MovieForm from './pages/MovieForm'
+
 const Home = lazy(() => import('./pages/Home'))
 const MoodMain = lazy(() => import('./pages/MoodMain'))
 const Genres = lazy(() => import('./pages/Genres'))
@@ -71,7 +72,6 @@ const App = () => {
           } />
           <Route path='movieForm' element={<MovieForm />} />
 
-          <Route path='*' element={<div>404 Not Found</div>} />
         </Route>
         <Route path='subscription-success' element={
           <Suspense fallback={<LoadingFallback />}>
@@ -83,6 +83,7 @@ const App = () => {
             <SubscriptionCancel />
           </Suspense>
         } />
+        <Route path='*' element={<div>404 Not Found</div>} />
       </Routes>
     </div>
   )
