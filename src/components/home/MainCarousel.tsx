@@ -1,4 +1,4 @@
-import React,  from "react";
+import React from "react";
 import Slider from "react-slick";
 import { MdArrowRight } from "react-icons/md";
 import MainCarouselMovieCard from "./MainCarouselMovieCard";
