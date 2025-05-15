@@ -27,6 +27,7 @@ const userSlice = createSlice({
         resetUser: (state: any) => {
             state.userInfo = {};
             state.isLoggedIn = false;
+            state.currentPlan = null;
         },
         setError: (state, action) => {
             state.error = action.payload;
