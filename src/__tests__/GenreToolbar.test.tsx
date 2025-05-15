@@ -1,6 +1,33 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import GenreToolbar from '../components/genre/GenreToolbar';
 
+jest.mock('../constants/genre', () => ({
+  genres: [
+    { id: 1, name: 'All' },
+    { id: 2, name: 'Action' },
+    { id: 3, name: 'Adventure' },
+    { id: 4, name: 'Comedy' },
+    { id: 5, name: 'Drama' },
+    { id: 6, name: 'Horror' },
+    { id: 7, name: 'Romance' },
+    { id: 8, name: 'Sci-Fi' },
+    { id: 9, name: 'Thriller' },
+    { id: 10, name: 'Fantasy' },
+  ],
+  genreGradients: {
+    All: 'from-gray-700 to-gray-900',
+    Action: 'from-red-500 to-yellow-500',
+    Adventure: 'from-green-400 to-blue-500',
+    Comedy: 'from-yellow-300 to-pink-400',
+    Drama: 'from-purple-500 to-pink-500',
+    Horror: 'from-gray-800 to-red-900',
+    Romance: 'from-pink-400 to-red-400',
+    'Sci-Fi': 'from-blue-400 to-indigo-600',
+    Thriller: 'from-gray-700 to-gray-900',
+    Fantasy: 'from-green-300 to-blue-300',
+  }
+}));
+
 describe('GenreToolbar', () => {
   const setSelectedGenre = jest.fn();
 

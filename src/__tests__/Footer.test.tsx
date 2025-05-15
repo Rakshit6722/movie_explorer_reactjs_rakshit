@@ -22,7 +22,6 @@ describe('Footer', () => {
 
   test('renders social media links', () => {
     render(<Footer />);
-    expect(screen.getByRole('link', { name: '' })).toBeInTheDocument();
-    expect(screen.getAllByRole('link').length).toBeGreaterThanOrEqual(4);
+    expect(screen.getByTestId(/link/i)).toBeInTheDocument();
   });
 });

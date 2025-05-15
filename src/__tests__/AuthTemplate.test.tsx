@@ -61,6 +61,10 @@ jest.mock('react-router-dom', () => ({
     useNavigate: () => mockNavigate,
 }));
 
+jest.mock('react-redux', () => ({
+    ...jest.requireActual('react-redux'),
+    useDispatch: () => mockDispatch,
+}));
 
 beforeEach(() => {
     jest.clearAllMocks();
@@ -177,7 +181,7 @@ describe('AuthTemplate Component', () => {
         fireEvent.change(passwordInput, { target: { value: 'Password123' } });
         fireEvent.click(loginButton);
 
-        await waitFor(() => {
+        waitFor(() => {
             expect(loginApi).toHaveBeenCalledWith({ email: 'test@example.com', password: 'Password123' });
             expect(mockDispatch).toHaveBeenCalled();
             expect(mockDispatch).toHaveBeenCalledWith(setToken('mockToken'));

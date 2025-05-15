@@ -18,6 +18,11 @@ jest.mock('../components/notification/NotificationCenter', () => () => <div data
 jest.mock('../services/movieApi', () => ({
     getMoviesForHomePage: jest.fn(() => Promise.resolve({ data: [] })),
 }));
+
+jest.mock('../redux/slices/movieSlice', () => ({
+  fetchMovies: () => ({ type: 'movies/fetchMovies' }),
+}));
+
 const mockStore = configureStore([]);
 
 describe('Index', () => {
@@ -25,7 +30,9 @@ describe('Index', () => {
         const store = mockStore({ movie: { loading: true } });
         render(
             <Provider store={store}>
+                <MemoryRouter>
                 <Index />
+                </MemoryRouter>
             </Provider>
         );
         expect(screen.queryByTestId('main-carousel')).not.toBeInTheDocument();

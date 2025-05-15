@@ -84,7 +84,7 @@ test('renders NavItem with filled icon when active', () => {
             </MemoryRouter>
         </Provider>
     );
-    expect(screen.getByTestId('filled-icon')).toBeInTheDocument();
+    expect(screen.getByTestId(/filled-icon/i)).toBeInTheDocument();
     expect(screen.getByText('Test')).toBeInTheDocument();
 });
 
@@ -109,7 +109,7 @@ test('calls onClick if provided',  () => {
                 <NavItem {...mockProps} location={{ pathname: '/test' }} />
             </MemoryRouter>
         </Provider>
-    );
-    fireEvent.click( screen.getByTestId(/nav-link/i));
+    )
+    fireEvent.click(getByTestId(/nav-link/i));
     expect(handleClick).toHaveBeenCalled();
 });

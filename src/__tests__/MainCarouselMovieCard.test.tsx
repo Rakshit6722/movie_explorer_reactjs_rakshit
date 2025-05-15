@@ -26,3 +26,21 @@ test('renders MainCarouselMovieCard with movie details', () => {
   expect(screen.getByText(/Jane Doe/)).toBeInTheDocument();
   expect(screen.getByText('Explore Movie')).toBeInTheDocument();
 });
+
+test('preloads images on mount', () => {
+  const imageSpy = jest.spyOn(window, 'Image').mockImplementation(() => {
+    return { set src(_: string) {} } as any;
+  });
+  render(<MainCarouselMovieCard movie={mockMovie} />);
+  expect(imageSpy).toHaveBeenCalled();
+  imageSpy.mockRestore();
+});
+
+test('Explore Movie button sets window.location.href', () => {
+  delete (window as any).location;
+  (window as any).location = { href: '' };
+  render(<MainCarouselMovieCard movie={mockMovie} />);
+  const btn = screen.getByRole('button', { name: /explore movie/i });
+  btn.click();
+  expect(window.location.href).toContain('/movie?id=1');
+});

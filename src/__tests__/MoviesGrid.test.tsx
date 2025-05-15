@@ -1,13 +1,24 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import MoviesGrid from '../components/common/MoviesGrid/MoviesGrid';
 
-jest.mock('../components/home/CategorySection/MoviesCard', () => (props: any) => (
+jest.mock('../components/common/MoviesCard', () => (props: any) => (
   <div data-testid="movie-card">{props.movie.title}</div>
 ));
 
 describe('MoviesGrid', () => {
   const mockMovies = [
     { id: 1, title: 'Movie 1', genre: 'Action', duration: 120, release_year: 2020, rating: 8, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: '' },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
+    { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
     { id: 2, title: 'Movie 2', genre: 'Drama', duration: 90, release_year: 2021, rating: 7, plan: "basic" as const, poster_url: '', director: '', description: '', banner_url: ''  },
   ];
 
