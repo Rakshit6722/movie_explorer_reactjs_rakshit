@@ -1,4 +1,3 @@
-import axios, { AxiosResponse } from 'axios'
 import { apiConnector } from './interceptor/apiConnector'
 import { toast } from 'react-toastify'
 
