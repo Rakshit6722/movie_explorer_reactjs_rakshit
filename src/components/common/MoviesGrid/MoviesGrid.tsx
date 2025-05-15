@@ -1,5 +1,5 @@
 import React from 'react';
-import MoviesCard from '../../home/CategorySection/MoviesCard';
+import MoviesCard from '../MoviesCard';
 import Pagination from '@mui/material/Pagination';
 import { Movie } from '../../../types/type';
 
