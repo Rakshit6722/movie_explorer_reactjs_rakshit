@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { Movie } from "../../types/type";
+import { getMoviesForHomePage } from "../../services/movieApi";
 
 
 const initialState: {
@@ -11,6 +12,18 @@ const initialState: {
     loading: false,
     error: null,
 }
+
+export const fetchMovies = createAsyncThunk<Movie[]>(
+    "movies/fetchMovies",
+    async(__, {rejectWithValue}) => {
+        try{
+            const data = await getMoviesForHomePage()
+            return data
+        }catch(err: any){
+            return rejectWithValue(err.message || "Failed to fetch movies")
+        }
+    }
+)
 
 const movieSlice = createSlice({
     name: "movies",
@@ -40,6 +53,21 @@ const movieSlice = createSlice({
         resetMovies(state) {
             state.movies = []
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchMovies.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchMovies.fulfilled, (state, action) => {
+                state.loading = false;
+                state.movies = action.payload;
+            })
+            .addCase(fetchMovies.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as string;
+            })
     }
 })
 
