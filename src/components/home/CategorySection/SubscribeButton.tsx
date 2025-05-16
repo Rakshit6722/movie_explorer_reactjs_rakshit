@@ -35,6 +35,7 @@ export class SubscribeButton extends Component<Props, State> {
     startToggleInterval = () => {
         this.clearToggleInterval();
         this.intervalRef.current = setInterval(() => {
+            console.log("toggling state")
             this.setState(prevState => ({ minimized: !prevState.minimized }));
         }, 10 * 1000);
     }
@@ -48,7 +49,7 @@ export class SubscribeButton extends Component<Props, State> {
 
     render() {
         const { userInfo } = this.state;
-        const isBasicPlan = userInfo === 'basic' || userInfo === 'null';
+        const isBasicPlan = userInfo === 'basic' || userInfo === null;
         const { isLoggedIn } = this.props;
 
         return (
