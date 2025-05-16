@@ -363,14 +363,14 @@ export class MovieForm extends Component<{}, MovieFormState> {
         }
 
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#18122B] via-[#393053] to-[#635985]">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-600 via-black to-black">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="bg-white/10 backdrop-blur-xl border border-gradient-to-r from-[#e23145] to-[#fbbf24] shadow-2xl p-8 rounded-2xl w-full max-w-3xl mx-auto"
+                    className="bg-white/10 backdrop-blur-xl shadow-2xl p-8 rounded-2xl w-full max-w-3xl mx-auto"
                 >
-                    <h2 className="font-anton text-3xl mb-8 font-bold text-center bg-gradient-to-r from-[#e23145] to-[#fbbf24] bg-clip-text text-transparent drop-shadow-lg">
+                    <h2 className="font-anton text-3xl text-center tracking-wider mb-8 font-bold text-white drop-shadow-lg">
                         {isEditMode ? 'Edit Movie' : 'Add New Movie'}
                     </h2>
 
