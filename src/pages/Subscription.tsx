@@ -1,5 +1,5 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { addSubscriptioApi } from '../services/api';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -17,10 +17,18 @@ const Subscription = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  const scrollRef = useRef<HTMLDivElement>(null)
+
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const currentPlan = useSelector((state: RootState) => state.user.currentPlan || 'basic'); 
 
   const [selectedPlan, setSelectedPlan] = useState(currentPlan !== 'basic' ? currentPlan : 'gold');
+
+  useEffect(() => {
+    if(scrollRef.current){
+        scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  },[])
 
   const handlePlanSelection = (planKey: string) => {
     if (planKey === 'basic') {
@@ -69,7 +77,7 @@ const Subscription = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-black via-black/95 to-black text-white pb-12">
-      <div className="relative pt-16 pb-10 px-4 border-b border-gray-800/40">
+      <div ref={scrollRef} className="relative pt-16 pb-10 px-4 border-b border-gray-800/40">
         <div className="max-w-5xl mx-auto text-center">
           <motion.div
             className="inline-block mb-4 px-4 py-1.5 rounded-full bg-red-900/20 border border-red-800/30"
