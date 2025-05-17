@@ -14,16 +14,17 @@ export const loginApi = async (data: { email: string, password: string }) => {
         const response = await apiConnector('POST', `${BASE_URL}/login`, payload)
         return response
     } catch (err: any) {
-        if (err?.status === 401) {
-            toast.error(err?.response?.data?.error ?? 'Something went wrong, try again!')
+        console.log("error response", err?.response?.data?.errors[0])
+        if (err?.response?.status === 401) {
+            toast.error(err?.response?.data?.errors[0] ?? 'Something went wrong, try again!')
         }
-        else if (err?.status === 422) {
-            toast.error(err?.response?.data?.error ?? 'Something went wrong, try again!')
+        else if (err?.response?.status === 422) {
+            toast.error(err?.response?.data?.error[0] ?? 'Something went wrong, try again!')
         }
-        else if (err?.status === 500) {
-            toast.error(err?.response?.data?.error ?? 'Something went wrong, try again!')
+        else if (err?.response?.status === 500) {
+            toast.error(err?.response?.data?.error[0] ?? 'Something went wrong, try again!')
         } else {
-            toast.error(err?.message ?? 'Something went wrong, try again!')
+            toast.error(err?.response?.message ?? 'Something went wrong, try again!')
         }
 
     }
