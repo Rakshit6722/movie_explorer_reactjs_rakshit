@@ -1,4 +1,4 @@
-import React from 'react'; 
+import React, { useEffect } from 'react'; 
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { IoSearch } from "react-icons/io5";
@@ -6,6 +6,7 @@ import { MdClear } from "react-icons/md";
 import { styled } from '@mui/material/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { top100Films } from '../../constants/search';
+import { useSelector } from 'react-redux';
 
 type AutocompleteProps = {
   searchTerm: string;
@@ -88,6 +89,14 @@ export default function SearchBar({ searchTerm, onSearchChange, removeMargins = 
     onSearchChange({} as React.SyntheticEvent, "");
   };
 
+  const [suggestions, setSuggestions] = React.useState<string[]>([...top100Films.map((option) => option.title)]);
+
+  const movies = useSelector((state: any) => state.movie.movies);
+
+  useEffect(() => {
+    setSuggestions(movies.map((movie: any) => movie.title));
+  }, [movies]);
+
   return (
     <div className={`w-full ${removeMargins ? '' : 'px-4 py-6 mb-6'}`}>
       {!hideTitle && (
@@ -111,7 +120,7 @@ export default function SearchBar({ searchTerm, onSearchChange, removeMargins = 
             forcePopupIcon={false}
             onChange={(event, value, reason, details) => onSearchChange(event, value as string | null)}
             onInputChange={onSearchChange}
-            options={top100Films.map((option) => option.title)}
+            options={suggestions}
             renderInput={(params) => (
               <TextField
                 {...params}
