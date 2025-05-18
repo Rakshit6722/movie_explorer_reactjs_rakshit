@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios'
+import { toast } from 'react-toastify'
 
 const axiosInstance = axios.create({})
 
@@ -15,6 +16,21 @@ axiosInstance.interceptors.request.use(
         return config
     },
     (error) => {
+        return Promise.reject(error)
+    }
+)
+
+axiosInstance.interceptors.response.use(
+    (response) => {
+        return response
+    },
+    (error) => {
+        if (error.response.status === 401) {
+            localStorage.removeItem('token')
+            window.location.href = '/login'
+        }else if(error.response.status === 500){
+            toast.error("Internal server error")
+        }
         return Promise.reject(error)
     }
 )
