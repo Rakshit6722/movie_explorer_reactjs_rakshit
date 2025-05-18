@@ -4,22 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { deleteMovie } from '../../services/adminApi';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
+import { removeMovie } from '../../redux/slices/movieSlice';
 
 type MoviesCardProps = {
     movie: Movie;
     index?: number;
     type?: 'standard' | 'trending';
+    removeFromPageMovies?: (id: number) => void;
+    genreCard?: boolean;
 };
 
-function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
+function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFromPageMovies }: MoviesCardProps) {
     const navigate = useNavigate();
-    const userInfo = useSelector((state: RootState) => state.user.userInfo);
-    const role = userInfo.role;
+    const dispatch = useDispatch();
+    const userInfo = useSelector((state: RootState) => state.user.userInfo) as { role?: string } || {};
+    const role = userInfo.role || '';
     
     const [imageUrl, setImageUrl] = useState<string>('');
     const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -64,7 +68,10 @@ function MoviesCard({ movie, index = 0, type = 'standard' }: MoviesCardProps) {
             const response = await deleteMovie(movie.id);
             if (response.status === 200) {
                 toast.success('Movie deleted successfully');
-                navigate(0); 
+                if(genreCard){
+                    removeFromPageMovies && removeFromPageMovies(movie.id);
+                }
+                dispatch(removeMovie(movie.id));
             } else {
                 toast.error('Failed to delete movie');
             }

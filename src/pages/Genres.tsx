@@ -70,6 +70,10 @@ function Genres() {
         }
     };
 
+    const removeFromPageMovies = (id: number) => {
+        setPageMovies((prevMovies) => prevMovies.filter((movie) => movie.id !== id));
+    }
+
     const handlePageChange = (page: number) => {
         if (page === currentPage) return;
         setCurrentPage(page)
@@ -189,6 +193,7 @@ function Genres() {
                                         currentPage={currentPage}
                                         type={'genre'}
                                         isLoading={isLoading}
+                                        removeFromPageMovies={removeFromPageMovies}
                                     />
                                 ) : (
                                     <div className="py-16 text-center bg-gray-900/30 rounded-xl border border-gray-800/40">
