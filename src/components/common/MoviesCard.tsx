@@ -10,6 +10,7 @@ import { deleteMovie } from '../../services/adminApi';
 import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { removeMovie } from '../../redux/slices/movieSlice';
+import DeleteConfirmationAlert from './DeleteConfirmationAlert';
 
 type MoviesCardProps = {
     movie: Movie;
@@ -28,6 +29,7 @@ function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFrom
     const [imageUrl, setImageUrl] = useState<string>('');
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [showDetails, setShowDetails] = useState<boolean>(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
 
     const formatRating = (rating: number) => {
         if (rating || rating === 0) {
@@ -59,11 +61,6 @@ function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFrom
 
     const handleDelete = async (e: React.MouseEvent) => {
         e.stopPropagation();
-
-        if (!confirm(`Are you sure you want to delete "${movie.title}"?`)) {
-            return;
-        }
-
         try {
             const response = await deleteMovie(movie.id);
             if (response.status === 200) {
@@ -72,6 +69,7 @@ function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFrom
                     removeFromPageMovies && removeFromPageMovies(movie.id);
                 }
                 dispatch(removeMovie(movie.id));
+                setShowDeleteDialog(false);
             } else {
                 toast.error('Failed to delete movie');
             }
@@ -168,7 +166,7 @@ function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFrom
                 </motion.button>
 
                 <motion.button
-                    onClick={handleDelete}
+                    onClick={() => setShowDeleteDialog(true)}
                     className="absolute bottom-16 right-4 z-30 opacity-0 group-hover:opacity-100 flex items-center justify-center
                     w-10 h-10 rounded-full
                     bg-white/10 backdrop-blur-[6px]
@@ -214,10 +212,10 @@ function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFrom
 
             <div
                 className={`absolute inset-0 bg-black/70 rounded-md p-4 flex flex-col justify-between ${isMobile
-                        ? showDetails
-                            ? 'opacity-100'
-                            : 'opacity-0'
-                        : 'opacity-0 group-hover:opacity-100'
+                    ? showDetails
+                        ? 'opacity-100'
+                        : 'opacity-0'
+                    : 'opacity-0 group-hover:opacity-100'
                     } transition-opacity duration-300`}
             >
                 <div>
@@ -238,15 +236,21 @@ function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFrom
                 <button
                     onClick={() => navigate(`/movie?id=${movie.id}`)}
                     className={`mt-auto w-full py-2 text-sm rounded-md transition-colors ${movie?.plan === 'basic'
-                            ? 'bg-[#f02c49] hover:bg-[#f02c49c5] hover:text-black text-white'
-                            : movie?.plan === 'gold'
-                                ? 'bg-amber-500 hover:bg-amber-400 text-black'
-                                : 'bg-slate-300 hover:bg-slate-200 text-black'
+                        ? 'bg-[#f02c49] hover:bg-[#f02c49c5] hover:text-black text-white'
+                        : movie?.plan === 'gold'
+                            ? 'bg-amber-500 hover:bg-amber-400 text-black'
+                            : 'bg-slate-300 hover:bg-slate-200 text-black'
                         }`}
                 >
                     More Info
                 </button>
             </div>
+            <DeleteConfirmationAlert
+                open={showDeleteDialog}
+                onClose={() => setShowDeleteDialog(false)}
+                onConfirm={handleDelete}
+                movieTitle={movie.title}
+            />
         </div>
     );
 }

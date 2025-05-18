@@ -7,6 +7,10 @@ import { getMovieDetails } from '../services/movieApi';
 import { authorizeUserForAccessMovie } from '../utils/AuthorizeUser';
 import AuthorizedContent from '../components/common/AuthorizedContent';
 import { toast } from 'react-toastify';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
+import WithRouter from '../components/hoc/WithRouter';
+import DeleteConfirmationAlert from '../components/common/DeleteConfirmationAlert';
 
 class MovieDetail extends Component<any, any> {
     constructor(props: any) {
@@ -15,7 +19,8 @@ class MovieDetail extends Component<any, any> {
             movie: '',
             similarMovie: [],
             isLoading: true,
-            imageError: false
+            imageError: false,
+            showDeleteDialog: false,
         };
     }
 
@@ -24,11 +29,11 @@ class MovieDetail extends Component<any, any> {
     searchParams = new URLSearchParams(window.location.search);
     movieId = this.searchParams.get('id');
     currentPlan = this.props.currentPlan;
+    role = this.props.userInfo.role || '';
 
     async componentDidMount() {
         if (this.movieId) {
             await this.getMovie(this.movieId);
-            this.findSimilarMovies(this.state.movie)
         }
 
         if (this.mainRef.current) {
@@ -61,7 +66,9 @@ class MovieDetail extends Component<any, any> {
         try {
             const data = await getMovieDetails(Number(id))
             this.setState({ movie: data?.data, isLoading: false });
-
+            if (this.state.movie) {
+                this.findSimilarMovies(this.state.movie)
+            }
         } catch (error: any) {
             toast.error(error?.message || "Couldn't fetch movie details");
             this.setState({ isLoading: false });
@@ -69,10 +76,22 @@ class MovieDetail extends Component<any, any> {
         }
 
     }
+    handleDelete = async () => {
+            try {
+                const response = await this.props.deleteMovie(this.movieId);
+                if (response?.status === 200) {
+                    toast.success("Movie deleted successfully !");
+                    this.setState({ showDeleteDialog: false });
+                    this.props.navigate('/');
+                }
+                toast.success("Movie deleted successfully!");
+            } catch (error: any) {
+                toast.error(error?.message || "Failed to delete movie.");
+            }
+        }
 
     findSimilarMovies = (movie: Movie) => {
-        const similarMovies = this.props.movieList.filter((m: Movie) => (m.genre === movie.genre || m.genre === 'Action') && m.id !== this.state.movie.id).slice(0, 4);
-
+        const similarMovies = this.props.movieList.filter((m: Movie) => (m.genre === movie.genre) && m.id !== this.state.movie.id).slice(0, 6);
         if (similarMovies.length > 0) {
             this.setState({ similarMovie: similarMovies });
         }
@@ -152,7 +171,27 @@ class MovieDetail extends Component<any, any> {
             <div ref={this.mainRef} className="flex flex-col bg-[#0f0f0f] min-h-screen">
 
                 <div className="relative h-[85vh] sm:h-[75vh] md:h-[75vh] lg:h-[80vh] w-full flex flex-col lg:flex-row">
-
+                    {(this.role === 'admin' || this.role === 'supervisor') && (
+                        <div className="absolute top-6 right-6 z-30 flex gap-3">
+                            <button
+                                onClick={() => {
+                                    localStorage.setItem('editMovieId', movie.id.toString());
+                                    this.props.navigate('/movieForm');
+                                }}
+                                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-[6px] border-2 border-blue-400/30 shadow-[0_2px_12px_0_rgba(30,144,255,0.15)] transition-all duration-200 hover:shadow-[0_0_16px_4px_rgba(30,144,255,0.25)] hover:bg-blue-400/20 hover:border-blue-400 hover:text-blue-50 focus:outline-none"
+                                title="Edit Movie"
+                            >
+                                <EditRoundedIcon sx={{ fontSize: 20 }} />
+                            </button>
+                            <button
+                                onClick={() => this.setState({ showDeleteDialog: true })}
+                                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-[6px] border-2 border-red-400/30 shadow-[0_2px_12px_0_rgba(240,44,73,0.15)] transition-all duration-200 hover:shadow-[0_0_16px_4px_rgba(240,44,73,0.25)] hover:bg-red-400/20 hover:border-red-400 hover:text-red-50 focus:outline-none"
+                                title="Delete Movie"
+                            >
+                                <DeleteOutlineRoundedIcon sx={{ fontSize: 20 }} />
+                            </button>
+                        </div>
+                    )}
                     <div className="hidden lg:flex lg:w-1/3 bg-black h-full relative overflow-hidden items-center justify-center">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0f0f0f] z-10"></div>
                         <div className="h-full w-full lg:w-3/4 flex items-center justify-center relative z-0">
@@ -335,9 +374,15 @@ class MovieDetail extends Component<any, any> {
                 </div>
 
                 <Footer />
+                <DeleteConfirmationAlert
+                    open={this.state.showDeleteDialog}
+                    onClose={() => this.setState({ showDeleteDialog: false })}
+                    onConfirm={this.handleDelete}
+                    movieTitle={movie.title}
+                />
             </div>
         );
     }
 }
 
-export default WithReduxState(MovieDetail);
+export default WithRouter(WithReduxState(MovieDetail));
