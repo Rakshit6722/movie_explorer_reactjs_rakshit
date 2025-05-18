@@ -194,6 +194,7 @@ function Genres() {
                                         type={'genre'}
                                         isLoading={isLoading}
                                         removeFromPageMovies={removeFromPageMovies}
+                                        genreCard={true}
                                     />
                                 ) : (
                                     <div className="py-16 text-center bg-gray-900/30 rounded-xl border border-gray-800/40">

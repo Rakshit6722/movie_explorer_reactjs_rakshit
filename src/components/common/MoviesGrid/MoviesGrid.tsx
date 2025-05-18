@@ -11,9 +11,10 @@ interface MoviesGridProps {
     type?: string | null;
     isLoading?: boolean;
     removeFromPageMovies?: (id: number) => void;
+    genreCard?: boolean;
 }
 
-function MoviesGrid({ movieList, onChange, totalPages = 10, currentPage = 1, type = null, isLoading = false , removeFromPageMovies}: MoviesGridProps) {
+function MoviesGrid({ movieList, onChange, totalPages = 10, currentPage = 1, type = null, isLoading = false , removeFromPageMovies, genreCard}: MoviesGridProps) {
     const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
         if (value === currentPage || !onChange) return;
         onChange(value);
@@ -32,7 +33,7 @@ function MoviesGrid({ movieList, onChange, totalPages = 10, currentPage = 1, typ
                 ) : movieList.length > 0 ? (
                     movieList.map((movie, index) => (
                         <div key={`movie-${movie.id || index}`} className="w-full flex justify-center">
-                            <MoviesCard movie={movie} removeFromPageMovies={removeFromPageMovies} genreCard={true} />
+                            <MoviesCard movie={movie} removeFromPageMovies={removeFromPageMovies} genreCard={genreCard} />
                         </div>
                     ))
                 ) : (
