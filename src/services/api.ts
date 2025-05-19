@@ -99,7 +99,7 @@ export const getSubscriptionDetailsApi = async (): Promise<any> => {
             null,
             true
         );
-        return response?.data?.subscriptions
+        return response?.data
     } catch (err: any) {
         throw err
     }

@@ -138,7 +138,8 @@ function Profile() {
         </div>
       </header>
 
-      <PersonalInformation userInfo={userInfo} currentPlan={currentUserPlan} loading={loading} error={error} planInfo={planInfo} formatDateForDisplay={formatDateForDisplay} getDaysRemaining={getDaysRemaining} subscriptionDetails={subscriptionDetails} getStatusDisplay={getStatusDisplay} />
+      <PersonalInformation 
+      userInfo={userInfo} currentPlan={currentUserPlan} loading={loading} error={error} planInfo={planInfo} formatDateForDisplay={formatDateForDisplay} getDaysRemaining={getDaysRemaining} subscriptionDetails={subscriptionDetails} getStatusDisplay={getStatusDisplay} />
 
     </div>
   );
