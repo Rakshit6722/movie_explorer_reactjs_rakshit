@@ -188,10 +188,6 @@ const Index = () => {
           </>
         ) : (
           <>
-            {/* <motion.div {...scrollAnimProps} className="mb-8">
-              <ParallaxText baseVelocity={-5}>Movie Explorer</ParallaxText>
-              <ParallaxText baseVelocity={5}>Explorer Movie</ParallaxText>
-            </motion.div> */}
             <motion.div {...scrollAnimProps} className="mb-8">
               <CarouselSection type="Trending" heading="Top Trending" />
             </motion.div>
