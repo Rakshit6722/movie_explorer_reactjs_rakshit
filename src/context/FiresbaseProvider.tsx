@@ -41,6 +41,8 @@ function FirebaseProvider({ children }: any) {
 
                     onMessage(messaging, (payload) => {
                         try {
+
+                            console.log("inside on message")
             
                             const audio = new Audio(audioUrl);
                             audio.volume = 1
