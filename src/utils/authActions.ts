@@ -25,8 +25,9 @@ export const loginUser = async (response: any, dispatch: any, navigate: any) => 
 
 }
 
-export const logoutUtil = async (dispatch?: any, navigate?: any) => {
+export const logoutUtil = async (dispatch?: any, navigate?: any, setLogoutLoading?: (args :boolean)=>void) => {
     try {
+        setLogoutLoading && setLogoutLoading(true)
         const response = await logoutUser()
         if (response?.data?.message === "Logout successful") {
             dispatch(resetUser())
@@ -39,5 +40,7 @@ export const logoutUtil = async (dispatch?: any, navigate?: any) => {
         }
     } catch (err: any) {
         throw new Error(err?.message || "Couldn't logout")
+    } finally {
+        setLogoutLoading && setLogoutLoading(false)
     }
 }
