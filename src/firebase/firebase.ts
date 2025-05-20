@@ -20,16 +20,16 @@ export const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
-// export const messaging = getMessaging(app);
+export const messaging = getMessaging(app);
 export const FIREBASE_VAPID_KEY = "BNIzu7CfP2_7yZTXxQ7hyI57c7Keav_P3sfuHw00UlVJ-aY6uKf_a8gAa-6t-EGAdsWrmV7o8t6nz-PWFUHhTwg"
 // export const FIREBASE_VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID
 
-export let messaging: any = null;
+// export let messaging: any = null;
 
-if(typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator.serviceWorker) {
-  try{
-    messaging = getMessaging(app);
-  }catch (error) {
-    toast.error("Couldn't initialize Firebase messaging");
-  }
-}
+// if(typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator.serviceWorker) {
+//   try{
+//     messaging = getMessaging(app);
+//   }catch (error) {
+//     toast.error("Couldn't initialize Firebase messaging");
+//   }
+// }
