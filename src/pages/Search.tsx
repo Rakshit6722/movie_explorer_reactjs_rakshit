@@ -48,7 +48,7 @@ function Search() {
       const response = await getMovieByPageApi(
         page,
         genre === 'All' ? null : genre,
-        searchTerm
+        searchTerm.trim()
       );
 
       if (response) {
