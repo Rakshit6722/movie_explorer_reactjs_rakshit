@@ -35,6 +35,7 @@ if (
   try {
     messaging = getMessaging(app);
   } catch (error) {
+    console.log("Error initializing Firebase messaging:", error);
     toast.error("Couldn't initialize Firebase messaging");
   }
 }
