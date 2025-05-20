@@ -29,13 +29,19 @@ export let messaging: any = null;
 if (
   typeof window !== 'undefined' &&
   typeof navigator !== 'undefined' &&
-  window.isSecureContext && 
+  window.isSecureContext &&
   'serviceWorker' in navigator
 ) {
-  try {
-    messaging = getMessaging(app);
-  } catch (error) {
-    console.log("Error initializing Firebase messaging:", error);
-    toast.error("Couldn't initialize Firebase messaging");
-  }
+  navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js').then(reg => {
+    if (reg) {
+      try {
+        messaging = getMessaging(app);
+      } catch (error) {
+        console.log("Error initializing Firebase messaging:", error);
+        toast.error("Couldn't initialize Firebase messaging");
+      }
+    } else {
+      console.log("firebase-messaging-sw.js not registered or not at root.");
+    }
+  });
 }
