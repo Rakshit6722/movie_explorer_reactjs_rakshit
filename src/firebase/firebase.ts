@@ -32,16 +32,17 @@ if (
   window.isSecureContext &&
   'serviceWorker' in navigator
 ) {
-  navigator.serviceWorker.getRegistration('/firebase-messaging-sw.js').then(reg => {
-    if (reg) {
+  navigator.serviceWorker
+    .register('/firebase-messaging-sw.js')
+    .then(reg => {
       try {
         messaging = getMessaging(app);
       } catch (error) {
         console.log("Error initializing Firebase messaging:", error);
         toast.error("Couldn't initialize Firebase messaging");
       }
-    } else {
-      console.log("firebase-messaging-sw.js not registered or not at root.");
-    }
-  });
+    })
+    .catch(err => {
+      console.log("Service worker registration failed:", err);
+    });
 }
