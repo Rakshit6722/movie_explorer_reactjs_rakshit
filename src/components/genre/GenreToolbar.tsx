@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { motion } from 'framer-motion';
 import { genreGradients, genres } from '../../constants/genre';
 
-
-
 interface GenreToolbarProps {
     selectedGenre: string;
     setSelectedGenre: (genre: string) => void;
@@ -28,9 +26,11 @@ export class GenreToolbar extends Component<GenreToolbarProps, GenreToolbarState
                     </div>
                 )}
 
-                <div className="bg-gray-900/40 backdrop-blur-sm rounded-xl p-0.5 border text-center border-gray-800/50 shadow-inner w-fit overflow-hidden">
-                    <div className={`${isSearchMode ? 'flex flex-wrap gap-1 p-2'
-                            : 'inline-flex flex-wrap items-center justify-center p-2 overflow-x-auto hide-scrollbar'}`}>
+                <div className="bg-gray-900/40 backdrop-blur-sm rounded-xl p-0.5 border text-center border-gray-800/50 shadow-inner w-full md:w-fit overflow-hidden">
+                    <div className={` flex flex-nowrap items-center gap-2 p-2 overflow-x-auto hide-scrollbar w-full
+            md:flex-wrap md:justify-center `}
+                        style={{ WebkitOverflowScrolling: 'touch' }}
+                    >
                         {genres.map((genre) => (
                             <motion.button
                                 onClick={() => this.props.setSelectedGenre(genre.name)}
@@ -38,9 +38,11 @@ export class GenreToolbar extends Component<GenreToolbarProps, GenreToolbarState
                                 whileHover={{ scale: 1.04 }}
                                 whileTap={{ scale: 0.97 }}
                                 className={`
-                                    relative px-5 py-2.5 mx-1 my-1 font-medium text-sm rounded-md md:rounded-lg transition-all duration-300 ease-out ${selectedGenre === genre.name ? 'text-white shadow-lg' : 'bg-gray-800/40 text-gray-300 hover:text-white'} ${genre.name === 'All' && selectedGenre !== 'All' ? 'bg-gray-800/40 text-gray-400' : ''}
-                                `}  >
-
+                    relative px-5 py-2.5 mx-1 my-1 font-medium text-sm rounded-md md:rounded-lg transition-all duration-300 ease-out
+                    ${selectedGenre === genre.name ? 'text-white shadow-lg' : 'bg-gray-800/40 text-gray-300 hover:text-white'}
+                    ${genre.name === 'All' && selectedGenre !== 'All' ? 'bg-gray-800/40 text-gray-400' : ''}
+                `}
+                            >
                                 {selectedGenre === genre.name && (
                                     <motion.div
                                         layoutId="selectedGenre"
