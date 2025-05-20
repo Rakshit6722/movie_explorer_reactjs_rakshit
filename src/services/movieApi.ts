@@ -37,7 +37,6 @@ export const getMoviesForHomePage = async () => {
             null,
         )
         if (response?.status === 200) {
-            console.log("response from index", response?.data)
             return response?.data?.movies
         }
     } catch (err: any) {
