@@ -8,7 +8,7 @@ firebase.initializeApp({
   projectId: "fir-messaginservice",
   storageBucket: "fir-messaginservice.firebasestorage.app",
   messagingSenderId: "753278980485",
-  appId: "G-1:753278980485:web:3f4436e86e55a3b05df4ec",
+  appId: "1:753278980485:web:3f4436e86e55a3b05df4ec",
   measurementId: "G-YR2NW0T0XW"
 });
 
