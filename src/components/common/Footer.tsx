@@ -29,7 +29,7 @@ const Footer = () => {
 
           <div className="w-full md:w-1/3 mb-8 md:mb-0 px-4">
             <h3 className="text-white text-lg font-semibold mb-6">Quick Links</h3>
-            <ul className="grid grid-cols-2 gap-4">
+            <ul data-testid="links" className="grid grid-cols-2 gap-4">
               {quickLinks.map(link => (
                 <li key={link.label}>
                   <a href={link.href} className="hover:text-red-500 transition duration-300">
