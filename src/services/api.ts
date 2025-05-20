@@ -52,7 +52,7 @@ export const logoutUser = async () => {
 }
 
 
-export const userNotificationApi = async (data: { device_token: string, notifications_enabled: boolean }) => {
+export const userNotificationApi = async (data: { device_token: string | null, notifications_enabled: boolean }) => {
 
     try {
         const response = await apiConnector(
@@ -66,6 +66,7 @@ export const userNotificationApi = async (data: { device_token: string, notifica
             null,
             true
         )
+        return response?.data
     } catch (err: any) {
         throw err
     }
