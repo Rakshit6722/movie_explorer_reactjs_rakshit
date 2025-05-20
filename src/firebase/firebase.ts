@@ -25,4 +25,7 @@ export const FIREBASE_VAPID_KEY = "BNIzu7CfP2_7yZTXxQ7hyI57c7Keav_P3sfuHw00UlVJ-
 // export const FIREBASE_VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID
 
 export let messaging: any = null;
-messaging = getMessaging(app);
+
+if(typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator.serviceWorker) {
+    messaging = getMessaging(app);
+}
