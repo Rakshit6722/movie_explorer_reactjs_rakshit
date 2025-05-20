@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getMessaging } from "firebase/messaging";
+import { getInstallations } from 'firebase/installations';
 import { toast } from "react-toastify";
 
 export const firebaseConfig = {
@@ -20,6 +21,7 @@ export const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
+const installations = getInstallations(app);
 export const messaging = getMessaging(app);
 export const FIREBASE_VAPID_KEY = "BNIzu7CfP2_7yZTXxQ7hyI57c7Keav_P3sfuHw00UlVJ-aY6uKf_a8gAa-6t-EGAdsWrmV7o8t6nz-PWFUHhTwg"
 // export const FIREBASE_VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID
