@@ -27,5 +27,9 @@ export const FIREBASE_VAPID_KEY = "BNIzu7CfP2_7yZTXxQ7hyI57c7Keav_P3sfuHw00UlVJ-
 export let messaging: any = null;
 
 if(typeof window !== 'undefined' && typeof navigator !== 'undefined' && navigator.serviceWorker) {
+  try{
     messaging = getMessaging(app);
+  }catch (error) {
+    toast.error("Couldn't initialize Firebase messaging");
+  }
 }
