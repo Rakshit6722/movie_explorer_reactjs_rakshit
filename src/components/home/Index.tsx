@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Skeleton, Box } from '@mui/material';
+import { Skeleton, Box, LinearProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import CarouselSection from './CategorySection/CarouselSection';
 import MainCarousel from './MainCarousel';
@@ -161,16 +161,44 @@ const Index = () => {
 
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-black text-white">
-    {!loading && (
-      <div className="fixed top-0  z-50 p-4">
-        <NotificationCenter />
-      </div>
-    )}
+      {!loading && (
+        <div className="fixed top-0  z-50 p-4">
+          <NotificationCenter />
+        </div>
+      )}
 
       {!loading && <SubscribeButton />}
       <section className="w-full mb-12">
         {loading ? (
-          renderCarouselSkeleton()
+          <>
+            <LinearProgress
+              variant="indeterminate"
+              sx={{
+                zIndex: '150',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '5px',
+                '& .MuiLinearProgress-bar': {
+                  backgroundColor: '#f02c49',
+                },
+                '&.MuiLinearProgress-root': {
+                  backgroundColor: 'rgba(240, 44, 73, 0.2)',
+                },
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '100%',
+                  backgroundColor: 'rgba(240, 44, 73, 0.2)',
+                }
+              }}
+            />
+            {renderCarouselSkeleton()}
+          </>
         ) : (
           <motion.div {...scrollAnimProps}>
             <MoodFeaturePromo />
