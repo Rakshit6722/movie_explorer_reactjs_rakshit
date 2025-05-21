@@ -3,12 +3,154 @@
 @tailwind utilities;
 
 
-*{
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body{
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.25s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.25s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.notification-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.notification-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.notification-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(226, 49, 69, 0.5);
+  border-radius: 8px;
+}
+
+.notification-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(226, 49, 69, 0.7);
+}
+
+.notification-pulse {
+  animation: pulse 2s infinite;
+}
+
+.my-toast {
+  background: #222;
+  border-radius: 10px;
+}
+.my-toast-body {
+  color: #e23145;
+  font-weight: bold;
+}
+
+
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(226, 49, 69, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 8px rgba(226, 49, 69, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(226, 49, 69, 0);
+  }
+}
+
+@keyframes subtle-pulse {
+
+  0%,
+  100% {
+    opacity: 0.95;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.filter.drop-shadow-glow {
+  animation: subtle-pulse 3s infinite ease-in-out;
+}
+
+
+.film-strip-top,
+.film-strip-bottom {
+  height: 24px;
+  background: repeating-linear-gradient(90deg,
+      #000,
+      #000 15px,
+      transparent 15px,
+      transparent 30px);
+  background-size: 30px 100%;
+  opacity: 0.5;
+}
+
+.film-strip-bottom {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.film-strip-top {
+  position: absolute;
+  top: 0;
   width: 100%;
 }
