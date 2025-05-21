@@ -1,16 +1,9 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging } from "firebase/messaging";
-import { getInstallations } from 'firebase/installations';
+import { getMessaging, isSupported } from "firebase/messaging";
+import { getInstallations } from "firebase/installations";
 import { toast } from "react-toastify";
 
 export const firebaseConfig = {
-  // apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  // authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
-  // projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
-  // storageBucket: import.meta.env.VITE_FIREBASE_STORAGEBUCKET,
-  // messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGINGSENDERID,
-  // appId: import.meta.env.VITE_FIREBASE_APPID,
-  // measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENTID,
   apiKey: "AIzaSyBD9LE28yQAUD8VgBc3-pGH_vSJvkvq7q0",
   authDomain: "fir-messaginservice.firebaseapp.com",
   projectId: "fir-messaginservice",
@@ -20,29 +13,32 @@ export const firebaseConfig = {
   measurementId: "G-YR2NW0T0XW"
 };
 
+export const FIREBASE_VAPID_KEY = "BNIzu7CfP2_7yZTXxQ7hyI57c7Keav_P3sfuHw00UlVJ-aY6uKf_a8gAa-6t-EGAdsWrmV7o8t6nz-PWFUHhTwg";
+
 export const app = initializeApp(firebaseConfig);
-const installations = getInstallations(app);
-export const messaging = getMessaging(app);
-export const FIREBASE_VAPID_KEY = "BNIzu7CfP2_7yZTXxQ7hyI57c7Keav_P3sfuHw00UlVJ-aY6uKf_a8gAa-6t-EGAdsWrmV7o8t6nz-PWFUHhTwg"
-// export const FIREBASE_VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID
+export const installations = getInstallations(app);
 
-// export let messaging: any = null;
+// Messaging must be initialized safely
+export const initializeMessaging = async () => {
+  try {
+    const supported = await isSupported();
+    if (!supported) {
+      console.warn("Firebase Messaging is not supported in this browser.");
+      return null;
+    }
 
-// if (
-//   window.isSecureContext &&
-//   'serviceWorker' in navigator
-// ) {
-//   navigator.serviceWorker
-//     .register('/firebase-messaging-sw.js')
-//     .then(reg => {
-//       try {
-//         messaging = getMessaging(app);
-//       } catch (error) {
-//         console.log("Error initializing Firebase messaging:", error);
-//         toast.error("Couldn't initialize Firebase messaging");
-//       }
-//     })
-//     .catch(err => {
-//       console.log("Service worker registration failed:", err);
-//     });
-// }
+    if ('serviceWorker' in navigator) {
+      const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      const messaging = getMessaging(app);
+      console.log("Firebase Messaging initialized");
+      return messaging;
+    } else {
+      console.warn("Service workers are not supported in this environment.");
+      return null;
+    }
+  } catch (err) {
+    console.error("Failed to initialize Firebase Messaging:", err);
+    toast.error("Couldn't initialize Firebase messaging");
+    return null;
+  }
+};
