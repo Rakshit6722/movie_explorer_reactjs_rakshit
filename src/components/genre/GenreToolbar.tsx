@@ -25,7 +25,7 @@ export class GenreToolbar extends Component<GenreToolbarProps, GenreToolbarState
                         <p className="text-gray-400 text-sm">Find movies from your favorite categories</p>
                     </div>
                 )}
-
+ 
                 <div className="bg-gray-900/40 backdrop-blur-sm rounded-xl p-0.5 border text-center border-gray-800/50 shadow-inner w-full md:w-fit overflow-hidden">
                     <div className={` flex flex-nowrap items-center gap-2 p-2 overflow-x-auto hide-scrollbar w-full
             md:flex-wrap md:justify-center `}
