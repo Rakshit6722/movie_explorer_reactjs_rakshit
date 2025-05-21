@@ -88,7 +88,7 @@ export class CreateEditForm extends Component<propType> {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="bg-black/80 backdrop-blur-xl shadow-2xl p-10 rounded-2xl w-full max-w-7xl mx-auto"
+                    className="bg-black/80 backdrop-blur-xl shadow-2xl p-10 w-full max-w-7xl mx-auto"
                 >
                     <h2 className="font-anton text-3xl text-center tracking-wider mb-10 font-bold text-white drop-shadow-lg">
                         {isEditMode ? 'Edit Movie' : 'Add New Movie'}
