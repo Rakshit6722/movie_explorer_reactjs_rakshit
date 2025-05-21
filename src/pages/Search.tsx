@@ -7,8 +7,8 @@ import { Movie } from '../types/type';
 import { motion } from 'framer-motion';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 import SearchIcon from '@mui/icons-material/Search';
-import VideocamIcon from '@mui/icons-material/Videocam';
 import { toast } from 'react-toastify';
+import Placeholder from '../components/common/Placeholder';
 
 function Search() {
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ function Search() {
       const response = await getMovieByPageApi(
         page,
         genre === 'All' ? null : genre,
-        searchTerm
+        searchTerm.trim()
       );
 
       if (response) {
@@ -157,7 +157,7 @@ function Search() {
 
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[40vw] h-[30vh] bg-[#e23145]/10 blur-[120px] rounded-[100%] opacity-50"></div>
 
-        <div className="pt-8 px-6 pb-12 relative z-10">
+        <div className="pt-8 px-6 relative z-10">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ y: -20, opacity: 0 }}
@@ -166,7 +166,7 @@ function Search() {
               className="mb-8 flex items-center justify-center"
             >
               <SearchIcon sx={{ fontSize: 28, color: '#e23145', marginRight: '12px' }} />
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-anton font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
                 Explore Movies
               </h1>
             </motion.div>
@@ -187,22 +187,9 @@ function Search() {
         </div>
       </div>
 
-      <div className="flex-grow px-6 pb-12">
+      <div className="flex-grow px-6">
         {searchTerm.trim() === '' ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col items-center justify-center h-[60vh] text-center"
-          >
-            <div className="mb-8 p-6 bg-[#e23145]/5 rounded-full">
-              <VideocamIcon sx={{ fontSize: 64, color: '#e23145' }} />
-            </div>
-            <h2 className="text-2xl font-medium mb-3">Discover Your Next Favorite Movie</h2>
-            <p className="text-gray-400 max-w-lg">
-              Enter a title or any keyword to begin your cinematic journey
-            </p>
-          </motion.div>
+          <Placeholder />
         ) : (
           <motion.div
             initial={{ opacity: 0, y: 20 }}

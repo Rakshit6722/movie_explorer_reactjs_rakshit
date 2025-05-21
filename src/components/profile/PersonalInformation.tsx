@@ -9,6 +9,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CircularProgress from '@mui/material/CircularProgress';
 import WithRouter from '../hoc/WithRouter';
+import NotificationSlider from './NotificationSlider';
 
 export class PersonalInformation extends Component<any> {
 
@@ -47,6 +48,10 @@ export class PersonalInformation extends Component<any> {
                                             <span className="text-gray-200">
                                                 {new Date().toLocaleDateString()}
                                             </span>
+                                        </div>
+                                        
+                                        <div>
+                                            <NotificationSlider/>
                                         </div>
                                     </div>
                                 </div>

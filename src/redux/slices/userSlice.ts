@@ -9,6 +9,7 @@ const userSlice = createSlice({
         loading: false,
         error: null,
         currentPlan: null,
+        allowNotifications: false
     },
     reducers: {
         setUser: (state, action) => {
@@ -34,9 +35,15 @@ const userSlice = createSlice({
         },
         setIsLoggedIn: (state, action) => {
             state.isLoggedIn = action.payload;
-        }
+        },
+        setAllowNotifications: (state, action) => {
+            state.allowNotifications = action.payload;
+        },
+        resetAllowNotifications: (state) => {
+            state.allowNotifications = false;
+        },
     },
 })
 
-export const { setUser, setToken, resetUser, setError, resetToken, setIsLoggedIn, setCurrentPlan } = userSlice.actions;
+export const { setUser, setToken, resetUser, setError, resetToken, setIsLoggedIn, setCurrentPlan, setAllowNotifications, resetAllowNotifications } = userSlice.actions;
 export default userSlice.reducer;

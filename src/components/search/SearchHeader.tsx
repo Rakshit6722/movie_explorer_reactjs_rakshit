@@ -20,7 +20,6 @@ export class SearchHeader extends Component<SearchHeaderProps> {
       <div className="w-full md:px-4 mb-6">
         <div className="bg-black/40 backdrop-blur-md rounded-xl border border-gray-800/50 shadow-xl">
           <div className="px-6 pt-5 pb-3">
-            <h2 className="font-anton text-gray-200 text-2xl tracking-wide">Explore Movies</h2>
             <p className="text-gray-400 text-sm italic">Search and filter your favorite films</p>
           </div>
           

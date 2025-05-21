@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
-import { FiSearch } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import VideocamIcon from '@mui/icons-material/Videocam';
 
 export class Placeholder extends Component {
   render() {
     return (
-      <div className="flex flex-col items-center justify-center h-full opacity-40">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center p-5 bg-gray-800/30 rounded-full mb-6">
-            <FiSearch data-testid="placeholderIcon" size={40} className="text-gray-500/80" />
-          </div>
-          <h2 className="text-xl font-light text-gray-400/90 mb-2">
-            Search for movies
-          </h2>
-          <p className="text-gray-500/70 text-xs max-w-xs mx-auto">
-            Enter a title or keyword in the search bar above
+      <motion.div
+        initial={{  scale: 0.9 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col items-center justify-center h-[40vh] text-center opacity-30"
+      >
+        <div className="mb-5 p-6 bg-[#e23145]/5 rounded-full">
+          <VideocamIcon sx={{ fontSize: 64, color: '#e23145' }} />
+        </div>
+        <div>
+          <h2 className="text-2xl font-medium mb-3">Discover Your Next Favorite Movie</h2>
+          <p className="text-gray-400 max-w-lg">
+            Enter a title or any keyword to begin your cinematic journey
           </p>
         </div>
-      </div>
+      </motion.div>
     );
   }
 }

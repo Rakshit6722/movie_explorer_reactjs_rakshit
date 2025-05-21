@@ -1,7 +1,7 @@
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
 import { render, screen } from '@testing-library/react';
-import Index from '../components/home/CategorySection/Index';
+import Index from '../components/home/Index';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import { MemoryRouter } from 'react-router-dom';

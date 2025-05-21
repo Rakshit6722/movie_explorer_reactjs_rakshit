@@ -245,6 +245,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                                 style={{
                                     filter: 'drop-shadow(0 0 2px rgba(255,255,255,0.3))'
                                 }}
+                                loading='eager'
                             />
                             <div className="absolute -inset-1 bg-gradient-to-r from-[#e23145]/10 to-transparent rounded-full blur-sm opacity-70 -z-10"></div>
                         </div>

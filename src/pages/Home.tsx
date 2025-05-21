@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Index from '../components/home/CategorySection/Index'
+import Index from '../components/home/Index'
 import Footer from '../components/common/Footer'
 
 

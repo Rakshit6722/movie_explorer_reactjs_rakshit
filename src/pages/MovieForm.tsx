@@ -10,7 +10,7 @@ import WithRouter from '../components/hoc/WithRouter';
 export class MovieForm extends Component<{
     navigate: (path: string) => void;
 }, MovieFormState> {
-    constructor(props: {}) {
+    constructor(props: any) {
         super(props);
 
         const searchParams = new URLSearchParams(window.location.search)
@@ -104,6 +104,11 @@ export class MovieForm extends Component<{
 
     loadImageFromUrl = async (url: string, fieldName: 'poster' | 'coverimage') => {
         if (!url) return;
+
+        if (url.startsWith('http://res.cloudinary.com/')) {
+            url = url.replace('http://', 'https://');
+        }
+
 
         try {
             const response = await fetch(url);

@@ -2,6 +2,14 @@ import { toast } from 'react-toastify';
 import { messaging, FIREBASE_VAPID_KEY } from '../firebase/firebase';
 import { getToken } from "firebase/messaging";
 
+export const getInitialNotificationPermission = () => {
+  return Notification.permission
+}
+
+export const requestBrowserNotificationPermission = async () => {
+  Notification.requestPermission()
+}
+
 export const requestForToken = async () => {
   try {
     if (!messaging) {

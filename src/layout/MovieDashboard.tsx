@@ -12,7 +12,7 @@ export class MovieDashboard extends Component<any> {
         
         return (
             <>
-                {movieLoading && (
+                {/* {movieLoading && (
                     <LinearProgress 
                         variant="indeterminate"
                         sx={{ 
@@ -39,7 +39,7 @@ export class MovieDashboard extends Component<any> {
                             }
                         }} 
                     />
-                )}
+                )} */}
             
                 <div className="flex min-h-screen bg-black text-white">
                     <Header />
