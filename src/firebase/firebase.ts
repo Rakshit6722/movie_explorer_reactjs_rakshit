@@ -17,28 +17,30 @@ export const FIREBASE_VAPID_KEY = "BNIzu7CfP2_7yZTXxQ7hyI57c7Keav_P3sfuHw00UlVJ-
 
 export const app = initializeApp(firebaseConfig);
 export const installations = getInstallations(app);
+export const messaging = getMessaging(app);
 
-// Messaging must be initialized safely
-export const initializeMessaging = async () => {
-  try {
-    const supported = await isSupported();
-    if (!supported) {
-      console.warn("Firebase Messaging is not supported in this browser.");
-      return null;
-    }
+// export const initializeMessaging = async () => {
+//   try {
+//     const supported = await isSupported();
+//     if (!supported) {
+//       console.warn("Firebase Messaging is not supported in this browser.");
+//       return null;
+//     }
 
-    if ('serviceWorker' in navigator) {
-      const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-      const messaging = getMessaging(app);
-      console.log("Firebase Messaging initialized");
-      return messaging;
-    } else {
-      console.warn("Service workers are not supported in this environment.");
-      return null;
-    }
-  } catch (err) {
-    console.error("Failed to initialize Firebase Messaging:", err);
-    toast.error("Couldn't initialize Firebase messaging");
-    return null;
-  }
-};
+//     if ('serviceWorker' in navigator) {
+//       const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+//       const messaging = getMessaging(app);
+//       console.log("Firebase Messaging initialized");
+//       return messaging;
+//     } else {
+//       console.warn("Service workers are not supported in this environment.");
+//       return null;
+//     }
+//   } catch (err) {
+//     console.error("Failed to initialize Firebase Messaging:", err);
+//     toast.error("Couldn't initialize Firebase messaging");
+//     return null;
+//   }
+// };
+
+// export const messaging = initializeMessaging();
