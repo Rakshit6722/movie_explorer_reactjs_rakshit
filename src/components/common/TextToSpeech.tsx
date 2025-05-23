@@ -11,7 +11,7 @@ const TextToSpeech: React.FC<TextToSpeechProps> = ({ text }) => {
 
   useEffect(() => {
     return () => {
-      cancel();
+      window.speechSynthesis.cancel();
     };
   }, []);
 
