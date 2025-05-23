@@ -168,9 +168,7 @@ class MovieDetail extends Component<any, any> {
             );
         }
 
-        <TextToSpeech
-            text={`Discover "${movie.title}", released in ${movie.release_year}. This ${Array.isArray(movie.genre) ? movie.genre.join(', ') : movie.genre} film, directed by ${movie.director}, runs for ${this.formatDuration(movie.duration)}. With a rating of ${this.formatRating(movie.rating)} out of 10, here's a quick synopsis: ${movie.description}`}
-        />
+
 
         return (
             <div ref={this.mainRef} className="flex flex-col bg-[#0f0f0f] min-h-screen">
@@ -337,6 +335,9 @@ class MovieDetail extends Component<any, any> {
                                 </div>
                             </div>
                         </div>
+                        <TextToSpeech
+                            text={`Discover "${movie.title}", released in ${movie.release_year}. This ${Array.isArray(movie.genre) ? movie.genre.join(', ') : movie.genre} film, directed by ${movie.director}, runs for ${this.formatDuration(movie.duration)}. With a rating of ${this.formatRating(movie.rating)} out of 10, here's a quick synopsis: ${movie.description}`}
+                        />
                     </div>
 
                     <div className="mb-12 sm:mb-16">
