@@ -103,6 +103,7 @@ class MovieDetail extends Component<any, any> {
             const mGenre = Array.isArray(m.genre) ? m.genre : [m.genre];
             return m.id !== movie.id && mGenre.some(g => movieGenre.includes(g));
         }).slice(0, 6);
+        console.log("similar movies", similarMovies)
 
         this.setState({ similarMovie: similarMovies, similarMovieLoading: false });
 
