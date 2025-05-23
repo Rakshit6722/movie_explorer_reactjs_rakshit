@@ -11,6 +11,7 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import WithRouter from '../components/hoc/WithRouter';
 import DeleteConfirmationAlert from '../components/common/DeleteConfirmationAlert';
+import LoadingFallback from '../components/common/LoadingFallback';
 
 class MovieDetail extends Component<any, any> {
     constructor(props: any) {
@@ -21,6 +22,7 @@ class MovieDetail extends Component<any, any> {
             isLoading: true,
             imageError: false,
             showDeleteDialog: false,
+            similarMovieLoading: false,
         };
     }
 
@@ -32,7 +34,7 @@ class MovieDetail extends Component<any, any> {
     role = this.props.userInfo.role || '';
 
     async componentDidMount() {
-      if (this.movieId) {
+        if (this.movieId) {
             await this.getMovie(this.movieId);
         }
 
@@ -93,13 +95,18 @@ class MovieDetail extends Component<any, any> {
     }
 
     findSimilarMovies = (movie: Movie) => {
+        this.setState(() => ({
+            similarMovieLoading: true
+        }))
         const movieGenre = Array.isArray(movie.genre) ? movie.genre : [movie.genre];
         const similarMovies = this.props.movieList.filter((m: Movie) => {
             const mGenre = Array.isArray(m.genre) ? m.genre : [m.genre];
             return m.id !== movie.id && mGenre.some(g => movieGenre.includes(g));
         }).slice(0, 6);
 
-        this.setState({ similarMovie: similarMovies });
+        this.setState({ similarMovie: similarMovies, similarMovieLoading: false });
+
+
     }
 
     handleImageError = () => {
@@ -344,37 +351,47 @@ class MovieDetail extends Component<any, any> {
                         </div>
 
 
-                        <div className="flex overflow-x-auto pb-4 sm:pb-6 gap-4 sm:gap-6 scrollbar-hide snap-x">
-                            {this.state.similarMovie.map((movie: Movie, index: number) => (
-                                <NavLink to={`/movie?id=${movie.id}`} key={index} className="flex-shrink-0 snap-start">
-                                    <div className="w-36 sm:w-44 md:w-52 group cursor-pointer">
-                                        <div className="w-full h-52 sm:h-64 md:h-72 bg-gray-800 rounded-lg overflow-hidden mb-2 sm:mb-3 border border-gray-700/50 shadow-lg transform transition-transform group-hover:scale-105">
-                                            <img
-                                                src={movie.poster_url}
-                                                alt={movie.title}
-                                                loading="lazy"
-                                                className="w-full h-full object-cover"
-                                                onError={this.handleImageError}
-                                            />
-                                        </div>
-                                        <h4 className="text-white font-medium text-sm sm:text-base md:text-lg group-hover:text-red-500 transition-colors line-clamp-1">
-                                            {movie.title}
-                                        </h4>
-                                        <div className="flex items-center text-xs sm:text-sm text-gray-400">
-                                            <span>{movie.release_year}</span>
-                                            <span className="mx-1 sm:mx-2">•</span>
-                                            <span className="truncate">{movie.genre}</span>
-                                        </div>
-                                    </div>
-                                </NavLink>
-                            ))}
+                        {
+                            this.state.similarMovieLoading ? (
+                                <>
+                                    <LoadingFallback/>
+                                </>
+                            ) : (
 
-                            {this.state.similarMovie.length === 0 && (
-                                <div className="w-full py-8 sm:py-10 text-center text-gray-500">
-                                    No similar movies found
+                                <div className="flex overflow-x-auto pb-4 sm:pb-6 gap-4 sm:gap-6 scrollbar-hide snap-x">
+                                    {this.state.similarMovie.map((movie: Movie, index: number) => (
+                                        <NavLink to={`/movie?id=${movie.id}`} key={index} className="flex-shrink-0 snap-start">
+                                            <div className="w-36 sm:w-44 md:w-52 group cursor-pointer">
+                                                <div className="w-full h-52 sm:h-64 md:h-72 bg-gray-800 rounded-lg overflow-hidden mb-2 sm:mb-3 border border-gray-700/50 shadow-lg transform transition-transform group-hover:scale-105">
+                                                    <img
+                                                        src={movie.poster_url}
+                                                        alt={movie.title}
+                                                        loading="lazy"
+                                                        className="w-full h-full object-cover"
+                                                        onError={this.handleImageError}
+                                                    />
+                                                </div>
+                                                <h4 className="text-white font-medium text-sm sm:text-base md:text-lg group-hover:text-red-500 transition-colors line-clamp-1">
+                                                    {movie.title}
+                                                </h4>
+                                                <div className="flex items-center text-xs sm:text-sm text-gray-400">
+                                                    <span>{movie.release_year}</span>
+                                                    <span className="mx-1 sm:mx-2">•</span>
+                                                    <span className="truncate">{movie.genre}</span>
+                                                </div>
+                                            </div>
+                                        </NavLink>
+                                    ))}
+
+                                    {this.state.similarMovie.length === 0 && (
+                                        <div className="w-full py-8 sm:py-10 text-center text-gray-500">
+                                            No similar movies found
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
+                            )
+                        }
+
                     </div>
                 </div>
 
