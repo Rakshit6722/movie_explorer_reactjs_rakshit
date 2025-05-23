@@ -8,10 +8,7 @@
     "build": " vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest",
-  "netlify-install": "npm install --legacy-peer-deps",
-  "netlify-build": "npm run netlify-install && npm run build"
-
+    "test": "jest"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
