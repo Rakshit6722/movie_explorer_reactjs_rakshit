@@ -32,8 +32,7 @@ class MovieDetail extends Component<any, any> {
     role = this.props.userInfo.role || '';
 
     async componentDidMount() {
-        console.log("movie list", this.props.movieList)
-        if (this.movieId) {
+\        if (this.movieId) {
             await this.getMovie(this.movieId);
         }
 
@@ -94,12 +93,13 @@ class MovieDetail extends Component<any, any> {
     }
 
     findSimilarMovies = (movie: Movie) => {
-        const similarMovies = this.props.movieList.filter((m: Movie) => (m.genre === movie.genre || m.genre === 'Action') && m.id !== this.state.movie.id).slice(0, 6);
+        const movieGenre = Array.isArray(movie.genre) ? movie.genre : [movie.genre];
+        const similarMovies = this.props.movieList.filter((m: Movie) => {
+            const mGenre = Array.isArray(m.genre) ? m.genre : [m.genre];
+            return m.id !== movie.id && mGenre.some(g => movieGenre.includes(g));
+        }).slice(0, 6);
 
-        if (similarMovies.length > 0) {
-            this.setState({ similarMovie: similarMovies });
-            console.log("similar movies", similarMovies)
-        }
+        this.setState({ similarMovie: similarMovies });
     }
 
     handleImageError = () => {
