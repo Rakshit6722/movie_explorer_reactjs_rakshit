@@ -91,7 +91,7 @@ class MovieDetail extends Component<any, any> {
         }
 
     findSimilarMovies = (movie: Movie) => {
-        const similarMovies = this.props.movieList.filter((m: Movie) => (m.genre === movie.genre) && m.id !== this.state.movie.id).slice(0, 6);
+        const similarMovies = this.props.movieList.filter((m: Movie) => (m.genre === movie.genre || m.genre === 'Action') && m.id !== this.state.movie.id).slice(0, 6);
         if (similarMovies.length > 0) {
             this.setState({ similarMovie: similarMovies });
         }
@@ -339,7 +339,7 @@ class MovieDetail extends Component<any, any> {
                         </div>
 
 
-                        <div className="flex overflow-x-auto pb-4 sm:pb-6 gap-4 sm:gap-6 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent snap-x">
+                        <div className="flex overflow-x-auto pb-4 sm:pb-6 gap-4 sm:gap-6 scrollbar-hide snap-x">
                             {this.state.similarMovie.map((movie: Movie, index: number) => (
                                 <NavLink to={`/movie?id=${movie.id}`} key={index} className="flex-shrink-0 snap-start">
                                     <div className="w-36 sm:w-44 md:w-52 group cursor-pointer">
