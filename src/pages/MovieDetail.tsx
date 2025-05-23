@@ -70,10 +70,7 @@ class MovieDetail extends Component<any, any> {
         try {
             const data = await getMovieDetails(Number(id))
             this.setState({ movie: data?.data, isLoading: false });
-            if (this.state.movie) {
-                this.findSimilarMovies(this.state.movie)
-
-            }
+            this.findSimilarMovies(this.state.movie)
         } catch (error: any) {
             toast.error(error?.message || "Couldn't fetch movie details");
             this.setState({ isLoading: false });
@@ -96,14 +93,14 @@ class MovieDetail extends Component<any, any> {
     }
 
     findSimilarMovies = async (movie: Movie) => {
-        try{
+        try {
             this.setState({ similarMovieLoading: true });
             const similarMovies = await getMovieByPageApi(1, movie?.genre, null);
-            const filteredMovies = similarMovies.data.filter((m: Movie) => m.id !== movie.id).slice(0,6);
+            const filteredMovies = similarMovies.data.filter((m: Movie) => m.id !== movie.id).slice(0, 6);
             this.setState({ similarMovie: filteredMovies });
-        }catch(err: any){
+        } catch (err: any) {
             toast.error(err?.message || "Couldn't fetch similar movies");
-        } finally{
+        } finally {
             this.setState({ similarMovieLoading: false });
         }
     }
@@ -360,7 +357,7 @@ class MovieDetail extends Component<any, any> {
                         {
                             this.state.similarMovieLoading ? (
                                 <>
-                                    <LoadingFallback/>
+                                    <LoadingFallback />
                                 </>
                             ) : (
 
