@@ -70,7 +70,7 @@ class MovieDetail extends Component<any, any> {
         try {
             const data = await getMovieDetails(Number(id))
             this.setState({ movie: data?.data, isLoading: false });
-            this.findSimilarMovies(this.state.movie)
+            this.findSimilarMovies(data?.data);
         } catch (error: any) {
             toast.error(error?.message || "Couldn't fetch movie details");
             this.setState({ isLoading: false });
