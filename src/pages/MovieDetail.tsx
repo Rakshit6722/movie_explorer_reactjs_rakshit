@@ -32,7 +32,7 @@ class MovieDetail extends Component<any, any> {
     role = this.props.userInfo.role || '';
 
     async componentDidMount() {
-\        if (this.movieId) {
+      if (this.movieId) {
             await this.getMovie(this.movieId);
         }
 
