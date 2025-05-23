@@ -39,6 +39,7 @@ class MovieDetail extends Component<any, any> {
         if (this.mainRef.current) {
             this.mainRef.current.scrollIntoView({ behavior: 'smooth' });
         }
+
     }
 
     async componentDidUpdate(prevProps: any) {
@@ -68,6 +69,7 @@ class MovieDetail extends Component<any, any> {
             this.setState({ movie: data?.data, isLoading: false });
             if (this.state.movie) {
                 this.findSimilarMovies(this.state.movie)
+
             }
         } catch (error: any) {
             toast.error(error?.message || "Couldn't fetch movie details");
@@ -77,23 +79,24 @@ class MovieDetail extends Component<any, any> {
 
     }
     handleDelete = async () => {
-            try {
-                const response = await this.props.deleteMovie(this.movieId);
-                if (response?.status === 200) {
-                    toast.success("Movie deleted successfully !");
-                    this.setState({ showDeleteDialog: false });
-                    this.props.navigate('/');
-                }
-                toast.success("Movie deleted successfully!");
-            } catch (error: any) {
-                toast.error(error?.message || "Failed to delete movie.");
+        try {
+            const response = await this.props.deleteMovie(this.movieId);
+            if (response?.status === 200) {
+                toast.success("Movie deleted successfully !");
+                this.setState({ showDeleteDialog: false });
+                this.props.navigate('/');
             }
+            toast.success("Movie deleted successfully!");
+        } catch (error: any) {
+            toast.error(error?.message || "Failed to delete movie.");
         }
+    }
 
     findSimilarMovies = (movie: Movie) => {
         const similarMovies = this.props.movieList.filter((m: Movie) => (m.genre === movie.genre || m.genre === 'Action') && m.id !== this.state.movie.id).slice(0, 6);
         if (similarMovies.length > 0) {
             this.setState({ similarMovie: similarMovies });
+            console.log("similar movies", similarMovies)
         }
     }
 
