@@ -58,21 +58,6 @@ function FirebaseProvider({ children }: any) {
                                 ...payload.data
                             }));
 
-                            if (Notification.permission === 'granted') {
-                                navigator.serviceWorker.ready.then(registration => {
-                                    registration.showNotification(
-                                        payload.notification?.title || 'New Notification',
-                                        {
-                                            body: payload.notification?.body || '',
-                                            icon: '/favicon.ico',
-                                            tag: 'movie-explorer-notification',
-                                            badge: '/favicon.ico',
-                                            requireInteraction: true,
-                                            data: payload.data
-                                        }
-                                    );
-                                });
-                            }
                         } catch (error: any) {
                             toast.error(error?.message || "Couldn't handle notification");
                         }
