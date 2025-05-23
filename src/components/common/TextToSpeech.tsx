@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSpeechSynthesis } from "react-speech-kit";
-import { FaPlay, FaStop, FaVolumeUp } from "react-icons/fa";
+import { FaVolumeUp, FaStop } from "react-icons/fa";
 
 interface TextToSpeechProps {
   text: string;
@@ -13,70 +13,42 @@ const TextToSpeech: React.FC<TextToSpeechProps> = ({ text }) => {
     return () => {
       cancel();
     };
-    // eslint-disable-next-line
   }, []);
 
   if (!supported) {
     return <span style={{ color: "#888" }}>TTS not supported.</span>;
   }
 
-  const handleSpeak = () => {
-    if (voices.length > 0) {
+  const handleClick = () => {
+    if (speaking) {
+      cancel();
+    } else if (voices.length > 0) {
       speak({ text, voice: voices[0] });
     }
   };
 
-  const handleStop = () => {
-    cancel();
-  };
-
   return (
-    <div
+    <button
+      onClick={handleClick}
       style={{
+        background: "rgba(30, 30, 36, 0.85)",
+        border: "1px solid #23232b",
+        borderRadius: "1.5rem",
+        padding: "0.35rem 0.7rem",
         display: "flex",
         alignItems: "center",
-        gap: "0.5rem",
-        background: "rgba(30, 30, 36, 0.85)",
-        borderRadius: "1.5rem",
-        padding: "0.25rem 0.75rem",
+        cursor: "pointer",
         boxShadow: "0 1px 4px rgba(0,0,0,0.12)",
-        width: "fit-content",
-        border: "1px solid #23232b",
+        transition: "background 0.2s",
       }}
+      title={speaking ? "Stop" : "Play"}
     >
-      <FaVolumeUp size={16} color="#7ab7ff" style={{ marginRight: 4 }} />
-      {!speaking ? (
-        <button
-          onClick={handleSpeak}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            padding: 0,
-            display: "flex",
-            alignItems: "center",
-          }}
-          title="Play"
-        >
-          <FaPlay size={22} color="#7ab7ff" style={{ transition: "color 0.2s" }} />
-        </button>
+      {speaking ? (
+        <FaStop size={20} color="#ff7a7a" />
       ) : (
-        <button
-          onClick={handleStop}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            padding: 0,
-            display: "flex",
-            alignItems: "center",
-          }}
-          title="Stop"
-        >
-          <FaStop size={22} color="#ff7a7a" style={{ transition: "color 0.2s" }} />
-        </button>
+        <FaVolumeUp size={20} color="#7ab7ff" />
       )}
-    </div>
+    </button>
   );
 };
 
