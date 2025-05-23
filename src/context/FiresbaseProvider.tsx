@@ -57,6 +57,7 @@ function FirebaseProvider({ children }: any) {
                                 read: false,
                                 ...payload.data
                             }));
+
                         } catch (error: any) {
                             toast.error(error?.message || "Couldn't handle notification");
                         }
