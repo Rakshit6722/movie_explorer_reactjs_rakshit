@@ -32,6 +32,7 @@ class MovieDetail extends Component<any, any> {
     role = this.props.userInfo.role || '';
 
     async componentDidMount() {
+        console.log("movie list", this.props.movieList)
         if (this.movieId) {
             await this.getMovie(this.movieId);
         }
@@ -94,6 +95,7 @@ class MovieDetail extends Component<any, any> {
 
     findSimilarMovies = (movie: Movie) => {
         const similarMovies = this.props.movieList.filter((m: Movie) => (m.genre === movie.genre || m.genre === 'Action') && m.id !== this.state.movie.id).slice(0, 6);
+
         if (similarMovies.length > 0) {
             this.setState({ similarMovie: similarMovies });
             console.log("similar movies", similarMovies)
