@@ -80,7 +80,7 @@ const Index = () => {
     try {
       const response = await getSubscriptionDetailsApi()
       if (response) {
-        if (response?.status === 'pending') {
+        if (response?.status === 'pending' || response?.status === 'cancelled') {
           dispatch(setCurrentPlan("Basic"));
           return
         }
