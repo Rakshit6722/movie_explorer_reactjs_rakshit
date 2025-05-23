@@ -21,7 +21,7 @@ const TextToSpeech: React.FC<TextToSpeechProps> = ({ text }) => {
 
   const handleClick = () => {
     if (speaking) {
-      window.speechSynthesis.cancel();
+      cancel();
     } else if (voices.length > 0) {
       speak({ text, voice: voices[0] });
     }
