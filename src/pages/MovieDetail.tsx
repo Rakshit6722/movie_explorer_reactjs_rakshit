@@ -3,7 +3,7 @@ import { Movie } from '../types/type';
 import Footer from '../components/common/Footer';
 import WithReduxState from '../components/hoc/WithReduxState';
 import { NavLink } from 'react-router-dom';
-import { getMovieDetails } from '../services/movieApi';
+import { getMovieByPageApi, getMovieDetails } from '../services/movieApi';
 import { authorizeUserForAccessMovie } from '../utils/AuthorizeUser';
 import AuthorizedContent from '../components/common/AuthorizedContent';
 import { toast } from 'react-toastify';
@@ -95,20 +95,17 @@ class MovieDetail extends Component<any, any> {
         }
     }
 
-    findSimilarMovies = (movie: Movie) => {
-        this.setState(() => ({
-            similarMovieLoading: true
-        }))
-        const movieGenre = Array.isArray(movie.genre) ? movie.genre : [movie.genre];
-        const similarMovies = this.props.movieList.filter((m: Movie) => {
-            const mGenre = Array.isArray(m.genre) ? m.genre : [m.genre];
-            return m.id !== movie.id && mGenre.some(g => movieGenre.includes(g));
-        }).slice(0, 6);
-        console.log("similar movies", similarMovies)
-
-        this.setState({ similarMovie: similarMovies, similarMovieLoading: false });
-
-
+    findSimilarMovies = async (movie: Movie) => {
+        try{
+            this.setState({ similarMovieLoading: true });
+            const similarMovies = await getMovieByPageApi(1, movie?.genre, null);
+            const filteredMovies = similarMovies.data.filter((m: Movie) => m.id !== movie.id).slice(0,6);
+            this.setState({ similarMovie: filteredMovies });
+        }catch(err: any){
+            toast.error(err?.message || "Couldn't fetch similar movies");
+        } finally{
+            this.setState({ similarMovieLoading: false });
+        }
     }
 
     handleImageError = () => {
