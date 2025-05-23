@@ -11,6 +11,7 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import WithRouter from '../components/hoc/WithRouter';
 import DeleteConfirmationAlert from '../components/common/DeleteConfirmationAlert';
+import TextToSpeech from '../components/common/TextToSpeech';
 
 class MovieDetail extends Component<any, any> {
     constructor(props: any) {
@@ -77,18 +78,18 @@ class MovieDetail extends Component<any, any> {
 
     }
     handleDelete = async () => {
-            try {
-                const response = await this.props.deleteMovie(this.movieId);
-                if (response?.status === 200) {
-                    toast.success("Movie deleted successfully !");
-                    this.setState({ showDeleteDialog: false });
-                    this.props.navigate('/');
-                }
-                toast.success("Movie deleted successfully!");
-            } catch (error: any) {
-                toast.error(error?.message || "Failed to delete movie.");
+        try {
+            const response = await this.props.deleteMovie(this.movieId);
+            if (response?.status === 200) {
+                toast.success("Movie deleted successfully !");
+                this.setState({ showDeleteDialog: false });
+                this.props.navigate('/');
             }
+            toast.success("Movie deleted successfully!");
+        } catch (error: any) {
+            toast.error(error?.message || "Failed to delete movie.");
         }
+    }
 
     findSimilarMovies = (movie: Movie) => {
         const similarMovies = this.props.movieList.filter((m: Movie) => (m.genre === movie.genre) && m.id !== this.state.movie.id).slice(0, 6);
@@ -166,6 +167,8 @@ class MovieDetail extends Component<any, any> {
                 </div>
             );
         }
+
+
 
         return (
             <div ref={this.mainRef} className="flex flex-col bg-[#0f0f0f] min-h-screen">
@@ -280,14 +283,19 @@ class MovieDetail extends Component<any, any> {
                         <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-12">
 
                             <div className="lg:w-2/3">
-                                <div className="flex items-center mb-4 sm:mb-6">
+                                <div className="flex items-center mb-4 gap-4 sm:mb-6">
                                     <h2 className="text-xl sm:text-2xl font-semibold text-white">Synopsis</h2>
+                                    <TextToSpeech
+                                        text={`Discover "${movie.title}", released in ${movie.release_year}. This ${Array.isArray(movie.genre) ? movie.genre.join(', ') : movie.genre} film, directed by ${movie.director}, runs for ${this.formatDuration(movie.duration)}. With a rating of ${this.formatRating(movie.rating)} out of 10, here's a quick synopsis: ${movie.description}`}
+                                    />
                                     <div className="h-0.5 bg-red-800/30 flex-grow ml-4 sm:ml-6"></div>
                                 </div>
 
                                 <div className="text-gray-300 leading-relaxed text-base sm:text-lg">
                                     {movie.description}
                                 </div>
+
+
 
                                 <div className="mt-6 sm:mt-8">
                                     <div className="text-gray-400 text-xs sm:text-sm mb-1 sm:mb-2">Directed by</div>
