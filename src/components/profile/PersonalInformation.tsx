@@ -74,7 +74,7 @@ export class PersonalInformation extends Component<any> {
 
                                         <div className="space-y-2">
                                             <button
-                                                onClick={() => window.location.href = '/movieForm?mode=add'}
+                                                onClick={() => this.props.navigate('/movieForm?mode=add')}
                                                 className="w-full py-2.5 bg-black/30 hover:bg-[#e23145]/10 text-gray-200 rounded text-left px-4 flex justify-between items-center border border-transparent hover:border-[#e23145]/30 transition-all duration-200"
                                             >
                                                 <span>Add Movie</span>

@@ -26,6 +26,7 @@ function Profile() {
   const [logoutLoading, setLogoutLoading] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchPlanDetails();
     setPlanInfo(plans.find((plan) => plan.key === currentUserPlan) || plans[0]);
   }, [currentUserPlan]);
