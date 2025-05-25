@@ -45,13 +45,17 @@ export class PersonalInformation extends Component<any> {
 
                                         <div className="p-2 rounded-md bg-black hover:bg-[#0a0a0a] border border-[#1a1a1a] transition-colors duration-200">
                                             <span className="block text-xs text-gray-500 mb-1">MEMBER SINCE</span>
-                                            <span className="text-gray-200">
-                                                {new Date().toLocaleDateString()}
-                                            </span>
+                                            {
+                                                !loading && subscriptionDetails && (
+                                                    <span className="text-gray-200">
+                                                        {formatDateForDisplay(subscriptionDetails.created_at)}
+                                                    </span>
+                                                )
+                                            }
                                         </div>
-                                        
+
                                         <div>
-                                            <NotificationSlider/>
+                                            <NotificationSlider />
                                         </div>
                                     </div>
                                 </div>
@@ -126,18 +130,18 @@ export class PersonalInformation extends Component<any> {
                                     <div className="absolute top-0 inset-x-0 h-[1px] bg-white/30"></div>
 
                                     <div className={`absolute inset-0 ${currentPlan === 'gold'
-                                            ? 'bg-[url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PGxpbmUgeDE9IjAiIHkxPSIxMDAiIHgyPSIxMDAiIHkyPSIwIiBzdHJva2U9InJnYmEoMjU1LDIxNSwxNDAsMC4xKSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIsMjQiLz48L3N2Zz4=)]'
-                                            : currentPlan === 'platinum'
-                                                ? 'bg-[url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PGxpbmUgeDE9IjAiIHkxPSIxMDAiIHgyPSIxMDAiIHkyPSIwIiBzdHJva2U9InJnYmEoMjI4LDIzNSwyNTAsMC4xKSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIsMjQiLz48L3N2Zz4=)]'
-                                                : 'bg-[url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PGxpbmUgeDE9IjAiIHkxPSIxMDAiIHgyPSIxMDAiIHkyPSIwIiBzdHJva2U9InJnYmEoMTgwLDE4MCwxODAsMC4xKSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIsMjQiLz48L3N2Zz4=)]'
+                                        ? 'bg-[url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PGxpbmUgeDE9IjAiIHkxPSIxMDAiIHgyPSIxMDAiIHkyPSIwIiBzdHJva2U9InJnYmEoMjU1LDIxNSwxNDAsMC4xKSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIsMjQiLz48L3N2Zz4=)]'
+                                        : currentPlan === 'platinum'
+                                            ? 'bg-[url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PGxpbmUgeDE9IjAiIHkxPSIxMDAiIHgyPSIxMDAiIHkyPSIwIiBzdHJva2U9InJnYmEoMjI4LDIzNSwyNTAsMC4xKSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIsMjQiLz48L3N2Zz4=)]'
+                                            : 'bg-[url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PGxpbmUgeDE9IjAiIHkxPSIxMDAiIHgyPSIxMDAiIHkyPSIwIiBzdHJva2U9InJnYmEoMTgwLDE4MCwxODAsMC4xKSIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjIsMjQiLz48L3N2Zz4=)]'
                                         }`}></div>
                                 </div>
 
                                 <div className={`absolute inset-0 rounded-lg border-2 ${currentPlan === 'gold'
-                                        ? 'border-amber-900/30 shadow-[inset_0_0_15px_rgba(120,83,15,0.5)]'
-                                        : currentPlan === 'platinum'
-                                            ? 'border-slate-700/30 shadow-[inset_0_0_15px_rgba(71,85,105,0.5)]'
-                                            : 'border-gray-800/50 shadow-[inset_0_0_15px_rgba(0,0,0,0.5)]'
+                                    ? 'border-amber-900/30 shadow-[inset_0_0_15px_rgba(120,83,15,0.5)]'
+                                    : currentPlan === 'platinum'
+                                        ? 'border-slate-700/30 shadow-[inset_0_0_15px_rgba(71,85,105,0.5)]'
+                                        : 'border-gray-800/50 shadow-[inset_0_0_15px_rgba(0,0,0,0.5)]'
                                     }`}></div>
 
                                 <div className="absolute top-3 left-3 w-2 h-2 rounded-full bg-black/20 shadow-inner shadow-black/60 border border-white/20"></div>
@@ -147,32 +151,32 @@ export class PersonalInformation extends Component<any> {
 
                                 <div className="absolute top-0 inset-x-0 h-1 overflow-hidden">
                                     <div className={`h-full w-full ${currentPlan === 'gold'
-                                            ? 'bg-gradient-to-r from-amber-800/70 via-amber-400 to-amber-800/70'
-                                            : currentPlan === 'platinum'
-                                                ? 'bg-gradient-to-r from-slate-600/70 via-slate-300 to-slate-600/70'
-                                                : 'bg-gradient-to-r from-gray-800/70 via-[#e23145] to-gray-800/70'
+                                        ? 'bg-gradient-to-r from-amber-800/70 via-amber-400 to-amber-800/70'
+                                        : currentPlan === 'platinum'
+                                            ? 'bg-gradient-to-r from-slate-600/70 via-slate-300 to-slate-600/70'
+                                            : 'bg-gradient-to-r from-gray-800/70 via-[#e23145] to-gray-800/70'
                                         }`}></div>
                                 </div>
 
                                 <div className="p-6 relative z-10">
                                     <div className={`flex items-center justify-between border-b pb-3 mb-5 ${currentPlan === 'gold'
-                                            ? 'border-amber-800/30'
-                                            : currentPlan === 'platinum'
-                                                ? 'border-slate-700/30'
-                                                : 'border-gray-700/50'
+                                        ? 'border-amber-800/30'
+                                        : currentPlan === 'platinum'
+                                            ? 'border-slate-700/30'
+                                            : 'border-gray-700/50'
                                         }`}>
                                         <h3 className={`text-xl font-medium flex items-center ${currentPlan === 'gold'
-                                                ? 'text-amber-950'
-                                                : currentPlan === 'platinum'
-                                                    ? 'text-slate-950'
-                                                    : 'text-white'
+                                            ? 'text-amber-950'
+                                            : currentPlan === 'platinum'
+                                                ? 'text-slate-950'
+                                                : 'text-white'
                                             }`}>
                                             <WorkspacePremiumIcon
                                                 className={`transition-transform group-hover:scale-110 duration-300 ${currentPlan === 'gold'
-                                                        ? 'text-amber-800'
-                                                        : currentPlan === 'platinum'
-                                                            ? 'text-slate-700'
-                                                            : 'text-[#e23145]'
+                                                    ? 'text-amber-800'
+                                                    : currentPlan === 'platinum'
+                                                        ? 'text-slate-700'
+                                                        : 'text-[#e23145]'
                                                     }`}
                                                 sx={{ mr: 1.5 }}
                                             />
@@ -216,8 +220,8 @@ export class PersonalInformation extends Component<any> {
                                             {error}
                                             <button onClick={() => window.location.href = '/subscription'}
                                                 className={`mt-2 border rounded-md px-4 py-2 transition-all duration-300 hover:scale-105 ${currentPlan !== 'basic'
-                                                        ? 'border-black/20 bg-black/10 hover:bg-black/20 text-black/90'
-                                                        : 'border-red-400/50 bg-red-400/10 hover:bg-red-400/20 text-white'
+                                                    ? 'border-black/20 bg-black/10 hover:bg-black/20 text-black/90'
+                                                    : 'border-red-400/50 bg-red-400/10 hover:bg-red-400/20 text-white'
                                                     }`}>
                                                 <span className="font-medium cursor-pointer">Retry</span>
                                             </button>
@@ -225,10 +229,10 @@ export class PersonalInformation extends Component<any> {
                                     ) : (
                                         <div className="space-y-6">
                                             <div className={`rounded-xl relative overflow-hidden backdrop-blur-sm ${currentPlan === 'gold'
-                                                    ? 'bg-gradient-to-br from-amber-300/80 to-amber-500/80 border-2 border-amber-600/30'
-                                                    : currentPlan === 'platinum'
-                                                        ? 'bg-gradient-to-br from-slate-300/80 to-slate-400/80 border-2 border-slate-500/30'
-                                                        : 'bg-black/80 border border-[#1a1a1a]'
+                                                ? 'bg-gradient-to-br from-amber-300/80 to-amber-500/80 border-2 border-amber-600/30'
+                                                : currentPlan === 'platinum'
+                                                    ? 'bg-gradient-to-br from-slate-300/80 to-slate-400/80 border-2 border-slate-500/30'
+                                                    : 'bg-black/80 border border-[#1a1a1a]'
                                                 }`}>
                                                 {currentPlan !== 'basic' && (
                                                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0IiBoZWlnaHQ9IjQiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0gNCAwIEwgMCAwIDAgNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDAsIDAsIDAsIDAuMSkiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIiAvPjwvc3ZnPg==')] opacity-30 mix-blend-overlay"></div>
@@ -242,17 +246,17 @@ export class PersonalInformation extends Component<any> {
                                                     <div className="flex items-center justify-between">
                                                         <div className="flex items-center gap-3">
                                                             <div className={`p-3 rounded-full ${currentPlan === 'gold'
-                                                                    ? 'bg-gradient-to-br from-amber-200 to-amber-400 shadow-inner shadow-amber-900/20 border border-amber-500/50'
-                                                                    : currentPlan === 'platinum'
-                                                                        ? 'bg-gradient-to-br from-slate-200 to-slate-400 shadow-inner shadow-slate-700/20 border border-slate-500/50'
-                                                                        : 'bg-gradient-to-br from-red-700/20 to-red-900/20 border border-red-800/20'
+                                                                ? 'bg-gradient-to-br from-amber-200 to-amber-400 shadow-inner shadow-amber-900/20 border border-amber-500/50'
+                                                                : currentPlan === 'platinum'
+                                                                    ? 'bg-gradient-to-br from-slate-200 to-slate-400 shadow-inner shadow-slate-700/20 border border-slate-500/50'
+                                                                    : 'bg-gradient-to-br from-red-700/20 to-red-900/20 border border-red-800/20'
                                                                 }`}>
                                                                 <WorkspacePremiumIcon
                                                                     className={`${currentPlan === 'gold'
-                                                                            ? 'text-amber-800'
-                                                                            : currentPlan === 'platinum'
-                                                                                ? 'text-slate-700'
-                                                                                : 'text-gray-400'
+                                                                        ? 'text-amber-800'
+                                                                        : currentPlan === 'platinum'
+                                                                            ? 'text-slate-700'
+                                                                            : 'text-gray-400'
                                                                         }`}
                                                                     sx={{ fontSize: 32 }}
                                                                 />
@@ -263,10 +267,10 @@ export class PersonalInformation extends Component<any> {
                                                                     {planInfo?.name || 'Basic'} Plan
                                                                 </span>
                                                                 <span className={`text-xs px-2 py-0.5 rounded-md inline-block mt-1 font-medium ${currentPlan === 'gold'
-                                                                        ? 'bg-amber-900/40 text-amber-100'
-                                                                        : currentPlan === 'platinum'
-                                                                            ? 'bg-slate-700/40 text-slate-100'
-                                                                            : 'bg-gray-700 text-gray-300'
+                                                                    ? 'bg-amber-900/40 text-amber-100'
+                                                                    : currentPlan === 'platinum'
+                                                                        ? 'bg-slate-700/40 text-slate-100'
+                                                                        : 'bg-gray-700 text-gray-300'
                                                                     }`}>
                                                                     {currentPlan?.toUpperCase() || 'BASIC'}
                                                                 </span>
@@ -275,10 +279,10 @@ export class PersonalInformation extends Component<any> {
 
                                                         <div className="text-right">
                                                             <div className={`font-bold text-xl ${currentPlan === 'gold'
-                                                                    ? 'text-amber-900'
-                                                                    : currentPlan === 'platinum'
-                                                                        ? 'text-slate-900'
-                                                                        : 'text-white'
+                                                                ? 'text-amber-900'
+                                                                : currentPlan === 'platinum'
+                                                                    ? 'text-slate-900'
+                                                                    : 'text-white'
                                                                 }`}>
                                                                 {planInfo?.price === 0 ? 'FREE' : `₹${planInfo?.price}`}
                                                             </div>
@@ -326,8 +330,8 @@ export class PersonalInformation extends Component<any> {
                                                             </div>
                                                             <div className="w-full bg-black/80 rounded-full h-1.5 mt-2.5 overflow-hidden">
                                                                 <div className={`h-full rounded-full relative ${subscriptionDetails.status?.toLowerCase() === "active"
-                                                                        ? "bg-gradient-to-r from-green-500 to-green-400"
-                                                                        : "bg-gray-500"
+                                                                    ? "bg-gradient-to-r from-green-500 to-green-400"
+                                                                    : "bg-gray-500"
                                                                     }`}
                                                                     style={{
                                                                         width: `${Math.min(getDaysRemaining() / 30 * 100, 100)}%`
@@ -363,10 +367,10 @@ export class PersonalInformation extends Component<any> {
                                                                 {feature.available ?
                                                                     <CheckCircleIcon
                                                                         className={`mr-2 flex-shrink-0 ${currentPlan === 'gold'
-                                                                                ? 'text-amber-500'
-                                                                                : currentPlan === 'platinum'
-                                                                                    ? 'text-slate-400'
-                                                                                    : 'text-green-500'
+                                                                            ? 'text-amber-500'
+                                                                            : currentPlan === 'platinum'
+                                                                                ? 'text-slate-400'
+                                                                                : 'text-green-500'
                                                                             }`}
                                                                         style={{ fontSize: '16px' }} /> :
                                                                     <CancelIcon className="text-gray-500 mr-2 flex-shrink-0" style={{ fontSize: '16px' }} />
