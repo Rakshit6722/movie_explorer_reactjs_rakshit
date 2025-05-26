@@ -39,7 +39,7 @@ const App = () => {
 
       if (!hasShownWelcome) {
         const referrer = document.referrer
-        const isDirectVisit = !referrer.includes(window.location.host) || referrer === '' || referrer === window.location.href
+        const isDirectVisit = !referrer.includes(window.location.host) || referrer === '' || referrer === window.location.href || !referrer.includes('/login') && !referrer.includes('/register');
 
         if (isDirectVisit) {
           setShowWelcomeBack(true);
