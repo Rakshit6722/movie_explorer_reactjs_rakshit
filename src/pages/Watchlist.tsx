@@ -135,7 +135,7 @@ export class Watchlist extends Component<any, any> {
         return (
             <div className="min-h-screen bg-black">
 
-                <Container maxWidth="xl" sx={{ py: 4, mt: 2 }}>
+                <Container maxWidth="xl" sx={{ py: 4, mt: 2}}>
                     <Box sx={{ mb: 4 }}>
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}

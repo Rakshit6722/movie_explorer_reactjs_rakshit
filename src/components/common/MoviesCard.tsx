@@ -194,7 +194,7 @@ function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFrom
     };
     if (type === 'watchlist') {
         return (
-            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto mb-4">
+            <div className="w-full max-w-xs md:max-w-[22rem] 2xl:max-w-md mx-auto mb-4">
                 <div
                     className="relative group rounded-lg overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300"
                 >
