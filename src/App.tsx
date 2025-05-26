@@ -30,7 +30,6 @@ const App = () => {
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const { isLoggedIn } = useSelector((state: RootState) => state.user);
   const { userInfo }: any = useSelector((state: RootState) => state.user);
-  const { loading } = useSelector((state: RootState) => state.movie);
   const token = localStorage.getItem('token');
 
   useEffect(() => {
@@ -122,75 +121,71 @@ const App = () => {
       </Routes>
 
 
-      {
-        !loading && (
-          <Snackbar
-            open={showWelcomeBack}
-            autoHideDuration={4000}
-            onClose={() => setShowWelcomeBack(false)}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            TransitionComponent={(props) => <Slide {...props} direction="up" />}
-            sx={{
-              zIndex: 9999,
-              mb: 3,
-              mr: 3
-            }}
-          >
-            <Alert
-              severity="success"
-              variant="filled"
-              icon={false} // Remove default icon
-              onClose={() => setShowWelcomeBack(false)}
-              sx={{
-                bgcolor: 'rgba(22, 22, 26, 0.94)',
-                backdropFilter: 'blur(10px)',
-                color: 'white',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderLeft: '3px solid #f02c49',
-                borderRadius: '8px',
-                padding: '10px 16px',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-                width: '100%',
-                maxWidth: '340px',
-                '& .MuiAlert-message': {
-                  padding: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 2
-                },
-                '& .MuiAlert-action': {
-                  padding: 0,
-                  alignItems: 'center'
-                }
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                {/* Custom icon */}
-                <span style={{
-                  display: 'flex',
-                  background: 'linear-gradient(135deg, #f02c49 0%, #f55b40 100%)',
-                  padding: '6px',
-                  borderRadius: '50%',
-                  marginRight: '12px'
-                }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
+      <Snackbar
+        open={showWelcomeBack}
+        autoHideDuration={4000}
+        onClose={() => setShowWelcomeBack(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        TransitionComponent={(props) => <Slide {...props} direction="up" />}
+        sx={{
+          zIndex: 9999,
+          mb: 3,
+          mr: 3
+        }}
+      >
+        <Alert
+          severity="success"
+          variant="filled"
+          icon={false} 
+          onClose={() => setShowWelcomeBack(false)}
+          sx={{
+            bgcolor: 'rgba(22, 22, 26, 0.94)',
+            backdropFilter: 'blur(10px)',
+            color: 'white',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderLeft: '3px solid #f02c49',
+            borderRadius: '8px',
+            padding: '10px 16px',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+            width: '100%',
+            maxWidth: '340px',
+            '& .MuiAlert-message': {
+              padding: 0,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2
+            },
+            '& .MuiAlert-action': {
+              padding: 0,
+              alignItems: 'center'
+            }
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+            <span style={{
+              display: 'flex',
+              background: 'linear-gradient(135deg, #f02c49 0%, #f55b40 100%)',
+              padding: '6px',
+              borderRadius: '50%',
+              marginRight: '12px'
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L9 17L4 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
 
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '2px' }}>
-                    Welcome back!
-                  </div>
-                  <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>
-                    Hi, {userInfo?.first_name || 'User'}
-                  </div>
-                </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600, fontSize: '15px', marginBottom: '2px' }}>
+                Welcome back!
               </div>
-            </Alert>
-          </Snackbar>
-        )
-      }
+              <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px' }}>
+                Hi, {userInfo?.first_name || 'User'}
+              </div>
+            </div>
+          </div>
+        </Alert>
+      </Snackbar>
+
 
     </div>
   )

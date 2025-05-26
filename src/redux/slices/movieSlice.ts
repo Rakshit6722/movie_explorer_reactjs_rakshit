@@ -9,7 +9,7 @@ const initialState: {
     error: string | null;
 } = {
     movies: [],
-    loading: true,
+    loading: false,
     error: null,
 }
 
