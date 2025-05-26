@@ -25,7 +25,7 @@ export const loginUser = async (response: any, dispatch: any, navigate: any) => 
 
 }
 
-export const logoutUtil = async (dispatch?: any, navigate?: any, setLogoutLoading?: (args :boolean)=>void) => {
+export const logoutUtil = async (dispatch?: any, navigate?: any, setLogoutLoading?: (args: boolean) => void) => {
     try {
         setLogoutLoading && setLogoutLoading(true)
         const response = await logoutUser()

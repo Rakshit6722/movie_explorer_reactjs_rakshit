@@ -9,10 +9,8 @@ import { loginApi, registerApi, userNotificationApi } from '../../services/api';
 import { toast } from 'react-toastify';
 import WithRouter from '../hoc/WithRouter';
 import SaveIcon from '@mui/icons-material/Save';
-import { setCurrentPlan, setToken, setUser } from '../../redux/slices/userSlice';
-import { requestForToken } from '../../utils/fcm';
 import logo from '../../assets/images/movieExplorerLogoNew.png'
-import {motion} from 'framer-motion';
+import { motion } from 'framer-motion';
 import { loginUser } from '../../utils/authActions';
 
 type AuthTemplateProps = {
@@ -124,8 +122,8 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
             if (formData.password.length < 6) {
                 errorObj.passwordError = 'Password must be at least 6 characters long'
                 isValid = false
-            } else if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$/.test(formData.password) === false) {
-                errorObj.passwordError = 'Password must contain at least one uppercase letter, one lowercase letter, and one number'
+            } else if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{6,}$/.test(formData.password) === false) {
+                errorObj.passwordError = 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
                 isValid = false
             }
         }
@@ -174,7 +172,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                 const response = await loginApi({ email, password })
 
                 if (response?.status === 200) {
-                    loginUser(response, this.props.dispatch,this.props.navigate)
+                    loginUser(response, this.props.dispatch, this.props.navigate)
                     toast.success('Login Successfull')
                 }
             } catch (err: any) {
@@ -191,7 +189,7 @@ class AuthTemplate extends Component<AuthTemplateProps, AuthTemplateState> {
                 })
 
                 if (response?.status === 201) {
-                    this.props.navigate('/login')
+                    loginUser(response, this.props.dispatch, this.props.navigate)
                     toast.success("User Created Successfully")
                 }
             } catch (err: any) {
