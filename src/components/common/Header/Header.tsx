@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
-import { RiHome2Line, RiHome2Fill, RiMovie2Line, RiMovie2Fill } from "react-icons/ri";
+import { RiHome2Line, RiHome2Fill, RiMovie2Line, RiMovie2Fill, RiVideoOnLine, RiVideoOnFill } from "react-icons/ri";
 import { FaRegUser, FaUser } from "react-icons/fa";
 import { TbMoodSmile, TbMoodSmileFilled } from "react-icons/tb";
 import { IoSearchOutline } from "react-icons/io5";
@@ -86,7 +86,7 @@ class Header extends Component<HeaderProps, HeaderState> {
 
   render() {
 
-    const NAV_ITEMS: Array<NavItemType> = [
+    const NAV_ITEMS: Array<NavItemType | any> = [
       {
         icon: {
           outline: <RiHome2Line size={22} />,
@@ -111,6 +111,14 @@ class Header extends Component<HeaderProps, HeaderState> {
         label: 'Genres',
         href: '/genres?pageCount=1'
       },
+      this.props.isLoggedIn ? {
+        icon: {
+          outline: <RiVideoOnLine size={22} />,
+          filled: <RiVideoOnFill size={22} />,
+        },
+        label: 'Watchlist',
+        href: '/watchlist'
+      } : null,
       {
         icon: {
           outline: <TbMoodSmile size={22} />,
@@ -127,6 +135,7 @@ class Header extends Component<HeaderProps, HeaderState> {
         label: this.props.isLoggedIn ? `Hi, ${this.props.userInfo.first_name}` : "Login",
         href: this.props.isLoggedIn ? '/profile' : "/login",
       },
+
     ];
 
     const { expanded } = this.state;
@@ -153,7 +162,9 @@ class Header extends Component<HeaderProps, HeaderState> {
 
           <nav className="flex flex-col space-y-4 pl-4 items-center pt-8">
             {NAV_ITEMS.map((item) => (
-              <NavItem key={item.label} {...item} />
+              item !== null && (
+                <NavItem key={item.label} {...item} />
+              )
             ))}
           </nav>
         </div>
@@ -165,18 +176,20 @@ class Header extends Component<HeaderProps, HeaderState> {
         >
           <div className="flex flex-col space-y-7 pl-2 pt-[167px]">
             {NAV_ITEMS.map((item) => (
-              <NavLink
-                data-testid="nav-link"
-                to={item.href}
-                key={item.label}
-                className={({ isActive }: any) =>
-                  `font-medium  text-lg whitespace-nowrap
+              item !== null && (
+                <NavLink
+                  data-testid="nav-link"
+                  to={item.href}
+                  key={item.label}
+                  className={({ isActive }: any) =>
+                    `font-medium  text-lg whitespace-nowrap
                    flex items-center font-sans space-x-2 transition-all duration-300
                    ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'}`
-                }
-              >
-                {item.label}
-              </NavLink>
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              )
             ))}
           </div>
         </div>

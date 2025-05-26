@@ -9,7 +9,9 @@ import AuthRoute from './components/protectedRoute/AuthRoute'
 import MovieForm from './pages/MovieForm'
 import Default from './pages/Default'
 
-const Home = lazy(() => import('./pages/Home'))
+import Home from './pages/Home'
+import ProtectedRoute from './components/protectedRoute/ProtectedRoute'
+const Watchlist = lazy(() => import('./pages/Watchlist'))
 const MoodMain = lazy(() => import('./pages/MoodMain'))
 const Genres = lazy(() => import('./pages/Genres'))
 const Profile = lazy(() => import('./pages/Profile'))
@@ -37,9 +39,7 @@ const App = () => {
         <Route path='/' element={<MovieDashboard />}>
           <Route index element={<Navigate to="/home" />} />
           <Route path='home' element={
-            <Suspense fallback={<LoadingFallback />}>
-              <Home />
-            </Suspense>
+            <Home />
           } />
           <Route path='genres' element={
             <Suspense fallback={<LoadingFallback />}>
@@ -64,6 +64,13 @@ const App = () => {
           <Route path='search' element={
             <Suspense fallback={<LoadingFallback />}>
               <Search />
+            </Suspense>
+          } />
+          <Route path='watchlist' element={
+            <Suspense fallback={<LoadingFallback />}>
+              <ProtectedRoute>
+                <Watchlist />
+              </ProtectedRoute>
             </Suspense>
           } />
           <Route path='subscription' element={

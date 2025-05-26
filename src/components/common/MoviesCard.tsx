@@ -11,16 +11,21 @@ import { toast } from 'react-toastify';
 import { motion } from 'framer-motion';
 import { removeMovie } from '../../redux/slices/movieSlice';
 import DeleteConfirmationAlert from './DeleteConfirmationAlert';
+import { Cross, CrossIcon } from 'lucide-react';
+import { MdCancel } from 'react-icons/md';
+import { Tooltip } from '@mui/material';
+
 
 type MoviesCardProps = {
     movie: Movie;
     index?: number;
-    type?: 'standard' | 'trending';
+    type?: 'standard' | 'trending' | string;
     removeFromPageMovies?: (id: number) => void;
     genreCard?: boolean;
+    handleDeleteWatchlist?: (movieId: number) => void;
 };
 
-function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFromPageMovies }: MoviesCardProps) {
+function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFromPageMovies, handleDeleteWatchlist }: MoviesCardProps) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const userInfo = useSelector((state: RootState) => state.user.userInfo) as { role?: string } || {};
@@ -187,6 +192,49 @@ function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFrom
             </>
         );
     };
+    if (type === 'watchlist') {
+        return (
+            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto mb-4">
+                <div
+                    className="relative group rounded-lg overflow-hidden cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                    <div className="aspect-[16/9] w-full">
+                        <img
+                            src={movie.banner_url || movie.poster_url}
+                            alt={movie.title}
+                            className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy"
+                        />
+                    </div>
+
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 p-3">
+                        <h3 className="text-base font-medium text-white drop-shadow-md truncate">{movie.title}</h3>
+                    </div>
+
+                    <Tooltip title="Remove from Watchlist" placement="top">
+                        <div
+                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                onClick={() => handleDeleteWatchlist && handleDeleteWatchlist(movie.id)}                        >
+                                <MdCancel className="w-6 h-6" />
+                            </button>
+                        </div>
+                    </Tooltip>
+
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center p-3 transition-opacity duration-300">
+                        <button
+                            onClick={(e) => { e.stopPropagation(); navigate(`/movie?id=${movie.id}`); }}
+                            className="bg-[#f02c49] hover:bg-[#f02c49c5] text-white font-medium px-6 py-2 rounded-md transition-colors"
+                        >
+                            More Info
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
     return (
         <div
             className={`relative w-[140px] h-[230px] md:w-[180px] md:h-[260px] group transition-all duration-300 ${isMobile ? '' : 'hover:scale-105 hover:z-10'

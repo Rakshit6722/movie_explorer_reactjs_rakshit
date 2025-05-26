@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import { Movie } from '../types/type';
 import Footer from '../components/common/Footer';
 import WithReduxState from '../components/hoc/WithReduxState';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { getMovieByPageApi, getMovieDetails } from '../services/movieApi';
 import { authorizeUserForAccessMovie } from '../utils/AuthorizeUser';
 import AuthorizedContent from '../components/common/AuthorizedContent';
@@ -13,6 +13,9 @@ import WithRouter from '../components/hoc/WithRouter';
 import DeleteConfirmationAlert from '../components/common/DeleteConfirmationAlert';
 import TextToSpeech from '../components/common/TextToSpeech';
 import LoadingFallback from '../components/common/LoadingFallback';
+import WatchlistButton from '../components/movieDetails/WatchlistButton';
+import { Slide, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
 class MovieDetail extends Component<any, any> {
     constructor(props: any) {
@@ -24,6 +27,7 @@ class MovieDetail extends Component<any, any> {
             imageError: false,
             showDeleteDialog: false,
             similarMovieLoading: false,
+            popoverOpen: false,
         };
     }
 
@@ -131,6 +135,17 @@ class MovieDetail extends Component<any, any> {
         }
     }
 
+    togglePopover = () => {
+        this.setState((prevState: any) => ({
+            popoverOpen: !prevState.popoverOpen
+        }));
+    }
+
+    SlideUpTransition(props: any) {
+        return <Slide {...props} direction="up" />;
+    }
+
+
     render() {
         const { movie, isLoading, imageError } = this.state;
         const isAuthorized = authorizeUserForAccessMovie(this.currentPlan, movie, this.props.userInfo.role);
@@ -202,6 +217,9 @@ class MovieDetail extends Component<any, any> {
                             </button>
                         </div>
                     )}
+                    <div className='absolute bottom-6 right-6 z-30 flex gap-3'>
+                        <WatchlistButton movieId={Number(this.movieId)} togglePopover={this.togglePopover} />
+                    </div>
                     <div className="hidden lg:flex lg:w-1/3 bg-black h-full relative overflow-hidden items-center justify-center">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0f0f0f] z-10"></div>
                         <div className="h-full w-full lg:w-3/4 flex items-center justify-center relative z-0">
@@ -405,6 +423,64 @@ class MovieDetail extends Component<any, any> {
                     onConfirm={this.handleDelete}
                     movieTitle={movie.title}
                 />
+                {
+                    this.state.popoverOpen && (
+                        <Snackbar
+                            open={this.state.popoverOpen}
+                            autoHideDuration={3500}
+                            onClose={() => this.setState({ popoverOpen: false })}
+                            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                            TransitionComponent={(props) => <Slide {...props} direction="up" />}
+                            sx={{
+                                '.MuiPaper-root': {
+                                    borderRadius: '10px',
+                                    background: '#161618',
+                                    boxShadow: '0 8px 24px rgba(0,0,0,0.3), 0 2px 8px rgba(240,44,73,0.15)',
+                                    border: '1px solid rgba(240,44,73,0.1)',
+                                    maxWidth: '300px',
+                                    minWidth: '260px',
+                                    overflow: 'hidden',
+                                }
+                            }}
+                        >
+                            <MuiAlert
+                                onClose={() => this.setState({ popoverOpen: false })}
+                                severity="success"
+                                elevation={0}
+                                variant="filled"
+                                sx={{
+                                    width: '100%',
+                                    alignItems: 'flex-start',
+                                    padding: '14px',
+                                    background: 'transparent',
+                                    color: '#fff',
+                                    '& .MuiAlert-icon': {
+                                        color: '#4CAF50',
+                                        marginRight: '10px',
+                                        fontSize: '20px',
+                                        padding: 0,
+                                        alignSelf: 'center'
+                                    },
+                                    '& .MuiAlert-message': {
+                                        padding: 0,
+                                    }
+                                }}
+                            >
+                                <div className="flex flex-col">
+                                    <span className="font-semibold text-base">Added to Watchlist</span>
+                                    <span className="text-gray-400 text-xs mb-2">This movie has been saved to your watchlist.</span>
+                                    <Link
+                                        to="/watchlist"
+                                        className="inline-block w-full text-center py-1.5 bg-[#0f0f0f] hover:bg-[#f02c49] text-white text-sm font-medium rounded-md transition-colors duration-200 border border-[#f02c49]/30"
+                                        onClick={() => this.setState({ popoverOpen: false })}
+                                    >
+                                        View Watchlist
+                                    </Link>
+                                </div>
+                            </MuiAlert>
+                        </Snackbar>
+                    )
+                }
             </div>
         );
     }

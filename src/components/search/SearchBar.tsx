@@ -94,6 +94,7 @@ export default function SearchBar({ searchTerm, onSearchChange, removeMargins = 
   const movies = useSelector((state: any) => state.movie.movies);
 
   useEffect(() => {
+    setSuggestions([]);
     setSuggestions(movies.map((movie: any) => movie.title));
   }, [movies]);
 

@@ -13,13 +13,16 @@ import { setCurrentPlan } from '../../redux/slices/userSlice';
 import NotificationCenter from '../notification/NotificationCenter'
 import { addNotification } from '../../redux/slices/notificationSlice';
 import { toast } from 'react-toastify';
-import { AppDispatch } from '../../redux/store';
+import { AppDispatch, RootState } from '../../redux/store';
+import WatchListSection from './WatchListSection';
 
 
 const Index = () => {
   const loading = useSelector((state: any) => state.movie.loading);
   const containerRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch<AppDispatch>();
+
+  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
 
   useEffect(() => {
@@ -219,6 +222,13 @@ const Index = () => {
             <motion.div {...scrollAnimProps} className="mb-8">
               <CarouselSection type="Trending" heading="Top Trending" />
             </motion.div>
+            {
+              isLoggedIn && (
+                <motion.div {...scrollAnimProps} className="mb-8">
+                  <WatchListSection />
+                </motion.div>
+              )
+            }
             <motion.div {...scrollAnimProps} className="mb-8">
               <CarouselSection type="NewRelease" heading="New Release" />
             </motion.div>

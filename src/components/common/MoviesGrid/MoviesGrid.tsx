@@ -33,7 +33,7 @@ function MoviesGrid({ movieList, onChange, totalPages = 10, currentPage = 1, typ
                 ) : movieList.length > 0 ? (
                     movieList.map((movie, index) => (
                         <div key={`movie-${movie.id || index}`} className="w-full flex justify-center">
-                            <MoviesCard movie={movie} removeFromPageMovies={removeFromPageMovies} genreCard={genreCard} />
+                            <MoviesCard movie={movie}  removeFromPageMovies={removeFromPageMovies} genreCard={genreCard} />
                         </div>
                     ))
                 ) : (
