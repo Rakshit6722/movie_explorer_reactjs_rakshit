@@ -2,6 +2,7 @@ import axios from "axios";
 import { apiConnector } from "./interceptor/apiConnector";
 
 const BASE_URL = `https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1/movies`
+const WISHLIST_BASE_URL = `https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1`
 
 export const getMovieByPageApi = async (page?: number, genre?: string | null, search?: string | null) => {
     if (genre === 'All') genre = null
@@ -57,6 +58,76 @@ export const getMovieDetails = async (id: number): Promise<any> => {
 
         return response
     } catch (err: any) {
+        throw err
+    }
+}
+
+export const getWatchList = async (): Promise<any> => {
+    try{
+        const response = await apiConnector(
+            "GET",
+            `${WISHLIST_BASE_URL}/wishlist`,
+            null,
+            null,
+            null,
+            null,
+            true
+        )
+        return response?.data
+    }catch(err: any){
+        throw err
+    }
+}
+
+export const addToWatchList = async (movieId: number) => {
+    try {
+        const response = await apiConnector(
+            "POST",
+            `${WISHLIST_BASE_URL}/wishlist`,
+            {
+                movie_id: movieId
+            },
+            null,
+            null,
+            null,
+            true
+        )
+        return response
+    } catch (err: any) {
+        throw err
+    }
+}
+
+export const removeFromWatchList = async (movieId: number) => {
+    try {
+        const response = await apiConnector(
+            "DELETE",
+            `${WISHLIST_BASE_URL}/wishlist/${movieId}`,
+            null,
+            null,
+            null,
+            null,
+            true
+        )
+        return response
+    } catch (err: any) {
+        throw err
+    }
+}
+
+export const deleteWatchList = async () => {
+    try{
+        const response = await apiConnector(
+            "DELETE",
+            `${WISHLIST_BASE_URL}/wishlist`,
+            null,
+            null,
+            null,
+            null,
+            true
+        )
+        return response?.data
+    }catch(err: any){
         throw err
     }
 }
