@@ -25,6 +25,7 @@ export class Watchlist extends Component<any, any> {
     }
 
     async componentDidMount() {
+        window.scrollTo(0, 0)
         await this.fetchWatchList()
     }
 
