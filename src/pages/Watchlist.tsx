@@ -376,8 +376,8 @@ export class Watchlist extends Component<any, any> {
                         </Box>
                     ) : filteredList.length > 0 ? (
                         <Fade in={!loading}>
-                            <Grid container spacing={3}>
-                                {filteredList.map((movie, index) => (
+                            <Grid container spacing={3} sx={{ textAlign: 'center', margin: 'auto' }}>
+                                {filteredList.map((movie: Movie, index) => (
                                     <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
                                         <MoviesCard
                                             movie={movie}
