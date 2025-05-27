@@ -6,39 +6,39 @@ export const genreBackgrounds = {
         image: genreImages['All']
     },
     "Action": {
-        gradient: "from-red-900/40 to-black/80", 
+        gradient: "from-red-900/40 to-black/80",
         image: genreImages['Action']
     },
     "Adventure": {
-        gradient: "from-amber-900/40 to-black/80", 
+        gradient: "from-amber-900/40 to-black/80",
         image: genreImages['Adventure']
     },
     " Comedy": {
-        gradient: "from-yellow-800/40 to-black/80", 
+        gradient: "from-yellow-800/40 to-black/80",
         image: genreImages['Comedy']
     },
     "Drama": {
-        gradient: "from-purple-900/40 to-black/80", 
+        gradient: "from-purple-900/40 to-black/80",
         image: genreImages['Drama']
     },
     "Fantasy": {
-        gradient: "from-blue-900/40 to-black/80", 
+        gradient: "from-blue-900/40 to-black/80",
         image: genreImages['Fantasy']
     },
     "Horror": {
-        gradient: "from-gray-900/40 to-black/90", 
+        gradient: "from-gray-900/40 to-black/90",
         image: genreImages['Horror']
     },
     "Romance": {
-        gradient: "from-pink-900/80 to-black/80", 
+        gradient: "from-pink-900/80 to-black/80",
         image: genreImages['Romance']
     },
     "Sci-Fi": {
-        gradient: "from-cyan-900/40 to-black/80", 
+        gradient: "from-cyan-900/40 to-black/80",
         image: genreImages['SciFi']
     },
     " Thriller": {
-        gradient: "from-red-950/40 to-black/80", 
+        gradient: "from-red-950/40 to-black/80",
         image: genreImages['Thriller']
     }
 };
@@ -48,13 +48,11 @@ export const genres = [
     { id: 0, name: "All" },
     { id: 1, name: "Action" },
     { id: 2, name: "Adventure" },
-    { id: 3, name: " Comedy" },
-    { id: 4, name: "Drama" },
-    { id: 5, name: "Horror" },
-    { id: 6, name: "Romance" },
-    { id: 7, name: "Sci-Fi" },
-    { id: 8, name: " Thriller" },
-    { id: 9, name: "Fantasy" },
+    { id: 3, name: "Comedy" },
+    { id: 4, name: "Horror" },
+    { id: 5, name: "Romance" },
+    { id: 6, name: "Sci-Fi" },
+    { id: 7, name: "Thriller" },
 ]
 
 export const genreGradients: Record<string, string> = {
