@@ -2,19 +2,20 @@ import React from 'react';
 import MoviesCard from '../MoviesCard';
 import Pagination from '@mui/material/Pagination';
 import { Movie } from '../../../types/type';
+import { motion } from 'framer-motion';
 
 interface MoviesGridProps {
     movieList: Movie[];
     onChange?: (page: number) => void;
     totalPages?: number;
-    currentPage?: number; 
+    currentPage?: number;
     type?: string | null;
     isLoading?: boolean;
     removeFromPageMovies?: (id: number) => void;
     genreCard?: boolean;
 }
 
-function MoviesGrid({ movieList, onChange, totalPages = 10, currentPage = 1, type = null, isLoading = false , removeFromPageMovies, genreCard}: MoviesGridProps) {
+function MoviesGrid({ movieList, onChange, totalPages = 10, currentPage = 1, type = null, isLoading = false, removeFromPageMovies, genreCard }: MoviesGridProps) {
     const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
         if (value === currentPage || !onChange) return;
         onChange(value);
@@ -24,7 +25,11 @@ function MoviesGrid({ movieList, onChange, totalPages = 10, currentPage = 1, typ
 
     return (
         <div className="flex flex-col w-full">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 
+            <motion.div
+                initial={{ opacity: 0}}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.6, ease: 'easeInOut' }}
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 
                   gap-2 sm:gap-2.5 md:gap-3 justify-items-center w-full min-h-[400px]">
                 {isLoading ? (
                     <div className="col-span-full py-20 text-center text-gray-400">
@@ -33,7 +38,7 @@ function MoviesGrid({ movieList, onChange, totalPages = 10, currentPage = 1, typ
                 ) : movieList.length > 0 ? (
                     movieList.map((movie, index) => (
                         <div key={`movie-${movie.id || index}`} className="w-full flex justify-center">
-                            <MoviesCard movie={movie}  removeFromPageMovies={removeFromPageMovies} genreCard={genreCard} />
+                            <MoviesCard movie={movie} removeFromPageMovies={removeFromPageMovies} genreCard={genreCard} />
                         </div>
                     ))
                 ) : (
@@ -41,7 +46,7 @@ function MoviesGrid({ movieList, onChange, totalPages = 10, currentPage = 1, typ
                         No movies found. Try adjusting your filters.
                     </div>
                 )}
-            </div>
+            </motion.div>
 
             {((type === 'genre' || type === 'search') && pageCount > 1) && (
                 <div className="flex justify-center items-center mt-10 mb-8">
