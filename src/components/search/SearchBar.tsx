@@ -56,6 +56,15 @@ const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
       backgroundColor: 'rgba(255, 255, 255, 0.05)',
     },
   },
+  '& .MuiAutocomplete-clearIndicator': {
+    display: 'none !important',
+  },
+  '& .MuiAutocomplete-endAdornment': {
+    display: 'none !important',
+  },
+  '& .MuiButtonBase-root[title="Clear"]': {
+    display: 'none !important',
+  },
 }));
 
 const darkTheme = createTheme({
@@ -117,38 +126,42 @@ export default function SearchBar({ searchTerm, onSearchChange, removeMargins = 
             freeSolo
             id="movie-search"
             value={searchTerm}
-            disableClearable={true}
+            disableClearable={true} 
             forcePopupIcon={false}
             onChange={(event, value, reason, details) => onSearchChange(event, value as string | null)}
             onInputChange={onSearchChange}
             options={suggestions}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder="Search for title of movie..."
-                fullWidth
-                InputProps={{
-                  ...params.InputProps,
-                  type: 'search',
-                  endAdornment: (
-                    <React.Fragment>
-                      {searchTerm ? (
-                        <button
-                          type="button"
-                          onClick={handleClear}
-                          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-[#f02c49] z-20 p-1"
-                          tabIndex={-1}
-                          aria-label="Clear"
-                          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-                        >
-                          <MdClear size={20} />
-                        </button>
-                      ) : null}
-                    </React.Fragment>
-                  ),
-                }}
-              />
-            )}
+            renderInput={(params) => {
+              const { InputProps, ...otherParams } = params;
+              const { endAdornment, ...otherInputProps } = InputProps || {};
+              
+              return (
+                <TextField
+                  {...otherParams}
+                  placeholder="Search for title of movie..."
+                  fullWidth
+                  InputProps={{
+                    ...otherInputProps,
+                    endAdornment: (
+                      <React.Fragment>
+                        {searchTerm ? (
+                          <button
+                            type="button"
+                            onClick={handleClear}
+                            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#f02c49] z-20"
+                            tabIndex={-1}
+                            aria-label="Clear"
+                            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+                          >
+                            <MdClear size={18} />
+                          </button>
+                        ) : null}
+                      </React.Fragment>
+                    ),
+                  }}
+                />
+              );
+            }}
           />
         </ThemeProvider>
       </div>
