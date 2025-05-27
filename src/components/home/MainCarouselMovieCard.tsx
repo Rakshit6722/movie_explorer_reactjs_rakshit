@@ -1,57 +1,61 @@
 import React, { Component } from 'react';
 import { Movie } from '../../types/type';
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion';
+import { Skeleton } from '@mui/material';
 
 type Props = {
   movie: Movie;
 };
 
-export class MainCarouselMovieCard extends Component<Props> {
+export class MainCarouselMovieCard extends Component<Props, any> {
   state = {
     coverUrl: this.props.movie.poster_url,
     bannerUrl: this.props.movie.banner_url,
+    bannerLoaded: false,
+    posterLoaded: false,
+    hasError: false
   };
 
   componentDidMount(): void {
-    const preloadPoster = new Image();
-    preloadPoster.src = this.state.coverUrl;
-
-    const preloadBanner = new Image();
-    preloadBanner.src = this.state.bannerUrl;
-
-    document.addEventListener('visibilitychange', this.handleVisibilityChange);
+    // Preload images with proper error handling
+    this.preloadImages();
   }
 
-  handleVisibilityChange = () => {
-    if (document.visibilityState === 'visible') {
-      const images = document.querySelectorAll('img');
-      images.forEach((img) => {
-        const src = img.getAttribute('src');
-        if (src) {
-          img.setAttribute('src', src);
-        }
-      });
-    }
+  preloadImages = () => {
+    // Banner image
+    const bannerImage = new Image();
+    bannerImage.onload = () => this.setState({ bannerLoaded: true });
+    bannerImage.onerror = () => this.setState({ hasError: true });
+    bannerImage.src = this.state.bannerUrl;
+
+    // Poster image
+    const posterImage = new Image();
+    posterImage.onload = () => this.setState({ posterLoaded: true });
+    posterImage.onerror = () => this.setState({ hasError: true });
+    posterImage.src = this.state.coverUrl;
   };
 
-  componentWillUnmount(): void {
-    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
-  }
-
   render() {
-    const { coverUrl, bannerUrl } = this.state;
+    const { coverUrl, bannerUrl, bannerLoaded, posterLoaded } = this.state;
     const { title, genre, release_year, rating, director, id, description } = this.props.movie;
 
     return (
-      <div className="relative group w-full h-[400px] md:h-[500px] lg:h-[600px] xl:h-[650px] 2xl:h-[700px] overflow-hidden bg-black">
-        <img
-          src={bannerUrl}
-          alt={title}
-          className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-500 group-hover:scale-105"
-          loading="eager"
-          fetchPriority="high"
-        />
-
+      <div className="relative group w-full h-[400px] md:h-[500px] lg:h-[600px] xl:h-[650px] 2xl:h-[700px] overflow-hidden bg-[#121218]">
+        {!bannerLoaded ? (
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-t from-black to-[#121218] animate-pulse">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-12 h-12 border-4 border-gray-700 border-t-red-500 rounded-full animate-spin"></div>
+            </div>
+          </div>
+        ) : (
+          <img
+            src={bannerUrl}
+            alt={title}
+            className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-500 group-hover:scale-105"
+            loading="eager"
+            style={{ opacity: bannerLoaded ? 1 : 0, transition: 'opacity 0.5s ease-in' }}
+          />
+        )}
 
         <div
           className="absolute"
@@ -67,19 +71,26 @@ export class MainCarouselMovieCard extends Component<Props> {
           <div className="w-full h-full bg-gradient-to-t from-black via-black/60 to-transparent transition-opacity duration-500 group-hover:via-black/70" />
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          viewport={{ once: true }}
-          style={{ zIndex: 20 }}
+        <div
           className="absolute bottom-20 left-6 md:left-16 z-20 flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
-          <div className="hidden md:block w-[160px] h-[230px] rounded-lg overflow-hidden shadow-md">
-            <img
-              src={coverUrl}
-              alt={title}
-              className="w-full h-full object-cover"
-            />
+          
+          <div className="hidden md:block w-[160px] h-[230px] rounded-lg overflow-hidden shadow-md bg-gray-900">
+            {!posterLoaded ? (
+              <Skeleton 
+                variant="rectangular"
+                width="100%"
+                height="100%"
+                animation="wave"
+                sx={{ bgcolor: 'rgba(255, 255, 255, 0.1)' }}
+              />
+            ) : (
+              <img
+                src={coverUrl}
+                alt={title}
+                className="w-full h-full object-cover"
+                style={{ opacity: posterLoaded ? 1 : 0, transition: 'opacity 0.3s ease-in' }}
+              />
+            )}
           </div>
 
           <div className="text-white hidden md:block max-w-2xl">
@@ -123,7 +134,7 @@ export class MainCarouselMovieCard extends Component<Props> {
               </svg>
             </button>
           </div>
-        </motion.div>
+        </div>
       </div>
     );
   }

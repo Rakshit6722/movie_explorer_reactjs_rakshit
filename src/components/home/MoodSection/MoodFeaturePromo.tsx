@@ -92,7 +92,3 @@ const MoodFeaturePromo = () => {
 
 export default MoodFeaturePromo;
 
-// Add this CSS to your global styles:
-/*
-
-*/
