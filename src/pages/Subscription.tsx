@@ -9,6 +9,7 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { plans } from '../constants/subscriptionPlans';
+import { current } from '@reduxjs/toolkit';
 
 
 const Subscription = () => {
@@ -20,15 +21,15 @@ const Subscription = () => {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
-  const currentPlan = useSelector((state: RootState) => state.user.currentPlan || 'basic'); 
+  const currentPlan = useSelector((state: RootState) => state.user.currentPlan || 'basic');
 
   const [selectedPlan, setSelectedPlan] = useState(currentPlan !== 'basic' ? currentPlan : 'gold');
 
   useEffect(() => {
-    if(scrollRef.current){
-        scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  },[])
+  }, [])
 
   const handlePlanSelection = (planKey: string) => {
     if (planKey === 'basic') {
@@ -37,8 +38,10 @@ const Subscription = () => {
     }
 
     if (planKey === currentPlan) {
-      setMessage("You're already subscribed to this plan");
-      return;
+      confirm(`You are already subscribed to the ${plans.find(plan => plan.key === planKey)?.name} plan. Would you like to renew?`);
+      if (!confirm) {
+        return;
+      }
     }
 
     setSelectedPlan(planKey);
@@ -188,11 +191,11 @@ const Subscription = () => {
 
                 <button
                   onClick={() => handlePlanSelection(plan.key)}
-                  disabled={loading || plan.key === currentPlan || plan.key === 'basic'}
-                  className={`w-full mt-8 py-3 rounded-lg font-semibold text-sm transition-all ${loading
+                  disabled={loading || plan.key === 'basic' || (currentPlan === 'platinum' && plan.key === 'gold')}
+                  className={`w-full mt-8 py-3 rounded-lg font-semibold text-sm transition-all ${(currentPlan === 'platinum' && plan.key === 'gold') ? 'cursor-not-allowed' : ''} ${loading
                     ? 'bg-gray-700 cursor-wait'
                     : plan.key === currentPlan
-                      ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed border border-gray-700'
+                      ? 'border border-gray-700  bg-gray-800 hover:border-gray-600 text-gray-300'
                       : plan.key === 'basic'
                         ? 'bg-gray-700/50 text-gray-400 cursor-not-allowed border border-gray-700'
                         : plan.key === 'gold'
@@ -209,7 +212,7 @@ const Subscription = () => {
                     }`}
                 >
                   {
-                    plan.key === 'basic' ? currentPlan === 'basic' ? 'Default Plan' : 'Included Free' : plan.key === currentPlan ? 'Current Plan' : selectedPlan === plan.key ? `Selected` : `Choose ${plan.name}`
+                    plan.key === 'basic' ? currentPlan === 'basic' ? 'Default Plan' : 'Included Free' : plan.key === currentPlan ? 'Renew Plan' : selectedPlan === plan.key ? `Selected` : (currentPlan === 'platinum' && plan.key === 'gold') ? 'Included' : `Choose ${plan.name}`
                   }
                 </button>
               </div>
@@ -273,11 +276,11 @@ const Subscription = () => {
               <form onSubmit={handlePaymentSubmit} className="space-y-6">
                 <button
                   type="submit"
-                  disabled={!stripe || loading || selectedPlan === currentPlan}
+                  disabled={!stripe || loading}
                   className={`w-full py-3.5 rounded-lg font-semibold text-center transition-all ${loading
                     ? 'bg-gray-700 cursor-wait'
                     : selectedPlan === currentPlan
-                      ? 'bg-gray-700 text-gray-300 cursor-not-allowed'
+                      ? 'bg-gray-700 text-gray-300'
                       : selectedPlan === 'gold'
                         ? 'bg-gradient-to-r from-yellow-500 to-amber-600 text-black hover:from-yellow-400 hover:to-amber-500'
                         : selectedPlan === 'platinum'
@@ -285,7 +288,7 @@ const Subscription = () => {
                           : 'bg-[#f02c49] text-white hover:bg-[#e01c39]'
                     }`}
                 >
-                  {loading ? 'Processing...' : `Subscribe Now`}
+                  {loading ? 'Processing...' : selectedPlan === currentPlan ? 'Renew Plan' : `Subscribe Now`}
                 </button>
 
                 {message && (
