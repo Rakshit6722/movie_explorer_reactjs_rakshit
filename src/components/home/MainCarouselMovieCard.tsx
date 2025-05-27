@@ -45,13 +45,15 @@ export class MainCarouselMovieCard extends Component<Props, any> {
             </div>
           </div>
         ) : (
-          <img
-            src={bannerUrl}
-            alt={title}
-            className="absolute inset-0 w-full h-full object-cover z-0 duration-800 group-hover:scale-105 transition-all"
-            loading="eager"
-            style={{ opacity: bannerLoaded ? 1 : 0, transition: 'opacity 0.5s ease-in' }}
-          />
+          <div className="absolute inset-0 w-full h-full z-0 transition-transform duration-300 ease-out group-hover:scale-105">
+            <img
+              src={bannerUrl}
+              alt={title}
+              className="w-full h-full object-cover"
+              loading="eager"
+              style={{ opacity: bannerLoaded ? 1 : 0, transition: 'opacity 0.3s ease-in' }}
+            />
+          </div>
         )}
 
         <div
