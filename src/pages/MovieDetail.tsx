@@ -39,9 +39,9 @@ class MovieDetail extends Component<any, any> {
     currentPlan = this.props.currentPlan;
     role = this.props.userInfo.role || '';
 
-    async componentDidMount() {
+    componentDidMount() {
         if (this.movieId) {
-            await this.getMovie(this.movieId);
+            this.getMovie(this.movieId);
         }
 
         if (this.mainRef.current) {
@@ -50,7 +50,7 @@ class MovieDetail extends Component<any, any> {
 
     }
 
-    async componentDidUpdate(prevProps: any) {
+    componentDidUpdate(prevProps: any) {
         const currentMovieId = new URLSearchParams(window.location.search).get('id');
 
         if (prevProps.movieList !== this.props.movieList || currentMovieId !== this.movieId) {
@@ -60,7 +60,7 @@ class MovieDetail extends Component<any, any> {
             if (this.movieId) {
                 this.setState({ isLoading: true });
 
-                await this.getMovie(this.movieId);
+                this.getMovie(this.movieId);
                 this.findSimilarMovies(this.state.movie);
 
                 if (this.mainRef.current) {
@@ -78,10 +78,14 @@ class MovieDetail extends Component<any, any> {
             this.findSimilarMovies(data?.data);
         } catch (error: any) {
             console.log("error status", error?.status)
-            if (error?.status === 403) {
-                this.setState({ isLoading: false, errorMessage: "You are not authorized to view this movie." });
+            if (error?.status === 401) {
+                this.setState({ movie: "", isLoading: false, errorMessage: "You need to login to view this movie." });
+                return;
+            } else if (error?.status === 403) {
+                this.setState({ movie: "", isLoading: false, errorMessage: "You are not authorized to view this movie." });
                 return;
             }
+            this.setState({ isLoading: false, errorMessage: "Movie not found or unavailable." });
             toast.error(error?.message || "Couldn't fetch movie details");
             this.setState({ isLoading: false });
             return;
@@ -109,7 +113,7 @@ class MovieDetail extends Component<any, any> {
             const filteredMovies = similarMovies.data.filter((m: Movie) => m.id !== movie.id).slice(0, 6);
             this.setState({ similarMovie: filteredMovies });
         } catch (err: any) {
-            toast.error(err?.message || "Couldn't fetch similar movies");
+            console.warn("Error fetching similar movies:", err);
         } finally {
             this.setState({ similarMovieLoading: false });
         }
@@ -180,68 +184,75 @@ class MovieDetail extends Component<any, any> {
                 </AuthorizedContent>
             );
         }
-if (!movie) {
-    return (
-        <div className="min-h-screen bg-black flex flex-col relative">
-            
-            <div className="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-12">
-                <div className="max-w-md mx-auto">
-                    <div className="mb-6 mx-auto w-16 h-16 rounded-full flex items-center justify-center bg-red-900/20 border border-red-900/30">
-                        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" className="text-red-500">
-                            <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
-                                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </div>
-                    
-                    <h2 className="text-2xl font-bold text-white mb-3 text-center">
-                        {this.state.errorMessage || "Movie Not Found"}
-                    </h2>
-                    
-                    <p className="text-gray-400 mb-6 text-center">
-                        {this.state.errorMessage?.toLowerCase().includes("authorized") 
-                            ? "This content requires a higher subscription plan to access."
-                            : "The movie you're looking for may have been removed or is unavailable."}
-                    </p>
-                    
-                    <div className="space-y-3">
-                        {this.state.errorMessage?.toLowerCase().includes("authorized") ? (
-                            <>
-                                <button 
-                                    onClick={() => this.props.navigate('/subscription')}
-                                    className="block w-full px-6 py-2.5 rounded-lg font-medium text-center
+        if (!movie) {
+            return (
+                <div className="min-h-screen bg-black flex flex-col relative">
+
+                    <div className="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-12">
+                        <div className="max-w-md mx-auto">
+                            <div className="mb-6 mx-auto w-16 h-16 rounded-full flex items-center justify-center bg-red-900/20 border border-red-900/30">
+                                <svg width="24" height="24" fill="none" viewBox="0 0 24 24" className="text-red-500">
+                                    <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+
+                            <h2 className="text-2xl font-bold text-white mb-3 text-center">
+                                {this.state.errorMessage || "Movie Not Found"}
+                            </h2>
+
+                            <p className="text-gray-400 mb-6 text-center">
+                                {this.state.errorMessage?.toLowerCase().includes("authorized")
+                                    ? "This content requires a higher subscription plan to access."
+                                    : `${this.state.errorMessage || "The movie you are looking for does not exist or is unavailable."}`}
+                            </p>
+
+                            <div className="space-y-3">
+                                {this.state.errorMessage?.toLowerCase().includes("authorized") ? (
+                                    <>
+                                        <button
+                                            onClick={() => this.props.navigate('/subscription')}
+                                            className="block w-full px-6 py-2.5 rounded-lg font-medium text-center
                                         bg-yellow-600 text-black hover:bg-yellow-500 transition"
-                                >
-                                    Upgrade My Plan
-                                </button>
-                                
-                                <button 
-                                    onClick={() => window.history.back()}
-                                    className="block w-full px-6 py-2.5 rounded-lg bg-transparent 
+                                        >
+                                            Upgrade My Plan
+                                        </button>
+
+                                        <button
+                                            onClick={() => window.history.back()}
+                                            className="block w-full px-6 py-2.5 rounded-lg bg-transparent 
                                         border border-gray-700 text-gray-300 hover:bg-gray-800 transition"
-                                >
-                                    Go Back
-                                </button>
-                            </>
-                        ) : (
-                            <button 
-                                onClick={() => window.history.back()}
-                                className="block w-full px-6 py-2.5 rounded-lg bg-[#f02c49] 
+                                        >
+                                            Go Back
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={() => this.props.navigate('/login')}
+                                            className='block w-full px-6 py-2.5 rounded-lg border hover:border-[#f02c49] hover:text-[#f02c49]  text-white font-medium'>
+                                            Login
+                                        </button>
+                                        <button
+                                            onClick={() => window.history.back()}
+                                            className="block w-full px-6 py-2.5 rounded-lg bg-[#f02c49] 
                                     hover:bg-[#f55b40] text-white font-medium transition"
-                            >
-                                ← Go Back
-                            </button>
-                        )}
+                                        >
+                                            ← Go Back
+                                        </button>
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    );
-}
+            );
+        }
 
 
 
         return (
-            <div ref={this.mainRef} className="flex flex-col bg-[#0f0f0f] min-h-screen">
+            <div ref={this.mainRef} className="flex flex-col bg-black min-h-screen">
 
                 <div className="relative h-[85vh] sm:h-[75vh] md:h-[75vh] lg:h-[80vh] w-full flex flex-col lg:flex-row">
                     {(this.role === 'admin' || this.role === 'supervisor') && (

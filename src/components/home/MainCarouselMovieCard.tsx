@@ -17,18 +17,15 @@ export class MainCarouselMovieCard extends Component<Props, any> {
   };
 
   componentDidMount(): void {
-    // Preload images with proper error handling
     this.preloadImages();
   }
 
   preloadImages = () => {
-    // Banner image
     const bannerImage = new Image();
     bannerImage.onload = () => this.setState({ bannerLoaded: true });
     bannerImage.onerror = () => this.setState({ hasError: true });
     bannerImage.src = this.state.bannerUrl;
 
-    // Poster image
     const posterImage = new Image();
     posterImage.onload = () => this.setState({ posterLoaded: true });
     posterImage.onerror = () => this.setState({ hasError: true });
@@ -51,7 +48,7 @@ export class MainCarouselMovieCard extends Component<Props, any> {
           <img
             src={bannerUrl}
             alt={title}
-            className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-500 group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover z-0 duration-800 group-hover:scale-105 transition-all"
             loading="eager"
             style={{ opacity: bannerLoaded ? 1 : 0, transition: 'opacity 0.5s ease-in' }}
           />

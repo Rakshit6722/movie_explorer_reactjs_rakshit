@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Skeleton, Box, LinearProgress } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import CarouselSection from './CategorySection/CarouselSection';
@@ -18,48 +18,21 @@ import WatchListSection from './WatchListSection';
 
 
 const Index = () => {
-  const loading = useSelector((state: any) => state.movie.loading);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const loading = useSelector((state: RootState) => state.movie.loading);
   const dispatch = useDispatch<AppDispatch>();
-
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
-
   useEffect(() => {
-    fetchHomeMovies();
-    currentFetchPlan()
+    dispatch(fetchMovies());
+    fetchCurrentPlan();
     syncStoredNotifications();
-    if (containerRef.current) {
-      containerRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @keyframes flicker {
-        0% { opacity: 1 }
-        50% { opacity: 0.55 }
-        60% { opacity: 0.85 }
-        70% { opacity: 0.55 }
-        80% { opacity: 0.85 }
-        100% { opacity: 1 }
-      }
-      .flicker-effect {
-        animation: flicker 2s infinite ease-in-out;
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
+  }, [dispatch]);
 
   const syncStoredNotifications = () => {
     try {
       const stored = localStorage.getItem('notifications');
       if (stored) {
         const notifications = JSON.parse(stored);
-
         notifications.forEach((notification: any) => {
           dispatch(addNotification({
             title: notification.title,
@@ -67,7 +40,6 @@ const Index = () => {
             timestamp: notification.timestamp || Date.now(),
           }))
         })
-
         localStorage.removeItem('notifications');
       }
     } catch (err: any) {
@@ -75,58 +47,63 @@ const Index = () => {
     }
   }
 
-  const fetchHomeMovies = async () => {
-    dispatch(fetchMovies())
-  };
-
-  const currentFetchPlan = async () => {
+  const fetchCurrentPlan = async () => {
     try {
-      const response = await getSubscriptionDetailsApi()
+      const response = await getSubscriptionDetailsApi();
       if (response) {
         if (response?.status === 'pending' || response?.status === 'cancelled') {
           dispatch(setCurrentPlan("Basic"));
-          return
+          return;
         }
-        dispatch(setCurrentPlan(response?.plan))
+        dispatch(setCurrentPlan(response?.plan));
       }
     } catch (err: any) {
       toast.error(err?.message || "Couldn't fetch subscription details");
     }
   }
 
+  const sections = useMemo(() => [
+    { component: <CarouselSection type="Trending" heading="Top Trending" />, condition: true },
+    { component: <WatchListSection />, condition: isLoggedIn },
+    { component: <CarouselSection type="NewRelease" heading="New Release" />, condition: true },
+    { component: <CarouselSection type="FanFavourite" heading="Fan Favourite" />, condition: true },
+    { component: <MidCarousel type="MidCarousel" />, condition: true },
+    { component: <CarouselSection type="Mood" heading="Find By Mood" />, condition: true },
+    { component: <CarouselSection type="Action" heading="Action Packed" />, condition: true },
+    { component: <CarouselSection type="Horror" heading="Horror Nights" />, condition: true }
+  ], [isLoggedIn]);
+
   const renderCarouselSkeleton = () => (
-    <Box className="w-full flicker-effect">
+    <Box className="w-full">
       <Skeleton
         variant="rectangular"
         animation="wave"
         width="100%"
-        height={500}
+        height={400}
         sx={{ bgcolor: 'rgba(255, 255, 255, 0.06)', borderRadius: '8px' }}
       />
     </Box>
   );
 
   const renderMovieCardsSkeleton = () => (
-    <Box className="w-full my-12">
+    <Box className="w-full my-8">
       <Skeleton
         variant="text"
         width={200}
         height={32}
         animation="wave"
-        sx={{ bgcolor: 'rgba(255, 255, 255, 0.06)', mb: 3 }}
-        className="flicker-effect"
+        sx={{ bgcolor: 'rgba(255, 255, 255, 0.06)', mb: 2 }}
       />
       <Box className="flex gap-4 overflow-x-hidden">
-        {[...Array(10)].map((_, index) => (
+        {[...Array(8)].map((_, index) => (
           <Box
             key={index}
-            className="flicker-effect"
-            style={{ animationDelay: `${index * 0.1}s`, minWidth: '180px' }}
+            style={{ minWidth: '160px' }}
           >
             <Skeleton
               variant="rectangular"
-              width={180}
-              height={270}
+              width={160}
+              height={220}
               animation="wave"
               sx={{
                 bgcolor: 'rgba(255, 255, 255, 0.08)',
@@ -136,17 +113,10 @@ const Index = () => {
             />
             <Skeleton
               variant="text"
-              width={140}
+              width={120}
               height={20}
               animation="wave"
               sx={{ bgcolor: 'rgba(255, 255, 255, 0.06)' }}
-            />
-            <Skeleton
-              variant="text"
-              width={100}
-              height={16}
-              animation="wave"
-              sx={{ bgcolor: 'rgba(255, 255, 255, 0.04)' }}
             />
           </Box>
         ))}
@@ -154,36 +124,16 @@ const Index = () => {
     </Box>
   );
 
-  const mainCarouselAnimProps = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    transition: { 
-      duration: 1.2,
-      ease: "easeOut"
-    }
-  };
-
-  const sectionAnimProps = {
-    initial: { opacity: 0, y: 15 },
-    whileInView: { opacity: 1, y: 0 },
-    transition: { 
-      duration: 0.6,
-      ease: "easeOut"
-    },
-    viewport: { once: true, margin: "-100px 0px" }
-  };
-
-
   return (
-    <div ref={containerRef} className="relative w-full min-h-screen bg-black text-white">
+    <div className="relative w-full min-h-screen bg-black text-white">
       {!loading && (
-        <div className="fixed top-0  z-50 p-4">
+        <div className="fixed top-0 z-50 p-4">
           <NotificationCenter />
         </div>
       )}
 
       {!loading && <SubscribeButton />}
-      <section className="w-full mb-12">
+      <section className="w-full mb-10">
         {loading ? (
           <>
             <LinearProgress
@@ -200,62 +150,46 @@ const Index = () => {
                 },
                 '&.MuiLinearProgress-root': {
                   backgroundColor: 'rgba(240, 44, 73, 0.2)',
-                },
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '100%',
-                  backgroundColor: 'rgba(240, 44, 73, 0.2)',
                 }
               }}
             />
             {renderCarouselSkeleton()}
           </>
         ) : (
-          <motion.div {...mainCarouselAnimProps}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
             <MoodFeaturePromo />
             <MainCarousel />
           </motion.div>
         )}
       </section>
 
-      <section className="w-full flex flex-col mb-12">
+      <section className="w-full flex flex-col mb-10">
         {loading ? (
-          <>
-            {renderMovieCardsSkeleton()}
-            {renderMovieCardsSkeleton()}
-            {renderMovieCardsSkeleton()}
-          </>
+          renderMovieCardsSkeleton()
         ) : (
           <>
-
-            { [
-                { component: <CarouselSection type="Trending" heading="Top Trending" />, condition: true },
-                { component: <WatchListSection />, condition: isLoggedIn },
-                { component: <CarouselSection type="NewRelease" heading="New Release" />, condition: true },
-                { component: <CarouselSection type="FanFavourite" heading="Fan Favourite" />, condition: true },
-                { component: <MidCarousel type="MidCarousel" />, condition: true },
-                { component: <CarouselSection type="Mood" heading="Find By Mood" />, condition: true },
-                { component: <CarouselSection type="Action" heading="Action Packed" />, condition: true },
-                { component: <CarouselSection type="Horror" heading="Horror Nights" />, condition: true }
-              ].map((section, index) => (
-                section.condition && (
-                  <motion.div 
-                    key={index}
-                    {...sectionAnimProps} 
-                    transition={{ 
-                      ...sectionAnimProps.transition, 
-                      delay: index * 0.05
-                    }}
-                    className="mb-8"
-                  >
-                    {section.component}
-                  </motion.div>
-                )
-              )) }
+            {sections.map((section, index) =>
+              section.condition && (
+                <div key={index} className="mb-8">
+                  {index === 0 ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: 15 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      viewport={{ once: true, margin: "-100px 0px" }}
+                    >
+                      {section.component}
+                    </motion.div>
+                  ) : (
+                    section.component
+                  )}
+                </div>
+              )
+            )}
           </>
         )}
       </section>
