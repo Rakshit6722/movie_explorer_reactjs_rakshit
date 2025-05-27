@@ -28,6 +28,7 @@ class MovieDetail extends Component<any, any> {
             showDeleteDialog: false,
             similarMovieLoading: false,
             popoverOpen: false,
+            errorMessage: ''
         };
     }
 
@@ -76,6 +77,11 @@ class MovieDetail extends Component<any, any> {
             this.setState({ movie: data?.data, isLoading: false });
             this.findSimilarMovies(data?.data);
         } catch (error: any) {
+            console.log("error status", error?.status)
+            if (error?.status === 403) {
+                this.setState({ isLoading: false, errorMessage: "You are not authorized to view this movie." });
+                return;
+            }
             toast.error(error?.message || "Couldn't fetch movie details");
             this.setState({ isLoading: false });
             return;
@@ -174,21 +180,64 @@ class MovieDetail extends Component<any, any> {
                 </AuthorizedContent>
             );
         }
-
-        if (!movie) {
-            return (
-                <div className="min-h-screen bg-black flex flex-col items-center justify-center text-white px-4">
-                    <h2 className="text-3xl font-bold mb-4">Movie Not Found</h2>
-                    <p className="text-gray-300 mb-6">The movie you're looking for isn't available.</p>
-                    <button
-                        onClick={() => window.history.back()}
-                        className="px-6 py-3 bg-red-600 hover:bg-red-700 transition rounded-md"
-                    >
-                        Go Back
-                    </button>
+if (!movie) {
+    return (
+        <div className="min-h-screen bg-black flex flex-col relative">
+            <div className="absolute inset-0 bg-gradient-to-b from-[#12121a] to-[#0a0a0e]"></div>
+            
+            <div className="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-12">
+                <div className="max-w-md mx-auto">
+                    <div className="mb-6 mx-auto w-16 h-16 rounded-full flex items-center justify-center bg-red-900/20 border border-red-900/30">
+                        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" className="text-red-500">
+                            <path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                    </div>
+                    
+                    <h2 className="text-2xl font-bold text-white mb-3 text-center">
+                        {this.state.errorMessage || "Movie Not Found"}
+                    </h2>
+                    
+                    <p className="text-gray-400 mb-6 text-center">
+                        {this.state.errorMessage?.toLowerCase().includes("authorized") 
+                            ? "This content requires a higher subscription plan to access."
+                            : "The movie you're looking for may have been removed or is unavailable."}
+                    </p>
+                    
+                    <div className="space-y-3">
+                        {this.state.errorMessage?.toLowerCase().includes("authorized") ? (
+                            <>
+                                <button 
+                                    onClick={() => this.props.navigate('/subscription')}
+                                    className="block w-full px-6 py-2.5 rounded-lg font-medium text-center
+                                        bg-yellow-600 text-black hover:bg-yellow-500 transition"
+                                >
+                                    Upgrade My Plan
+                                </button>
+                                
+                                <button 
+                                    onClick={() => window.history.back()}
+                                    className="block w-full px-6 py-2.5 rounded-lg bg-transparent 
+                                        border border-gray-700 text-gray-300 hover:bg-gray-800 transition"
+                                >
+                                    Go Back
+                                </button>
+                            </>
+                        ) : (
+                            <button 
+                                onClick={() => window.history.back()}
+                                className="block w-full px-6 py-2.5 rounded-lg bg-[#f02c49] 
+                                    hover:bg-[#f55b40] text-white font-medium transition"
+                            >
+                                ← Go Back
+                            </button>
+                        )}
+                    </div>
                 </div>
-            );
-        }
+            </div>
+        </div>
+    );
+}
 
 
 
@@ -217,9 +266,13 @@ class MovieDetail extends Component<any, any> {
                             </button>
                         </div>
                     )}
-                    <div className='absolute bottom-6 right-6 z-30 flex gap-3'>
-                        <WatchlistButton movieId={Number(this.movieId)} togglePopover={this.togglePopover} />
-                    </div>
+                    {
+                        this.props.isLoggedIn && (
+                            <div className='absolute bottom-6 right-6 z-30 flex gap-3'>
+                                <WatchlistButton movieId={Number(this.movieId)} togglePopover={this.togglePopover} />
+                            </div>
+                        )
+                    }
                     <div className="hidden lg:flex lg:w-1/3 bg-black h-full relative overflow-hidden items-center justify-center">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-[#0f0f0f] z-10"></div>
                         <div className="h-full w-full lg:w-3/4 flex items-center justify-center relative z-0">
