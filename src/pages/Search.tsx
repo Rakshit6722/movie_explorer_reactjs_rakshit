@@ -71,7 +71,7 @@ function Search() {
   const debouncedSearch = useCallback(
     debounce((page: number, genre: string, term: string) => {
       fetchSearchResults(page, genre, term);
-    }, 500),
+    }, 350),
     [fetchSearchResults, debounce]
   );
 
