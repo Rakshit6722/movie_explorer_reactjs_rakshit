@@ -53,7 +53,8 @@ export const getMovieDetails = async (id: number): Promise<any> => {
             null,
             null,
             null,
-            null
+            null,
+            true
         )
 
         return response

@@ -5,6 +5,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 
 function WatchlistButton({ movieId, togglePopover }: { movieId: number, togglePopover?: () => void }) {
+    
     const [isAdded, setIsAdded] = useState(false)
     const [loading, setLoading] = useState(false)
 
