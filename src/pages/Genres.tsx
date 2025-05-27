@@ -85,7 +85,7 @@ function Genres() {
 
     return (
         <>
-            <div className="bg-gradient-to-b from-black to-[#0f0f0f] min-h-screen">
+            <div className="bg-black min-h-screen">
                 <div ref={mainRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-2 py-8 lg:py-4">
                     <motion.div 
                         className="mb-8 pb-6 border-b border-gray-800/50"
