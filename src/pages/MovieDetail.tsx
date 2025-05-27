@@ -183,7 +183,6 @@ class MovieDetail extends Component<any, any> {
 if (!movie) {
     return (
         <div className="min-h-screen bg-black flex flex-col relative">
-            <div className="absolute inset-0 bg-gradient-to-b from-[#12121a] to-[#0a0a0e]"></div>
             
             <div className="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-12">
                 <div className="max-w-md mx-auto">
@@ -305,7 +304,7 @@ if (!movie) {
 
                         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-12 z-10">
                             <div className="max-w-3xl">
-                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white tracking-wide mb-2 sm:mb-4 leading-tight">
+                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-extrabold text-white tracking-wide mb-2 sm:mb-4 leading-tight opacity-40">
                                     {movie.title}
                                 </h1>
 

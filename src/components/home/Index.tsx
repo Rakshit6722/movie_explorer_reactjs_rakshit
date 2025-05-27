@@ -155,21 +155,24 @@ const Index = () => {
   );
 
   const mainCarouselAnimProps = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  transition: { 
-    duration: 0.8,
-    ease: [0.25, 0.1, 0.25, 1],
-  },
-};
-
-  const scrollAnimProps = {
-    initial: { opacity: 0, y: 35 },
-    whileInView: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 },
-    viewport: { once: true, amount: 0.2 },
-    style: { zIndex: 1, willChange: 'transform, opacity' },
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: { 
+      duration: 1.2,
+      ease: "easeOut"
+    }
   };
+
+  const sectionAnimProps = {
+    initial: { opacity: 0, y: 15 },
+    whileInView: { opacity: 1, y: 0 },
+    transition: { 
+      duration: 0.6,
+      ease: "easeOut"
+    },
+    viewport: { once: true, margin: "-100px 0px" }
+  };
+
 
   return (
     <div ref={containerRef} className="relative w-full min-h-screen bg-black text-white">
@@ -228,34 +231,31 @@ const Index = () => {
           </>
         ) : (
           <>
-            <motion.div {...scrollAnimProps} className="mb-8">
-              <CarouselSection type="Trending" heading="Top Trending" />
-            </motion.div>
-            {
-              isLoggedIn && (
-                <motion.div {...scrollAnimProps} className="mb-8">
-                  <WatchListSection />
-                </motion.div>
-              )
-            }
-            <motion.div {...scrollAnimProps} className="mb-8">
-              <CarouselSection type="NewRelease" heading="New Release" />
-            </motion.div>
-            <motion.div {...scrollAnimProps} className="mb-8">
-              <CarouselSection type="FanFavourite" heading="Fan Favourite" />
-            </motion.div>
-            <motion.div {...scrollAnimProps} className="mb-8">
-              <MidCarousel type="MidCarousel" />
-            </motion.div>
-            <motion.div {...scrollAnimProps} className="mb-8">
-              <CarouselSection type="Mood" heading="Find By Mood" />
-            </motion.div>
-            <motion.div {...scrollAnimProps} className="mb-8">
-              <CarouselSection type="Action" heading="Action Packed" />
-            </motion.div>
-            <motion.div {...scrollAnimProps} className="mb-8">
-              <CarouselSection type="Horror" heading="Horror Nights" />
-            </motion.div>
+
+            { [
+                { component: <CarouselSection type="Trending" heading="Top Trending" />, condition: true },
+                { component: <WatchListSection />, condition: isLoggedIn },
+                { component: <CarouselSection type="NewRelease" heading="New Release" />, condition: true },
+                { component: <CarouselSection type="FanFavourite" heading="Fan Favourite" />, condition: true },
+                { component: <MidCarousel type="MidCarousel" />, condition: true },
+                { component: <CarouselSection type="Mood" heading="Find By Mood" />, condition: true },
+                { component: <CarouselSection type="Action" heading="Action Packed" />, condition: true },
+                { component: <CarouselSection type="Horror" heading="Horror Nights" />, condition: true }
+              ].map((section, index) => (
+                section.condition && (
+                  <motion.div 
+                    key={index}
+                    {...sectionAnimProps} 
+                    transition={{ 
+                      ...sectionAnimProps.transition, 
+                      delay: index * 0.05
+                    }}
+                    className="mb-8"
+                  >
+                    {section.component}
+                  </motion.div>
+                )
+              )) }
           </>
         )}
       </section>

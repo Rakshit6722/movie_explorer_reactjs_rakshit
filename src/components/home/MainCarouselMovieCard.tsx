@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Movie } from '../../types/type';
+import { motion } from 'framer-motion'
 
 type Props = {
   movie: Movie;
@@ -51,7 +52,7 @@ export class MainCarouselMovieCard extends Component<Props> {
           fetchPriority="high"
         />
 
-    
+
         <div
           className="absolute"
           style={{
@@ -66,7 +67,13 @@ export class MainCarouselMovieCard extends Component<Props> {
           <div className="w-full h-full bg-gradient-to-t from-black via-black/60 to-transparent transition-opacity duration-500 group-hover:via-black/70" />
         </div>
 
-        <div className="absolute bottom-20 left-6 md:left-16 z-20 flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          viewport={{ once: true }}
+          style={{ zIndex: 20 }}
+          className="absolute bottom-20 left-6 md:left-16 z-20 flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
           <div className="hidden md:block w-[160px] h-[230px] rounded-lg overflow-hidden shadow-md">
             <img
               src={coverUrl}
@@ -116,7 +123,7 @@ export class MainCarouselMovieCard extends Component<Props> {
               </svg>
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
