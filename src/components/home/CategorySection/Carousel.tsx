@@ -8,6 +8,7 @@ type CarouselProps = {
   movieList: Array<Movie>;
   type: string;
   handleDeleteWatchlist?: (movieId: number) => any;
+  handleDeleteMovie?: (movieId: number) => any;
 };
 
 type CarouselState = {
@@ -108,9 +109,9 @@ class Carousel extends Component<CarouselProps, CarouselState> {
             <div key={movie.id} className="flex-shrink-0">
               {
                 type === 'Trending' ? (
-                  <MoviesCard type='trending' movie={movie} index={index}/>
+                  <MoviesCard type='trending' movie={movie} index={index} handleDeleteMovie={this.props.handleDeleteMovie}/>
                 ) : (
-                  <MoviesCard type={type} movie={movie} index={index} handleDeleteWatchlist={this.props.handleDeleteWatchlist} />
+                  <MoviesCard type={type} movie={movie} index={index} handleDeleteWatchlist={this.props.handleDeleteWatchlist} handleDeleteMovie={this.props.handleDeleteMovie} />
                 )
               }
             </div>

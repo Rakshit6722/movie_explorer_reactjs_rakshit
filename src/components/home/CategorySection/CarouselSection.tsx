@@ -51,6 +51,11 @@ function CarouselSection({ type, heading }: CarouselSectionProps) {
         }
     }
 
+    const handleDeleteMovie = async (movieId: number) => {
+        const newMovies = movies.filter((movie: Movie) => movie.id !== movieId);
+        setMovies(newMovies);
+    }
+
     const getActionMovies = async () => {
         try {
             setLoading(true)
@@ -186,7 +191,7 @@ function CarouselSection({ type, heading }: CarouselSectionProps) {
                     ) : type === 'Mood' ? (
                         <MoodCarousel />
                     ) : (
-                        <Carousel type={type} movieList={movies} />
+                        <Carousel type={type} movieList={movies} handleDeleteMovie={handleDeleteMovie}/>
                     )
                 }
 

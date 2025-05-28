@@ -23,9 +23,10 @@ type MoviesCardProps = {
     removeFromPageMovies?: (id: number) => void;
     genreCard?: boolean;
     handleDeleteWatchlist?: (movieId: number) => void;
+    handleDeleteMovie?: (movieId: number) => void;
 };
 
-function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFromPageMovies, handleDeleteWatchlist }: MoviesCardProps) {
+function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFromPageMovies, handleDeleteWatchlist, handleDeleteMovie }: MoviesCardProps) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const userInfo = useSelector((state: RootState) => state.user.userInfo) as { role?: string } || {};
@@ -72,6 +73,9 @@ function MoviesCard({ movie, index = 0, type = 'standard', genreCard, removeFrom
                 toast.success('Movie deleted successfully');
                 if (genreCard) {
                     removeFromPageMovies && removeFromPageMovies(movie.id);
+                }
+                if (handleDeleteMovie) {
+                    handleDeleteMovie(movie.id);
                 }
                 dispatch(removeMovie(movie.id));
                 setShowDeleteDialog(false);
