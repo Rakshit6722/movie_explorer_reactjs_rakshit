@@ -18,15 +18,15 @@ function CarouselSection({ type, heading }: CarouselSectionProps) {
     const movieList: Movie[] = React.useMemo(() => {
             switch (type) {
                 case 'Trending':
-                    return movies.filter((movie: any) => parseInt(movie.rating) > 7.5).sort((a: any, b: any) => b.rating - a.rating).slice(0, 30);
+                    return movies.filter((movie: any) => parseInt(movie.rating) > 7.5).sort((a: any, b: any) => b.rating - a.rating).slice(0, 12);
                 case 'NewRelease':
-                    return movies.filter((movie: any) => parseInt(movie.release_year) > 2015).sort((a: any, b: any) => b.release_year - a.release_year).slice(0, 30);
+                    return movies.filter((movie: any) => parseInt(movie.release_year) > 2015).sort((a: any, b: any) => b.release_year - a.release_year).slice(0, 12);
                 case 'FanFavourite':
                     return movies.filter((movie: any) => parseInt(movie.rating) > 7.5).sort((a: any, b: any) => b.rating - a.rating);
                 case 'Action':
-                    return movies.filter((movie: any) => movie.genre === 'Action').sort((a: any, b: any) => b.rating - a.rating).slice(0, 30);
+                    return movies.filter((movie: any) => movie.genre === 'Action').sort((a: any, b: any) => b.rating - a.rating).slice(0, 12);
                 case 'Horror':
-                    return movies.filter((movie: any) => movie.genre === 'Horror').sort((a: any, b: any) => b.rating - a.rating).slice(0, 30)
+                    return movies.filter((movie: any) => movie.genre === 'Horror').sort((a: any, b: any) => b.rating - a.rating).slice(0, 12)
                 default:
                     return movies;
             }
