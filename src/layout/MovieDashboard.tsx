@@ -11,7 +11,7 @@ export class MovieDashboard extends Component<any> {
             <>
                 <div className="flex flex-col md:flex-row min-h-screen bg-black text-white">
                     <Header />
-                    <div className="flex-1 pt-16 md:pt-0 md:pl-6 px-4 md:px-6 md:ml-20 overflow-y-auto">
+                    <div className="flex-1 pt-16 md:pt-0 md:pl-6 px-4 md:px-0 md:ml-20 overflow-y-auto">
                         <Outlet />
                     </div>
                 </div>
