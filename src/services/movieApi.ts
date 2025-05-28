@@ -4,7 +4,7 @@ import { apiConnector } from "./interceptor/apiConnector";
 const BASE_URL = `https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1/movies`
 const WISHLIST_BASE_URL = `https://movie-explorer-rorakshaykat2003-movie.onrender.com/api/v1`
 
-export const getMovieByPageApi = async (page?: number, genre?: string | null, search?: string | null) => {
+export const getMovieByPageApi = async (page?: number, genre?: string | null, search?: string | null, rating?: number | null, release_year?: number | null) => {
     if (genre === 'All') genre = null
     let apiUrl = ''
     if (!page) {
@@ -16,7 +16,9 @@ export const getMovieByPageApi = async (page?: number, genre?: string | null, se
         const response = await apiConnector("GET", apiUrl, null, null, null, {
             genre: genre ? genre : null,
             page: page ? page : null,
-            search: search ? search : null
+            search: search ? search : null,
+            rating: rating ? rating : null,
+            release_year: release_year ? release_year : null
         })
         if (response?.status === 200) {
             return { data: response.data?.movies, totalPages: response.data?.total_pages }

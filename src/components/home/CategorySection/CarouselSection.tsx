@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Carousel from './Carousel'
 import { useSelector } from 'react-redux'
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { NavLink } from 'react-router-dom'
 import MoodCarousel from '../MoodSection/MoodCarousel';
 import { Movie } from '../../../types/type';
+import { getMovieByPageApi } from '../../../services/movieApi';
+import { toast } from 'react-toastify';
+import { Skeleton } from '@mui/material';
 
 type CarouselSectionProps = {
     type: string,
@@ -13,25 +16,100 @@ type CarouselSectionProps = {
 
 function CarouselSection({ type, heading }: CarouselSectionProps) {
 
-    const movies = useSelector((state: any) => state.movie.movies)
+    const [movies, setMovies] = useState<Movie[]>([])
+    const [loading, setLoading] = useState<boolean>(false)
 
-    const movieList: Movie[] = React.useMemo(() => {
-            switch (type) {
-                case 'Trending':
-                    return movies.filter((movie: any) => parseInt(movie.rating) > 7.5).sort((a: any, b: any) => b.rating - a.rating).slice(0, 12);
-                case 'NewRelease':
-                    return movies.filter((movie: any) => parseInt(movie.release_year) > 2015).sort((a: any, b: any) => b.release_year - a.release_year).slice(0, 12);
-                case 'FanFavourite':
-                    return movies.filter((movie: any) => parseInt(movie.rating) > 7.5).sort((a: any, b: any) => b.rating - a.rating);
-                case 'Action':
-                    return movies.filter((movie: any) => movie.genre === 'Action').sort((a: any, b: any) => b.rating - a.rating).slice(0, 12);
-                case 'Horror':
-                    return movies.filter((movie: any) => movie.genre === 'Horror').sort((a: any, b: any) => b.rating - a.rating).slice(0, 12)
-                default:
-                    return movies;
-            }
-    }, [type, movies]);
-    
+    useEffect(() => {
+        fetchCarouselMovies()
+    }, [])
+
+    const fetchCarouselMovies = () => {
+        switch (type) {
+            case 'Trending':
+                getTrendingMovies()
+                break;
+
+            case 'NewRelease':
+                getNewRelease()
+                break;
+
+            case 'FanFavourite':
+                getFanFavouriteMovies()
+                break;
+
+            case 'Action':
+                getActionMovies()
+                break;
+
+            case 'Horror':
+                getHorroMovies()
+                break;
+
+            default:
+                getActionMovies();
+
+        }
+    }
+
+    const getActionMovies = async () => {
+        try {
+            setLoading(true)
+            const data = await getMovieByPageApi(1, 'Action', null, null, null);
+            setMovies(data?.data)
+        } catch (err: any) {
+            toast.error(err?.message || 'Error fetching action movies')
+        } finally {
+            setLoading(false)
+        }
+
+    }
+    const getHorroMovies = async () => {
+        try {
+            setLoading(true)
+            const data = await getMovieByPageApi(1, 'Horror', null, null, null);
+            setMovies(data?.data)
+        } catch (err: any) {
+            toast.error(err?.message || 'Error fetching horror movies')
+        } finally {
+            setLoading(false)
+        }
+    }
+    const getTrendingMovies = async () => {
+        try {
+            setLoading(true)
+            const data = await getMovieByPageApi(1, null, null, 8, null);
+            setMovies(data?.data)
+        } catch (err: any) {
+            toast.error(err?.message || 'Error fetching trending movies')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const getFanFavouriteMovies = async () => {
+        try {
+            setLoading(true)
+            const data = await getMovieByPageApi(1, null, null, 7, null);
+            setMovies(data?.data)
+        } catch (err: any) {
+            toast.error(err?.message || 'Error fetching fan favourite movies')
+        } finally {
+            setLoading(false)
+        }
+    }
+    const getNewRelease = async () => {
+        try {
+            setLoading(true)
+            const data = await getMovieByPageApi(1, null, null, null, 2023);
+            setMovies(data?.data)
+        } catch (err: any) {
+            toast.error(err?.message || "Error fetching new release movies")
+        } finally {
+            setLoading(false)
+        }
+
+    }
+
     return (
         <div className='flex flex-col z-20'>
             <div className='group cursor-pointer flex items-center space-x-2 lg:space-x-4 font-sans tracking-wide'>
@@ -48,11 +126,70 @@ function CarouselSection({ type, heading }: CarouselSectionProps) {
             </div>
 
             <div>
-                {type === 'Mood' ? (
-                    <MoodCarousel />
-                ) : (
-                    <Carousel type={type} movieList={movieList} />
-                )}
+                {
+                    loading ? (
+                        <div className="py-4">
+                            <div className="flex overflow-x-auto scrollbar-hide gap-4 pb-2 mt-2">
+                                {[...Array(7)].map((_, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex-shrink-0"
+                                        style={{ width: 'calc(50vw - 32px)', maxWidth: '210px' }}
+                                    >
+                                        <Skeleton
+                                            variant="rectangular"
+                                            animation="wave"
+                                            width="100%"
+                                            height={0}
+                                            sx={{
+                                                paddingTop: '150%',
+                                                bgcolor: 'rgba(255, 255, 255, 0.07)',
+                                                borderRadius: '8px',
+                                                transform: 'none'
+                                            }}
+                                        />
+
+                                        <Skeleton
+                                            variant="text"
+                                            width="75%"
+                                            sx={{
+                                                mt: 1.5,
+                                                bgcolor: 'rgba(255, 255, 255, 0.07)',
+                                                transform: 'none'
+                                            }}
+                                        />
+
+                                        <div className="flex items-center mt-1">
+                                            <Skeleton
+                                                variant="circular"
+                                                width={14}
+                                                height={14}
+                                                sx={{
+                                                    mr: 0.5,
+                                                    bgcolor: 'rgba(255, 255, 255, 0.07)',
+                                                    transform: 'none'
+                                                }}
+                                            />
+                                            <Skeleton
+                                                variant="text"
+                                                width={30}
+                                                sx={{
+                                                    bgcolor: 'rgba(255, 255, 255, 0.07)',
+                                                    transform: 'none'
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    ) : type === 'Mood' ? (
+                        <MoodCarousel />
+                    ) : (
+                        <Carousel type={type} movieList={movies} />
+                    )
+                }
+
             </div>
         </div>
 

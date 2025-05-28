@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { MdArrowRight } from "react-icons/md";
 import MainCarouselMovieCard from "./MainCarouselMovieCard";
@@ -7,13 +7,33 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Movie } from "../../types/type";
 import MoodFeaturePromo from "./MoodSection/MoodFeaturePromo";
+import { getMovieByPageApi } from "../../services/movieApi";
+import { toast } from "react-toastify";
+import { Skeleton, LinearProgress } from '@mui/material';
 
 const MainCarousel = () => {
-    const moviesFromStore = useSelector((state: any) => state.movie.movies);
-    
-    const carouselMovie = moviesFromStore && moviesFromStore.length > 0 
-        ? [...moviesFromStore].sort((a: any, b: any) => b.rating - a.rating).slice(0, 10)
-        : [];
+    const [movies, setMovies] = useState<Movie[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        fetchCarouselMovies()
+    }, [])
+
+    const fetchCarouselMovies = async () => {
+        try {
+            const data = await getMovieByPageApi(1, null, null, 8, null);
+            if (data?.data) {
+                setMovies(data.data);
+            } else {
+                setMovies([]);
+            }
+        } catch (err: any) {
+            toast.error(err?.message || "Error fetching featured movies");
+            setMovies([]);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const NextArrow = (props: any) => {
         const { onClick } = props;
@@ -39,59 +59,155 @@ const MainCarousel = () => {
         prevArrow: undefined,
     };
 
-    if (!carouselMovie.length) {
-        return (
-            <div className="w-full h-[400px] md:h-[570px] bg-gray-900/50 flex items-center justify-center">
-                <div className="animate-pulse text-white">Loading featured movies...</div>
-            </div>
-        );
-    }
-
     return (
-        <div className="relative w-full z-10">
-        <div className="absolute hidden md:block inset-y-[-4%] left-[-4%] w-[50%] max-w-[400px] opacity-90 bg-gradient-to-r from-black/95 to-transparent z-20 pointer-events-none" /> 
-        
-  
+        <>
+            {loading && (
+                <LinearProgress
+                    sx={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        zIndex: 9999,
+                        height: 3,
+                        '& .MuiLinearProgress-bar': {
+                            backgroundColor: '#f02c49', 
+                        },
+                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    }}
+                />
+            )}
 
-            <Slider {...settings}>
-                {carouselMovie.map((movie: Movie, index: number) => (
-                    <div key={movie.id || `movie-${index}`}>
-                        <MainCarouselMovieCard data-testId="carousel-movie-card" movie={movie} />
+            {(!movies.length || loading) ? (
+                <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] xl:h-[650px] 2xl:h-[700px] bg-[#0a0a0c] relative overflow-hidden">
+                    <Skeleton
+                        variant="rectangular"
+                        animation="wave"
+                        width="100%"
+                        height="100%"
+                        sx={{
+                            bgcolor: 'rgba(255, 255, 255, 0.03)', 
+                            position: 'absolute',
+                            transform: 'none'
+                        }}
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
+
+                    <div className="absolute bottom-20 left-6 md:left-16 z-20 flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8">
+                        <div className="hidden md:block">
+                            <Skeleton
+                                variant="rectangular"
+                                animation="wave"
+                                width={160}
+                                height={230}
+                                sx={{
+                                    bgcolor: 'rgba(255, 255, 255, 0.04)', // Darker
+                                    borderRadius: '8px',
+                                    transform: 'none'
+                                }}
+                            />
+                        </div>
+
+                        <div className="w-full max-w-2xl">
+                            <Skeleton
+                                variant="text"
+                                width="70%"
+                                height={50}
+                                sx={{
+                                    bgcolor: 'rgba(255, 255, 255, 0.04)', // Darker
+                                    mb: 3,
+                                    transform: 'none'
+                                }}
+                            />
+
+                            <Skeleton 
+                                variant="text" 
+                                width="100%" 
+                                sx={{ bgcolor: 'rgba(255, 255, 255, 0.03)', transform: 'none', mb: 1 }} 
+                            />
+                            <Skeleton 
+                                variant="text" 
+                                width="90%" 
+                                sx={{ bgcolor: 'rgba(255, 255, 255, 0.03)', transform: 'none' }} 
+                            />
+                            
+                            <div className="mt-6">
+                                <Skeleton
+                                    variant="rectangular"
+                                    width={120}
+                                    height={40}
+                                    sx={{
+                                        bgcolor: 'rgba(255, 255, 255, 0.04)', 
+                                        borderRadius: '6px',
+                                        transform: 'none'
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </div>
-                ))}
-            </Slider>
-            <MoodFeaturePromo/>
 
-            <style>{`
-                .slick-prev {
-                    display: none !important;  /* Hides the previous arrow */
-                }
+                    <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                        <Skeleton
+                            variant="circular"
+                            width={10}
+                            height={10}
+                            sx={{
+                                bgcolor: 'rgba(240, 44, 73, 0.5)', 
+                                transform: 'none'
+                            }}
+                        />
+                    </div>
+                </div>
+            ) : !movies ? (
+                <div className="w-full h-[400px] md:h-[500px] lg:h-[600px] xl:h-[650px] 2xl:h-[700px] bg-[#121218] flex items-center justify-center">
+                    <p>No movies found</p>
+                </div>
+            ) : (
+                <div className="relative w-full z-10">
+                    <div className="absolute hidden md:block inset-y-[-4%] left-[-4%] w-[50%] max-w-[400px] opacity-90 bg-gradient-to-r from-black/95 to-transparent z-20 pointer-events-none" />
 
-                .custom-arrow {
-                    position: absolute;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    z-index: 30;
-                    cursor: pointer;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    border-radius: 50%;
-                    background-color: rgba(0, 0, 0, 0.5);
-                    width: 80px;
-                    height: 80px;
-                    transition: background-color 0.3s ease;
-                }
-                
-                .custom-arrow:hover {
-                    background-color: rgba(0, 0, 0, 0.7);
-                }
-                
-                .custom-next-arrow {
-                    right: 20px;
-                }
-            `}</style>
-        </div>
+                    <Slider {...settings}>
+                        {movies.map((movie: Movie, index: number) => (
+                            <div key={movie.id || `movie-${index}`}>
+                                <MainCarouselMovieCard data-testId="carousel-movie-card" movie={movie} />
+                            </div>
+                        ))}
+                    </Slider>
+                    <MoodFeaturePromo />
+
+                    <style>{`
+                        .slick-prev {
+                            display: none !important;  /* Hides the previous arrow */
+                        }
+
+                        .custom-arrow {
+                            position: absolute;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            z-index: 30;
+                            cursor: pointer;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            border-radius: 50%;
+                            background-color: rgba(0, 0, 0, 0.5);
+                            width: 80px;
+                            height: 80px;
+                            transition: background-color 0.3s ease;
+                        }
+                        
+                        .custom-arrow:hover {
+                            background-color: rgba(0, 0, 0, 0.7);
+                        }
+                        
+                        .custom-next-arrow {
+                            right: 20px;
+                        }
+                    `}</style>
+                </div>
+            )}
+        </>
     );
 };
 
