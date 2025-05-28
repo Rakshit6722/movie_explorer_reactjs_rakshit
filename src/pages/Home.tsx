@@ -5,9 +5,6 @@ import Footer from '../components/common/Footer'
 
 class Home extends Component {
 
-  componentDidMount(): void {
-    window.scrollTo(0, 0);
-  }
 
   render() {
     return (

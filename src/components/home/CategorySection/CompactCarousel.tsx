@@ -14,13 +14,12 @@ const CompactCarousel = ({ movieList, type }: MidCarouselProps) => {
   const navigate = useNavigate();
 
   const settings = {
-    dots: true,
     infinite: true,
     speed: 700,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 3000,
     pauseOnHover: true,
     fade: true,
     cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)',

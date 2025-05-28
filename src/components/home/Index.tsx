@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CarouselSection from './CategorySection/CarouselSection';
 import MainCarousel from './MainCarousel';
@@ -20,10 +20,15 @@ const Index = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
+  const mainRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     dispatch(fetchMovies())
     fetchCurrentPlan();
     syncStoredNotifications();
+    if(mainRef.current) {
+      mainRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [dispatch]);
 
   const syncStoredNotifications = () => {
@@ -72,7 +77,7 @@ const Index = () => {
   ], [isLoggedIn]);
 
   return (
-    <div className="relative w-full min-h-screen bg-black text-white">
+    <div ref={mainRef} className="relative w-full min-h-screen bg-black text-white">
       <div className="fixed top-0 z-50 p-4">
         <NotificationCenter />
       </div>
