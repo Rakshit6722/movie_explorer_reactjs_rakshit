@@ -10,6 +10,7 @@ import MoodFeaturePromo from "./MoodSection/MoodFeaturePromo";
 import { getMovieByPageApi } from "../../services/movieApi";
 import { toast } from "react-toastify";
 import { Skeleton, LinearProgress } from '@mui/material';
+import { motion } from "framer-motion";
 
 const MainCarousel = () => {
     const [movies, setMovies] = useState<Movie[]>([]);
@@ -102,7 +103,7 @@ const MainCarousel = () => {
                                 width={160}
                                 height={230}
                                 sx={{
-                                    bgcolor: 'rgba(255, 255, 255, 0.04)', // Darker
+                                    bgcolor: 'rgba(255, 255, 255, 0.04)',
                                     borderRadius: '8px',
                                     transform: 'none'
                                 }}
@@ -115,7 +116,7 @@ const MainCarousel = () => {
                                 width="70%"
                                 height={50}
                                 sx={{
-                                    bgcolor: 'rgba(255, 255, 255, 0.04)', // Darker
+                                    bgcolor: 'rgba(255, 255, 255, 0.04)', 
                                     mb: 3,
                                     transform: 'none'
                                 }}
@@ -164,17 +165,56 @@ const MainCarousel = () => {
                     <p>No movies found</p>
                 </div>
             ) : (
-                <div className="relative w-full z-10">
-                    <div className="absolute hidden md:block inset-y-[-4%] left-[-4%] w-[50%] max-w-[400px] opacity-90 bg-gradient-to-r from-black/95 to-transparent z-20 pointer-events-none" />
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ 
+                        duration: 1.2,
+                        ease: [0.22, 0.03, 0.26, 1] 
+                    }}
+                    className="relative w-full z-10"
+                >
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.992 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ 
+                            duration: 1.6,
+                            ease: "easeOut",
+                            delay: 0.15
+                        }}
+                        className="w-full"
+                    >
+                        <div className="absolute hidden md:block inset-y-[-4%] left-[-4%] w-[50%] max-w-[400px] opacity-90 bg-gradient-to-r from-black/95 to-transparent z-20 pointer-events-none" />
 
-                    <Slider {...settings}>
-                        {movies.map((movie: Movie, index: number) => (
-                            <div key={movie.id || `movie-${index}`}>
-                                <MainCarouselMovieCard data-testId="carousel-movie-card" movie={movie} />
-                            </div>
-                        ))}
-                    </Slider>
-                    <MoodFeaturePromo />
+                        <Slider {...settings}>
+                            {movies.map((movie: Movie, index: number) => (
+                                <motion.div 
+                                    key={movie.id || `movie-${index}`}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    transition={{ 
+                                        duration: 0.7, 
+                                        delay: 0.3 + (index * 0.05), // Staggered delay based on index
+                                        ease: "easeInOut"
+                                    }}
+                                >
+                                    <MainCarouselMovieCard data-testId="carousel-movie-card" movie={movie} />
+                                </motion.div>
+                            ))}
+                        </Slider>
+                    </motion.div>
+                    
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ 
+                            duration: 0.7, 
+                            delay: 0.4,
+                            ease: [0.22, 0.03, 0.26, 1]
+                        }}
+                    >
+                        <MoodFeaturePromo />
+                    </motion.div>
 
                     <style>{`
                         .slick-prev {
@@ -205,7 +245,7 @@ const MainCarousel = () => {
                             right: 20px;
                         }
                     `}</style>
-                </div>
+                </motion.div>
             )}
         </>
     );
