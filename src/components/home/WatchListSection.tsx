@@ -9,7 +9,8 @@ import { waitForElementToBeRemoved } from '@testing-library/react'
 
 export class WatchListSection extends Component {
     state = {
-        watchList: []
+        watchList: [],
+        token: localStorage.getItem('token') || ''
     }
 
     componentDidMount(): void {
@@ -17,6 +18,9 @@ export class WatchListSection extends Component {
     }
 
     fetchWatchList = async () => {
+        if(!this.state.token) {
+            return;
+        }
         const data = await getWatchList()
         if (data) {
             this.setState({ watchList: data })
