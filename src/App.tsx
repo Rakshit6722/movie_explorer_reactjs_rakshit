@@ -14,7 +14,7 @@ import ProtectedRoute from './components/protectedRoute/ProtectedRoute'
 import { useSelector } from 'react-redux'
 import { RootState } from './redux/store'
 import { Alert, Slide, Snackbar } from '@mui/material'
-import { User } from './types/type'
+
 const Watchlist = lazy(() => import('./pages/Watchlist'))
 const MoodMain = lazy(() => import('./pages/MoodMain'))
 const Genres = lazy(() => import('./pages/Genres'))
@@ -38,7 +38,7 @@ const App = () => {
 
       if (!hasShownWelcome) {
         const referrer = document.referrer
-        const isDirectVisit = !referrer.includes(window.location.host) || referrer === '' || referrer === window.location.href || !referrer.includes('/login') && !referrer.includes('/register');
+        const isDirectVisit = !referrer.includes(window.location.host) || referrer === '' || referrer === window.location.href || (!referrer.includes('/login') && !referrer.includes('/register'));
 
         if (isDirectVisit) {
           setShowWelcomeBack(true);
