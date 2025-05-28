@@ -53,7 +53,7 @@ export class SubscribeButton extends Component<Props, State> {
         const { isLoggedIn } = this.props;
 
         return (
-            <div className="fixed top-4 right-4 z-50">
+            <div className="fixed mt-16 md:mt-0 top-4 right-4 z-50">
                 <AnimatePresence mode="wait">
                     {!this.state.minimized && (isBasicPlan) ? (
                         <motion.div

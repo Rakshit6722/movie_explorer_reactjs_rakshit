@@ -47,7 +47,7 @@ const NotificationCenter: React.FC = () => {
     };
 
     return (
-        <div className="relative">
+        <div className="relative mt-16 md:mt-0">
             <button
                 onClick={handleToggle}
                 className={`relative rounded-full p-2 bg-black/20 hover:bg-[#e23145]/10 border border-gray-800/30 hover:border-[#e23145]/20 transition-all duration-300 ${animateButton ? 'notification-pulse' : ''}`}

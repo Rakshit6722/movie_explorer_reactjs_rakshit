@@ -6,44 +6,12 @@ import { LinearProgress } from '@mui/material'
 import WithRouter from '../components/hoc/WithRouter'
 
 export class MovieDashboard extends Component<any> {
-
-    render() {
-        const { movieLoading } = this.props;
-        
+    render() {        
         return (
             <>
-                {/* {movieLoading && (
-                    <LinearProgress 
-                        variant="indeterminate"
-                        sx={{ 
-                            zIndex: '150',
-                            position: 'fixed',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            height: '5px',
-                            '& .MuiLinearProgress-bar': {
-                                backgroundColor: '#f02c49',
-                            },
-                            '&.MuiLinearProgress-root': {
-                                backgroundColor: 'rgba(240, 44, 73, 0.2)',
-                            },
-                            '&::before': {
-                                content: '""',
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                right: 0,
-                                height: '100%',
-                                backgroundColor: 'rgba(240, 44, 73, 0.2)',
-                            }
-                        }} 
-                    />
-                )} */}
-            
-                <div className="flex min-h-screen bg-black text-white">
+                <div className="flex flex-col md:flex-row min-h-screen bg-black text-white">
                     <Header />
-                    <div className="flex-1 md:pl-6 pr-0 ml-20 overflow-y-auto">
+                    <div className="flex-1 pt-16 md:pt-0 md:pl-6 px-4 md:px-6 md:ml-20 overflow-y-auto">
                         <Outlet />
                     </div>
                 </div>

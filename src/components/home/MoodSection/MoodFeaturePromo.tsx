@@ -43,7 +43,7 @@ const MoodFeaturePromo = () => {
     if (minimized) {
         return (
             <div
-                className="absolute bottom-20 right-8 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-3 shadow-lg cursor-pointer z-60 hover:bg-[#e23145]/70 hover:border-[#e23145]/30 transition-all duration-300"
+                className="hidden md:block absolute bottom-20 right-8 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-3 shadow-lg cursor-pointer z-60 hover:bg-[#e23145]/70 hover:border-[#e23145]/30 transition-all duration-300"
                 onClick={() => setMinimized(false)}
                 title="Explore mood search feature"
             >
@@ -55,7 +55,7 @@ const MoodFeaturePromo = () => {
     }
 
     return (
-        <div className="absolute bottom-20 right-8 w-64 bg-black/40 backdrop-blur-sm rounded-lg shadow-xl z-60 overflow-hidden border border-white/10 animate-fadeIn">
+        <div className="hidden md:block absolute bottom-20 right-8 w-64 bg-black/40 backdrop-blur-sm rounded-lg shadow-xl z-60 overflow-hidden border border-white/10 animate-fadeIn">
             <div className="p-4">
                 <div className="flex justify-between items-center mb-3">
                     <div className="flex items-center">
