@@ -169,7 +169,7 @@ class Header extends Component<HeaderProps, HeaderState> {
         </div>
 
         {isMobile && mobileMenuOpen && (
-          <div className="fixed inset-0 bg-black/95 z-40 pt-16">
+          <div className="fixed inset-0 mt-10 bg-black/95 z-40 pt-16">
             <div className="flex flex-col space-y-6 px-6 py-8">
               {NAV_ITEMS.map((item) => (
                 item !== null && (
