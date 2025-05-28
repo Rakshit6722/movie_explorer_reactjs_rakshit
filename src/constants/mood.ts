@@ -19,7 +19,7 @@ export const moodGenreMapping: any = {
     sad: ["Drama", "Romance", "Biography"],
     angry: ["Action", "Thriller", "Crime"],
     excited: ["Action", "Sci-Fi", "Adventure"],
-    bored: ["Biography", "Drama"]
+    bored: ["Comedy", "Adventure"]
 };
 
 export const moodColors: any = {
