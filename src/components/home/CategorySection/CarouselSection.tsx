@@ -18,10 +18,15 @@ function CarouselSection({ type, heading }: CarouselSectionProps) {
 
     const [movies, setMovies] = useState<Movie[]>([])
     const [loading, setLoading] = useState<boolean>(false)
+    const [showSeeAll, setShowSeeAll] = useState<boolean>(false)
 
     useEffect(() => {
         fetchCarouselMovies()
     }, [])
+
+    useEffect(() => {
+        console.log("see all", showSeeAll)
+    }, [showSeeAll])
 
     const fetchCarouselMovies = () => {
         switch (type) {
@@ -117,15 +122,22 @@ function CarouselSection({ type, heading }: CarouselSectionProps) {
 
     return (
         <div className='flex flex-col z-20'>
-            <div className='group cursor-pointer flex items-center space-x-2 lg:space-x-4 font-sans tracking-wide'>
+            <div className='group  flex items-center space-x-2 lg:space-x-4 font-sans tracking-wide'>
                 <p className='font-anton text-gray-300 tracking-wide text-3xl lg:text-3xl'>{heading}</p>
                 <NavLink to={type === 'Mood' ? '/moods' : '/genres'}>
-                    <div className="relative flex items-center italic space-x-1 lg:space-x-1 cursor-pointer overflow-hidden group">
-                        <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-[#f02c49] lg:ml-2 transition-all duration-300 group-hover:w-[85%]"></span>
-                        <p className="text-gray-400 text-sm transition-all duration-300 group-hover:text-[#f02c49] lg:opacity-0 group-hover:opacity-100">
+                    <div className={`relative flex items-center italic space-x-1 lg:space-x-1 ${showSeeAll ? 'cursor-pointer' : ''} overflow-hidden group`}>
+                        {
+                            showSeeAll && <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-[#f02c49] lg:ml-2 transition-all duration-300 group-hover:w-[85%]"></span>
+                        }
+                        <p className={`text-gray-400 text-sm transition-all duration-300 group-hover:text-[#f02c49]  ${showSeeAll ?
+                            ' opacity-100' : ' opacity-0'
+                            }`}>
                             See All
                         </p>
-                        <MdOutlineKeyboardArrowRight className="text-gray-400 lg:text-2xl group-hover:text-[#f02c49] transition-all duration-300 lg:opacity-0 group-hover:opacity-100" />
+                        {
+                            showSeeAll && <MdOutlineKeyboardArrowRight className="text-gray-400 lg:text-2xl group-hover:text-[#f02c49] transition-all duration-300 lg:opacity-0 group-hover:opacity-100" />
+
+                        }
                     </div>
                 </NavLink>
             </div>
@@ -191,7 +203,7 @@ function CarouselSection({ type, heading }: CarouselSectionProps) {
                     ) : type === 'Mood' ? (
                         <MoodCarousel />
                     ) : (
-                        <Carousel type={type} movieList={movies} handleDeleteMovie={handleDeleteMovie}/>
+                        <Carousel type={type} movieList={movies} handleDeleteMovie={handleDeleteMovie} setShowSeeAll={setShowSeeAll} />
                     )
                 }
 

@@ -21,6 +21,7 @@ const Index = () => {
   const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
 
   const mainRef = useRef<HTMLDivElement | null>(null);
+  
 
   useEffect(() => {
     dispatch(fetchMovies())

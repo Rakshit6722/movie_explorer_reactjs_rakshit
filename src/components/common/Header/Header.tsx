@@ -119,7 +119,7 @@ class Header extends Component<HeaderProps, HeaderState> {
           outline: <RiMovie2Line size={22} />,
           filled: <RiMovie2Fill size={22} />,
         },
-        label: 'Genres',
+        label: 'Explore',
         href: '/genres?pageCount=1'
       },
       this.props.isLoggedIn ? {

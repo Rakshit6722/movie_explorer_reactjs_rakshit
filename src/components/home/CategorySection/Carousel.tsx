@@ -9,6 +9,7 @@ type CarouselProps = {
   type: string;
   handleDeleteWatchlist?: (movieId: number) => any;
   handleDeleteMovie?: (movieId: number) => any;
+  setShowSeeAll?: (show: boolean) => void;
 };
 
 type CarouselState = {
@@ -40,11 +41,20 @@ class Carousel extends Component<CarouselProps, CarouselState> {
     this.checkScrollPosition();
   }
 
-  componentDidUpdate(prevProps: CarouselProps) {
+  componentDidUpdate(prevProps: CarouselProps, prevState: CarouselState) {
     if (prevProps.movieList !== this.props.movieList) {
       this.checkScrollPosition();
     }
+
+    if (prevState.isLeftVisible !== this.state.isLeftVisible) {
+      if (this.props.setShowSeeAll) {
+        this.props.setShowSeeAll(this.state.isLeftVisible);
+      }
+    }
+
   }
+
+
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
@@ -109,7 +119,7 @@ class Carousel extends Component<CarouselProps, CarouselState> {
             <div key={movie.id} className="flex-shrink-0">
               {
                 type === 'Trending' ? (
-                  <MoviesCard type='trending' movie={movie} index={index} handleDeleteMovie={this.props.handleDeleteMovie}/>
+                  <MoviesCard type='trending' movie={movie} index={index} handleDeleteMovie={this.props.handleDeleteMovie} />
                 ) : (
                   <MoviesCard type={type} movie={movie} index={index} handleDeleteWatchlist={this.props.handleDeleteWatchlist} handleDeleteMovie={this.props.handleDeleteMovie} />
                 )
