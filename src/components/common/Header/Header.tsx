@@ -208,7 +208,7 @@ class Header extends Component<HeaderProps, HeaderState> {
               </div>
             </NavLink>
 
-            <nav className="flex flex-col space-y-4 pl-4 items-center pt-8">
+            <nav className="flex flex-col space-y-4 pl-4 items-center pt-4">
               {NAV_ITEMS.map((item) => (
                 item !== null && (
                   <NavItem key={item.label} {...item} />
@@ -222,7 +222,7 @@ class Header extends Component<HeaderProps, HeaderState> {
                       transition-all duration-2200 ease-linear overflow-hidden flex py-16
                       ${expanded ? 'w-60 opacity-100' : 'w-0 opacity-0'}`}
           >
-            <div className="flex flex-col space-y-7 pl-2 pt-[167px]">
+            <div className="flex flex-col space-y-7 pl-2 pt-[150px]">
               {NAV_ITEMS.map((item) => (
                 item !== null && (
                   <NavLink
