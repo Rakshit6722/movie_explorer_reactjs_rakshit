@@ -34,6 +34,7 @@ interface HeaderProps {
 
 class Header extends Component<HeaderProps, HeaderState> {
   clickOutisideRef: React.RefObject<HTMLDivElement | null>;
+  closeTimeout: NodeJS.Timeout | undefined;
   constructor(props: HeaderProps) {
     super(props);
     this.clickOutisideRef = React.createRef<HTMLDivElement>();
@@ -60,6 +61,11 @@ class Header extends Component<HeaderProps, HeaderState> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('click', this.handleClickOutside);
+    
+    // Clear any pending timeouts
+    if (this.closeTimeout) {
+      clearTimeout(this.closeTimeout);
+    }
   }
 
   handleResize = () => {
@@ -71,6 +77,10 @@ class Header extends Component<HeaderProps, HeaderState> {
 
   handleMouseEnter = () => {
     if (this.state.windowWidth >= 768) {
+      // Clear any pending close timeout
+      if (this.closeTimeout) {
+        clearTimeout(this.closeTimeout);
+      }
       this.setState({ expanded: true });
     }
   };
@@ -83,7 +93,9 @@ class Header extends Component<HeaderProps, HeaderState> {
 
   handleMouseLeave = () => {
     if (this.state.windowWidth >= 768) {
-      this.setState({ expanded: false });
+      this.closeTimeout = setTimeout(() => {
+        this.setState({ expanded: false });
+      }, 300); 
     }
   };
 
