@@ -213,11 +213,9 @@ function Search() {
             {!isLoading && (
               <div className="flex items-center text-sm text-gray-500 mb-4">
                 <span className="mr-2 px-2 py-0.5 bg-gray-800/50 rounded-md font-medium">
-                  {totalPages > 0 ? (
-                    totalPages === 1 && movies.length < 20 ?
-                      `${movies.length} result${movies.length !== 1 ? 's' : ''}` :
-                      `${Math.min(20, movies.length)} of ${totalPages * 20}+ results`
-                  ) : 'No results found'}                </span>
+                  {totalPages > 0
+                    ? `${movies.length} result${movies.length !== 1 ? 's' : ''}`
+                    : 'No results found'}               </span>
               </div>
             )}
 
