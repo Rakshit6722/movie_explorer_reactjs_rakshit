@@ -34,7 +34,6 @@ interface HeaderProps {
 
 class Header extends Component<HeaderProps, HeaderState> {
   clickOutisideRef: React.RefObject<HTMLDivElement | null>;
-  closeTimeout: NodeJS.Timeout | undefined;
   constructor(props: HeaderProps) {
     super(props);
     this.clickOutisideRef = React.createRef<HTMLDivElement>();
@@ -61,11 +60,6 @@ class Header extends Component<HeaderProps, HeaderState> {
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
     window.removeEventListener('click', this.handleClickOutside);
-    
-    // Clear any pending timeouts
-    if (this.closeTimeout) {
-      clearTimeout(this.closeTimeout);
-    }
   }
 
   handleResize = () => {
@@ -77,10 +71,6 @@ class Header extends Component<HeaderProps, HeaderState> {
 
   handleMouseEnter = () => {
     if (this.state.windowWidth >= 768) {
-      // Clear any pending close timeout
-      if (this.closeTimeout) {
-        clearTimeout(this.closeTimeout);
-      }
       this.setState({ expanded: true });
     }
   };
@@ -93,9 +83,7 @@ class Header extends Component<HeaderProps, HeaderState> {
 
   handleMouseLeave = () => {
     if (this.state.windowWidth >= 768) {
-      this.closeTimeout = setTimeout(() => {
-        this.setState({ expanded: false });
-      }, 300); 
+      this.setState({ expanded: false });
     }
   };
 
@@ -209,7 +197,7 @@ class Header extends Component<HeaderProps, HeaderState> {
           onMouseLeave={this.handleMouseLeave}
           ref={this.clickOutisideRef}
         >
-          <div className="h-full bg-black md:w-20 flex flex-col items-center py-8 shadow-lg">
+          <div className="h-full bg-black md:w-20 flex flex-col items-center py-2 shadow-lg">
             <NavLink to={'/'}>
               <div className="mb-12">
                 <img
@@ -234,7 +222,7 @@ class Header extends Component<HeaderProps, HeaderState> {
                       transition-all duration-2200 ease-linear overflow-hidden flex py-16
                       ${expanded ? 'w-60 opacity-100' : 'w-0 opacity-0'}`}
           >
-            <div className="flex flex-col space-y-7 pl-2 pt-[150px]">
+            <div className="flex flex-col space-y-7 pl-2 pt-[127px]">
               {NAV_ITEMS.map((item) => (
                 item !== null && (
                   <NavLink
