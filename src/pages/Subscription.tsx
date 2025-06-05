@@ -10,11 +10,13 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 import { plans } from '../constants/subscriptionPlans';
 import { current } from '@reduxjs/toolkit';
+import { useNavigate } from 'react-router-dom';
 
 
 const Subscription = () => {
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -40,6 +42,7 @@ const Subscription = () => {
     if (planKey === currentPlan) {
       confirm(`You are already subscribed to the ${plans.find(plan => plan.key === planKey)?.name} plan. Would you like to renew?`);
       if (!confirm) {
+        navigate('/profile');
         return;
       }
     }
