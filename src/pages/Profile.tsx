@@ -39,10 +39,10 @@ function Profile() {
       const response = await getSubscriptionDetailsApi();
 
       if (response?.plan) {
-        if(response?.status === 'pending') {
+        if (response?.status === 'pending') {
           setError("You did not complete the payment, please try again.");
           return
-        }else if(response?.status === 'cancelled') {
+        } else if (response?.status === 'cancelled') {
           setError("Your subscription has been cancelled, please subscribe again or login again.");
           return
         }
@@ -131,17 +131,24 @@ function Profile() {
             onClick={handleLogout}
             className="flex items-center gap-2 py-1.5 px-3 text-sm bg-black/40 hover:bg-[#e23145]/15 rounded-lg border border-gray-800/40 hover:border-[#e23145]/30 text-gray-300 hover:text-white transition-all duration-200 group"
           >
-            <LogOutIcon
-              fontSize="small"
-              className="text-gray-400 group-hover:text-[#e23145] transition-colors"
-            />
+            {
+              logoutLoading ? (
+                <span className="animate-spin inline-block w-4 h-4 border-2 border-t-transparent border-white rounded-full"></span>
+              ) : (
+                <LogOutIcon
+                  fontSize="small"
+                  className="text-gray-400 group-hover:text-[#e23145] transition-colors"
+                />
+              )
+            }
+
             <span>Logout</span>
           </button>
         </div>
       </header>
 
-      <PersonalInformation 
-      userInfo={userInfo} currentPlan={currentUserPlan} loading={loading} error={error} planInfo={planInfo} formatDateForDisplay={formatDateForDisplay} getDaysRemaining={getDaysRemaining} subscriptionDetails={subscriptionDetails} getStatusDisplay={getStatusDisplay} />
+      <PersonalInformation
+        userInfo={userInfo} currentPlan={currentUserPlan} loading={loading} error={error} planInfo={planInfo} formatDateForDisplay={formatDateForDisplay} getDaysRemaining={getDaysRemaining} subscriptionDetails={subscriptionDetails} getStatusDisplay={getStatusDisplay} />
 
     </div>
   );
