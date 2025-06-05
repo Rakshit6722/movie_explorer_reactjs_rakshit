@@ -111,6 +111,11 @@ function Search() {
     setSelectedGenre(genre);
     setCurrentPage(1);
 
+    if(!searchTerm.trim()) {
+      toast.info('Please enter a search term before selecting a genre.');
+      return;
+    }
+
     if (searchTerm.trim()) {
       updateUrlParams(searchTerm, genre, 1);
       debouncedSearch(1, genre, searchTerm);
